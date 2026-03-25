@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f8f9fa",
+              "on-primary-fixed-variant": "#00429b",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed": "#001945",
+              "primary-fixed-dim": "#b0c6ff",
+              "surface-container-highest": "#e1e3e4",
+              "secondary-fixed-dim": "#b6c6f3",
+              "surface-container-high": "#e7e8e9",
+              "on-background": "#191c1d",
+              "on-surface": "#191c1d",
+              "on-primary-container": "#a9c1ff",
+              "inverse-surface": "#2e3132",
+              "surface-bright": "#f8f9fa",
+              "secondary": "#4e5e85",
+              "primary-container": "#004aad",
+              "primary": "#00357f",
+              "inverse-primary": "#b0c6ff",
+              "surface-container-lowest": "#ffffff",
+              "on-secondary-container": "#495980",
+              "inverse-on-surface": "#f0f1f2",
+              "on-surface-variant": "#434653",
+              "secondary-container": "#c1d1fe",
+              "on-tertiary-fixed": "#3a0a00",
+              "surface-dim": "#d9dadb",
+              "on-tertiary-container": "#ffae96",
+              "on-error": "#ffffff",
+              "surface-tint": "#215abd",
+              "surface": "#f8f9fa",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#852300",
+              "outline-variant": "#c3c6d5",
+              "surface-container-low": "#f3f4f5",
+              "tertiary-fixed-dim": "#ffb59f",
+              "secondary-fixed": "#d9e2ff",
+              "outline": "#737784",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#071a3e",
+              "surface-variant": "#e1e3e4",
+              "surface-container": "#edeeef",
+              "on-primary": "#ffffff",
+              "tertiary": "#6d1b00",
+              "on-tertiary": "#ffffff",
+              "tertiary-container": "#952800",
+              "tertiary-fixed": "#ffdbd0",
+              "primary-fixed": "#d9e2ff",
+              "on-secondary-fixed-variant": "#36466c",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .tonal-transition {
+        transition: background-color 0.3s ease;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary-fixed-dim selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-[0_20px_40px_rgba(25,28,29,0.06)] tonal-transition bg-surface-container-low">
+<div class="flex justify-between items-center px-8 py-4 max-w-full mx-auto">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-[#00357f] font-headline">Voyager</span>
+<div class="hidden md:flex gap-8">
+<a class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight text-slate-600 hover:text-[#00357f] hover:scale-105 transition-all" href="#">Destinations</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight text-slate-600 hover:text-[#00357f] hover:scale-105 transition-all" href="#">Itineraries</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight text-slate-600 hover:text-[#00357f] hover:scale-105 transition-all" href="#">Journal</a>
+<a class="font-['Plus_Jakarta_Sans'] font-semibold tracking-tight text-slate-600 hover:text-[#00357f] hover:scale-105 transition-all" href="#">Offers</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex bg-surface-container-highest rounded-full px-4 py-2 items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 placeholder:text-on-surface-variant/60 w-48" placeholder="Explore your next journey..." type="text"/>
+</div>
+<button class="font-headline font-semibold text-primary hover:scale-105 active:opacity-80 transition-all">Sign In</button>
+<button class="bg-tertiary text-white px-6 py-2.5 rounded-lg font-headline font-semibold hover:scale-105 active:opacity-80 transition-all shadow-lg">Book Now</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-20 px-8 max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Side Navigation / Filters Cluster -->
+<aside class="lg:col-span-3">
+<div class="sticky top-32 flex flex-col gap-8">
+<!-- Profile Summary Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_20px_40px_rgba(25,28,29,0.06)] border border-outline-variant/15 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-8 -mt-8"></div>
+<div class="relative z-10 flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full p-1 bg-gradient-to-tr from-primary to-tertiary mb-4">
+<img alt="User profile avatar" class="w-full h-full rounded-full object-cover border-4 border-surface-container-lowest" data-alt="portrait of a confident woman with a friendly smile, professional travel photography style, soft natural sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5JpPFO4pOrygXnJo-ye1uPOODzgOlkSv3smCB-Cdeo1NyQAE_mVpJM5kskUlRnNYVE6KNH8yQArtZEkgZFOuYTIIJnP6KXxALbPuLu3cCVFs5em37dpHbqDfawZo-JnOJu2PqmCTlzRS5d-nZiiTFQxmIQvCu-DQbcqxa-ENUEUL1WZzeK55yBSn2nc2DGXQ7bTxM4GI45GEgexvmTcAPbDununjkqNS1ZrytMGocAQYKie2XzpPqcWNw5DWIgn_VwPxNsXzc5w0"/>
+</div>
+<h2 class="font-headline text-xl font-bold text-on-surface">Elena Rodriguez</h2>
+<p class="text-on-surface-variant text-sm mb-6">Platinum Explorer</p>
+<div class="w-full bg-surface-container-low p-4 rounded-lg flex justify-between items-center mb-2">
+<div class="text-left">
+<p class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60">Loyalty Points</p>
+<p class="font-headline text-lg font-bold text-primary">42,850</p>
+</div>
+<span class="material-symbols-outlined text-tertiary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+</div>
+<!-- SideNavBar Implementation -->
+<div class="flex flex-col gap-2 p-4 bg-surface-container-low rounded-xl">
+<div class="px-4 py-2 mb-2">
+<h3 class="font-headline font-bold text-on-surface">Account</h3>
+</div>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-white bg-primary transition-all font-body text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-slate-700 hover:bg-slate-200 transition-all font-body text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Payment Methods</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-slate-700 hover:bg-slate-200 transition-all font-body text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+<span>Saved (Wishlist)</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-slate-700 hover:bg-slate-200 transition-all font-body text-sm" href="#">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+<span>Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<section class="lg:col-span-9">
+<div class="flex flex-col gap-12">
+<!-- Header Section -->
+<header class="flex justify-between items-end">
+<div>
+<p class="text-[10px] uppercase tracking-[0.2em] font-bold text-tertiary mb-2">Dashboard</p>
+<h1 class="font-headline text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface">Welcome back, Elena.</h1>
+</div>
+<div class="hidden sm:flex gap-3">
+<div class="flex -space-x-3">
+<img alt="friend 1" class="w-10 h-10 rounded-full border-2 border-surface-container-lowest" data-alt="portrait of a woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCk-K2NPV-aLNG0inLt9nWSddj7Gu2Bid95rrxUz1Vnd85zrfZoZ7PRCaqD8kt_98MSueRse5an8JG4p4LSboGCfWx1B7SK3x8-WMcDw4jkrwXCvXCagyulopFABtGU2qNvGtgvpiHpuiVSLkdbFHg_KMR1uSi1L4IqsCr-Gn37St_sAA7ZK0YUxPEairoZ3o_o64JXgmANv1CZdsgUNFiZ2Oou97InfPcet7VC_iIe13R1qHepR1KlaSRu5l8zsltYuLg1-mlqcpU"/>
+<img alt="friend 2" class="w-10 h-10 rounded-full border-2 border-surface-container-lowest" data-alt="portrait of a man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnDdaqWo5xHCSckHu4o8INAehGqvPRDHxWM8tpnREs8t6iIO_RqCeHN8NiY0CkvnCY2dnYQxpIte1TsLVqsPSNoG_cgVejHpYc9Pasa-ySHLiyJNiwsWrdK7udfZejIr1SMt3kw5kbRJz_zXTrKyuHkOTFSyQGCn4HRx5jTFF2kQeJrQhrTuptR7YXWyGr1KjLWNewFcakXIIh-UtIvyiR47wUXQncc8WqvOLYFk3XLR89uLqJlkqVCa4pt3jAJpWZYyRjCMiosTo"/>
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-fixed flex items-center justify-center text-xs font-bold border-2 border-surface-container-lowest">+8</div>
+</div>
+</div>
+</header>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+<!-- Upcoming Trip (Large Feature) -->
+<div class="md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_20px_40px_rgba(25,28,29,0.06)] group border border-outline-variant/10">
+<div class="relative h-64 overflow-hidden">
+<img alt="Upcoming Trip" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="luxury resort infinity pool overlooking the turquoise ocean in Santorini at sunset, serene and high-end atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN-tog3aZ0yh5JglWnHUKdxeQdN7HrCqkLLVGzFlQNUkOQ-kDEaIsRcYoDckzL-qO-enLEHrZi9CF9pzoKiB9uiXx742EtzMBCjBMSM8Nzoo8AjGiiqxzmAM_AWr9lIzv9NpSfmuxQrP4WsZHpXee7MviQcpq7r9DnOPJWepV3bVPICcRei24yODasOJ69lsFWnCoBM6b423jaJSuqvcrsTbJqsjDhLkkdK81gCWF5YmDXQ_8UFrZFfPW2qtuSODwCRQT6OB-0VM8"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-full text-xs font-bold text-primary">
+                                    UPCOMING • IN 12 DAYS
+                                </div>
+<div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-on-surface/80 to-transparent">
+<h3 class="text-white font-headline text-2xl font-bold">The Santorini Retreat</h3>
+<p class="text-white/80 text-sm">Grace Hotel, Auberge Resorts Collection</p>
+</div>
+</div>
+<div class="p-8 grid grid-cols-3 gap-8">
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant/60 mb-1">Check-in</p>
+<p class="font-headline font-bold">Oct 14, 2024</p>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant/60 mb-1">Guests</p>
+<p class="font-headline font-bold">2 Adults</p>
+</div>
+<div class="text-right">
+<button class="bg-primary text-white text-xs px-4 py-2 rounded-lg font-bold hover:bg-on-primary-fixed-variant transition-colors">Manage</button>
+</div>
+</div>
+</div>
+<!-- Quick Stats / Status -->
+<div class="md:col-span-2 bg-primary text-white rounded-xl p-8 flex flex-col justify-between relative overflow-hidden shadow-xl">
+<div class="absolute bottom-0 right-0 opacity-10 scale-150 rotate-12">
+<span class="material-symbols-outlined text-9xl" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+<div class="relative z-10">
+<span class="material-symbols-outlined mb-4" data-icon="calendar_month">calendar_month</span>
+<h4 class="font-headline text-lg font-bold mb-1">Travel Velocity</h4>
+<p class="text-white/70 text-sm leading-relaxed">You've explored 4 new countries this year. You're in the top 5% of voyagers!</p>
+</div>
+<div class="relative z-10 mt-8">
+<div class="flex justify-between text-xs font-bold mb-2">
+<span>NEXT STATUS: ELITE</span>
+<span>82%</span>
+</div>
+<div class="h-2 bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim w-[82%]"></div>
+</div>
+</div>
+</div>
+<!-- Past & Canceled Trips (Smaller Cards) -->
+<div class="md:col-span-3 bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-on-surface">Past Bookings</h3>
+<a class="text-primary text-xs font-bold hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 items-center group cursor-pointer">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Past Trip" class="w-full h-full object-cover" data-alt="Modern Sydney Opera House architecture against a clear blue sky, iconic and clean travel photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsGJDKL9LLGIJJ1eI4ShWClaET51fhDVhNmxsjnp4MFvDFAfmVxK05ErLI6-uym6XA9WOvye6V1DykjVr3xDdc_u93EzGf2F_HIjpBKiscCqv4BFSKnAKRMmVcJGZTcLgTNC8vOBQ5nrC7EeeLYnKKRvEGr1KjSj6K6KTly-jg1XzHoTsl6KFHR6wSuiNiDEEFTnc3DbG1gU1QuDjuhpi6RNRyxDTmUQqMme1vJmAPEBcHcrYzc34Jd6JnGGPW9-nOF3IHJZleDD0"/>
+</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-sm text-on-surface group-hover:text-primary transition-colors">Sydney Harbour Getaway</p>
+<p class="text-xs text-on-surface-variant">Completed • Aug 2024</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex gap-4 items-center group cursor-pointer">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Past Trip" class="w-full h-full object-cover" data-alt="Japanese traditional street in Kyoto with wooden buildings and soft lanterns, evening atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDDwSVeZGXNajTHg0EgtOCYtXO-fqY8LuU_92hF0HpvH72vTKy-YWtMFMUcJOYAkkcnwkY2Ivl8c1YKy37abR4xbFrE1Hb77ic9OqS-BC4GzQc_OJszYUkAJhONiJY6K6e3cRTsGclrMgh4CQQbGEfu5mTSlWyxrMvsBzcFDNPs4BDp73HseyLEJkEEgWHSjZQPB2jhU7Ci10nWLONG4y5c97MriXOwbtDgH-xYlm3qtje67ciynL7UaHMbPAkMTy_pC9KqOtMjas"/>
+</div>
+<div class="flex-1">
+<p class="font-headline font-bold text-sm text-on-surface group-hover:text-primary transition-colors">Kyoto Cultural Tour</p>
+<p class="text-xs text-on-surface-variant">Completed • June 2024</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-3 bg-surface-container-low rounded-xl p-6 border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-on-surface">Activity</h3>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="more_horiz">more_horiz</span>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="cancel">cancel</span>
+</div>
+<div>
+<p class="text-sm font-bold">Oslo Weekend Canceled</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">Refund Processed • $1,240.00</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="favorite">favorite</span>
+</div>
+<div>
+<p class="text-sm font-bold">Added to Wishlist</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">Aman Tokyo • 2 days ago</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="reviews" style="font-variation-settings: 'FILL' 1;">reviews</span>
+</div>
+<div>
+<p class="text-sm font-bold">Review Published</p>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">Fairmont Chateau • 1 week ago</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-20 bg-[#00357f] text-white">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-16 w-full max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<span class="text-xl font-bold text-white mb-4 block font-headline">Voyager</span>
+<p class="text-slate-300 text-xs leading-relaxed max-w-xs font-body">
+                    Elevating your travel experience through curated excellence and unparalleled service since 2012.
+                </p>
+</div>
+<div>
+<h4 class="font-['Inter'] text-xs uppercase tracking-widest font-bold mb-6">Explore</h4>
+<ul class="flex flex-col gap-4">
+<li><a class="text-slate-300 hover:text-white transition-colors text-xs uppercase tracking-widest" href="#">Help Center</a></li>
+<li><a class="text-slate-300 hover:text-white transition-colors text-xs uppercase tracking-widest" href="#">About Our Story</a></li>
+<li><a class="text-slate-300 hover:text-white transition-colors text-xs uppercase tracking-widest" href="#">Editorial Policy</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-['Inter'] text-xs uppercase tracking-widest font-bold mb-6">Legal</h4>
+<ul class="flex flex-col gap-4">
+<li><a class="text-slate-300 hover:text-white transition-colors text-xs uppercase tracking-widest" href="#">Privacy</a></li>
+<li><a class="text-slate-300 hover:text-white transition-colors text-xs uppercase tracking-widest" href="#">Terms</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-['Inter'] text-xs uppercase tracking-widest font-bold mb-6">Stay Inspired</h4>
+<div class="flex border-b border-white/20 pb-2">
+<input class="bg-transparent border-none text-[10px] focus:ring-0 placeholder:text-white/40 flex-1 uppercase tracking-widest" placeholder="YOUR EMAIL" type="email"/>
+<button class="material-symbols-outlined text-white" data-icon="arrow_forward">arrow_forward</button>
+</div>
+</div>
+</div>
+<div class="border-t border-white/10 px-12 py-8 text-center">
+<p class="font-['Inter'] text-[10px] uppercase tracking-[0.3em] text-slate-400">© 2024 The Editorial Voyager. Curated Travel Excellence.</p>
+</div>
+</footer>
+</body></html>

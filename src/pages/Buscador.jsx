@@ -3,7 +3,7 @@ import PopularDestinations from "../components/buscador/PopularDestinations";
 import SearchPanel from "../components/buscador/SearchPanel";
 import { buscadorNavLinks, popularDestinations } from "../data/buscadorData";
 
-const heroBackground = "images/home/10.jpg";
+const heroBackground = "images/home/9.jpg";
 
 export default function BuscadorPage() {
   return (

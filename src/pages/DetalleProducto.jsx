@@ -27,19 +27,23 @@ export default function DetalleProductoPage() {
 
       <main className="detalle-producto-main">
         <div className="detalle-producto-shell">
-          <ProductGallery images={detail.galleryImages} title={detail.title} />
+          <div className="detalle-producto-gallery-wrap">
+            <ProductGallery images={detail.galleryImages} title={detail.title} />
+          </div>
 
-          <div className="detalle-producto-layout">
-            <div className="detalle-producto-content">
-              <ProductHeroInfo detail={detail} />
-              <ProductOverview paragraphs={detail.overview} />
-              <ProductIncludes items={detail.includes} />
-              <ProductItinerary items={detail.itinerary} />
-              <ProductReviews items={detail.reviews} />
-            </div>
+          <div className="detalle-producto-content-wrap">
+            <div className="detalle-producto-layout">
+              <div className="detalle-producto-content">
+                <ProductHeroInfo detail={detail} />
+                <ProductOverview paragraphs={detail.overview} />
+                <ProductIncludes items={detail.includes} />
+                <ProductItinerary items={detail.itinerary} />
+                <ProductReviews items={detail.reviews} />
+              </div>
 
-            <div className="detalle-producto-sidebar">
-              <ProductBookingCard booking={detail.booking} />
+              <div className="detalle-producto-sidebar">
+                <ProductBookingCard booking={detail.booking} />
+              </div>
             </div>
           </div>
         </div>

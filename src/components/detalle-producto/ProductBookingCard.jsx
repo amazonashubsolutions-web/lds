@@ -4,7 +4,7 @@ export default function ProductBookingCard({ booking }) {
       <div className="detalle-producto-booking-top">
         <span>Desde</span>
         <strong>${booking.price}</strong>
-        <small>por noche</small>
+        <small>{booking.unitLabel ?? "por persona"}</small>
       </div>
 
       <div className="detalle-producto-booking-form">
@@ -21,7 +21,7 @@ export default function ProductBookingCard({ booking }) {
             <option>4 viajeros</option>
           </select>
         </label>
-        <button type="button">Reservar ahora</button>
+        <button type="button">{booking.buttonLabel ?? "Reservar ahora"}</button>
       </div>
 
       <div className="detalle-producto-booking-breakdown">
