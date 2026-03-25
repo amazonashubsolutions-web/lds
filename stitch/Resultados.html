@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Voyager | Curated Destinations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-transition {
+            background: linear-gradient(180deg, #f3f4f5 0%, #f8f9fa 100%);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "background": "#f8f9fa",
+                "on-primary-fixed-variant": "#00429b",
+                "on-secondary": "#ffffff",
+                "on-primary-fixed": "#001945",
+                "primary-fixed-dim": "#b0c6ff",
+                "surface-container-highest": "#e1e3e4",
+                "secondary-fixed-dim": "#b6c6f3",
+                "surface-container-high": "#e7e8e9",
+                "on-background": "#191c1d",
+                "on-surface": "#191c1d",
+                "on-primary-container": "#a9c1ff",
+                "inverse-surface": "#2e3132",
+                "surface-bright": "#f8f9fa",
+                "secondary": "#4e5e85",
+                "primary-container": "#004aad",
+                "primary": "#00357f",
+                "inverse-primary": "#b0c6ff",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary-container": "#495980",
+                "inverse-on-surface": "#f0f1f2",
+                "on-surface-variant": "#434653",
+                "secondary-container": "#c1d1fe",
+                "on-tertiary-fixed": "#3a0a00",
+                "surface-dim": "#d9dadb",
+                "on-tertiary-container": "#ffae96",
+                "on-error": "#ffffff",
+                "surface-tint": "#215abd",
+                "surface": "#f8f9fa",
+                "on-error-container": "#93000a",
+                "on-tertiary-fixed-variant": "#852300",
+                "outline-variant": "#c3c6d5",
+                "surface-container-low": "#f3f4f5",
+                "tertiary-fixed-dim": "#ffb59f",
+                "secondary-fixed": "#d9e2ff",
+                "outline": "#737784",
+                "error": "#ba1a1a",
+                "on-secondary-fixed": "#071a3e",
+                "surface-variant": "#e1e3e4",
+                "surface-container": "#edeeef",
+                "on-primary": "#ffffff",
+                "tertiary": "#6d1b00",
+                "on-tertiary": "#ffffff",
+                "tertiary-container": "#952800",
+                "tertiary-fixed": "#ffdbd0",
+                "primary-fixed": "#d9e2ff",
+                "on-secondary-fixed-variant": "#36466c",
+                "error-container": "#ffdad6"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 glass-header shadow-[0_20px_40px_rgba(25,28,29,0.06)] flex justify-between items-center px-8 py-4 max-w-full mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-primary">Voyager</span>
+<div class="hidden md:flex gap-6">
+<a class="font-headline font-semibold tracking-tight text-primary border-b-2 border-primary pb-1" href="#">Destinations</a>
+<a class="font-headline font-semibold tracking-tight text-slate-600 hover:text-primary hover:scale-105 transition-transform duration-200" href="#">Itineraries</a>
+<a class="font-headline font-semibold tracking-tight text-slate-600 hover:text-primary hover:scale-105 transition-transform duration-200" href="#">Journal</a>
+<a class="font-headline font-semibold tracking-tight text-slate-600 hover:text-primary hover:scale-105 transition-transform duration-200" href="#">Offers</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-semibold hover:scale-105 transition-all active:opacity-80">Sign In</button>
+<button class="bg-tertiary text-white px-6 py-2 rounded-lg font-semibold hover:scale-105 transition-all active:opacity-80">Book Now</button>
+</div>
+</nav>
+<!-- Main Content Layout -->
+<main class="pt-24 min-h-screen">
+<!-- CategoryBar (Horizontal) -->
+<div class="px-8 mb-8">
+<div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full whitespace-nowrap">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bed</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Stays</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface-variant rounded-full whitespace-nowrap hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">flight</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Flights</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface-variant rounded-full whitespace-nowrap hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">directions_car</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Car Rentals</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface-variant rounded-full whitespace-nowrap hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Attractions</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-3 bg-surface-container-high text-on-surface-variant rounded-full whitespace-nowrap hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">local_taxi</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Airport Taxis</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col md:flex-row px-8 gap-8">
+<!-- SideNavBar (Filters) -->
+<aside class="h-auto md:h-screen w-full md:w-72 md:sticky md:top-24 flex flex-col gap-6 p-6 bg-slate-50 rounded-xl mb-8 md:mb-0">
+<div class="border-b border-outline-variant/20 pb-4">
+<h2 class="font-headline text-xl font-bold text-primary">Filters</h2>
+<p class="font-body text-sm text-slate-500">Refine your curation</p>
+</div>
+<!-- Price Range -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Price Range</span>
+</div>
+<input class="w-full accent-primary h-1 bg-surface-container-highest rounded-lg appearance-none cursor-pointer" type="range"/>
+<div class="flex justify-between text-xs font-medium text-slate-500">
+<span>$0</span>
+<span>$2,500+</span>
+</div>
+</div>
+<!-- Guest Ratings -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" data-icon="star">star</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Guest Ratings</span>
+</div>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">Exceptional: 9+</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">Excellent: 8+</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">Very Good: 7+</span>
+</label>
+</div>
+</div>
+<!-- Amenities -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" data-icon="pool">pool</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Amenities</span>
+</div>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">Free WiFi</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">Swimming Pool</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">Fitness Center</span>
+</label>
+</div>
+</div>
+<!-- Trip Duration -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Trip Duration</span>
+</div>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="border-outline-variant text-primary focus:ring-primary h-4 w-4" name="duration" type="radio"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">1-3 Nights</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="border-outline-variant text-primary focus:ring-primary h-4 w-4" name="duration" type="radio"/>
+<span class="text-sm text-slate-700 group-hover:text-primary transition-colors">4-7 Nights</span>
+</label>
+</div>
+</div>
+<button class="mt-auto bg-primary text-white py-3 rounded-lg font-bold hover:scale-[1.02] transition-transform active:scale-95">Apply Filters</button>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1">
+<!-- Sorting Bar -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h1 class="font-headline text-2xl font-extrabold text-on-surface tracking-tight">Stays in Amalfi Coast</h1>
+<p class="text-slate-500 text-sm">342 results found for your dates</p>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/10">
+<span class="text-xs font-bold font-label uppercase text-slate-500">Sort by:</span>
+<select class="bg-transparent border-none text-sm font-semibold text-primary focus:ring-0 cursor-pointer">
+<option>Top Picks</option>
+<option>Price: Low to High</option>
+<option>Guest Rating</option>
+<option>Distance from Center</option>
+</select>
+</div>
+</div>
+<!-- Results Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-[0_20px_40px_rgba(25,28,29,0.06)] hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-[280px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Stunning luxury villa built into Amalfi coast cliffs with infinity pool overlooking the turquoise Mediterranean Sea at sunset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnh3EE9NaW9JbSmJSNpYeehKlwQ4SlwbLp2adxRZU3sJMfQdX9fKguF1FTnrQKU_n-l0caL-eN7jQ_WzKLuVESwL1MNMTQHzkUNBytNFLFG_FnvsPdtt1NwmXNoNwzfetGG78toUVRMIVF5camRZM6BTlWF7IsTFYkk1q1NSjJ911aar0I2gxwOTLEjf4Ju0tFXSwUhuKpYDsg2Qj3ku1mpKQY6abOANpEdMM_e-IM8yN2r0vVL3picpUlz2-yCq4dkoIBhh_Qu_U"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                4.9 ★
+                            </div>
+<div class="absolute bottom-4 left-4">
+<span class="bg-tertiary text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm">Featured</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight">Villa Poseidon Luxury Suites</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Positano, Italy</span>
+</div>
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Starting from</p>
+<p class="text-xl font-extrabold text-primary">$450 <span class="text-sm font-normal text-slate-500">/ night</span></p>
+</div>
+<button class="bg-tertiary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:scale-105 transition-all">View Deal</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-[0_20px_40px_rgba(25,28,29,0.06)] hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-[280px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Interior of a modern luxury boutique hotel room in Amalfi with large balcony doors opening to a view of the ocean" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC6Vc6yHf1lvVwOFLUEB7VQrXnF8vH7W2bAW88UX4HjN4rX4fa1FlAHjHw4qo_2NoR_4ZH_kuxaomeWSzcaL_3C5VEkajijFn20-4tWY2K9xxQ-T7CcxpxUd6D6108_ZBjyVyUNj8_zFF4U_doSHbq6K4Cv2kP6DLgsolhwFEVXBNkykbqYRJqwOWoDx4as_SSaOR-g_9VDusD0YzXdGFXu_urJ42sh5M-V1MPn0D_jRtnLQROs-RCYiF09W7AOzDTN_V0iQPLomo"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                4.7 ★
+                            </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight">Grand Hotel Excelsior</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Amalfi, Italy</span>
+</div>
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Starting from</p>
+<p class="text-xl font-extrabold text-primary">$320 <span class="text-sm font-normal text-slate-500">/ night</span></p>
+</div>
+<button class="bg-tertiary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:scale-105 transition-all">View Deal</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-[0_20px_40px_rgba(25,28,29,0.06)] hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-[280px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Contemporary coastal villa with white walls and bougainvillea flowers overlooking Ravello mountainside" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjHEmAnE5NIOHfvbj0BwEVj5CY3mdMn5-kvev7DslJI-hLIzWXrq19LaM0ZMrM1M0vvJ-POy5HODN-0QdlSKYB4Zzh-fkIkkLQOv_24oMkHdSImfPvhQCUYSCYgZBB3YbLVTdjXZ5h1zQpCokXTrhKMEvLsipFltLDPXFJyocgLH6iDEEiKFwjxE0YRp07QNi3U-ppWeFt8r_pyMjwIAQcT8O1IQYGs8IVWvc6xOAryfvaCQCGRI9o6lOQ7OiiU0XkMtkDx39R2Vw"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                4.8 ★
+                            </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight">Ravello Heights Boutique</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Ravello, Italy</span>
+</div>
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Starting from</p>
+<p class="text-xl font-extrabold text-primary">$290 <span class="text-sm font-normal text-slate-500">/ night</span></p>
+</div>
+<button class="bg-tertiary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:scale-105 transition-all">View Deal</button>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-[0_20px_40px_rgba(25,28,29,0.06)] hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-[280px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cozy sunlit balcony of a traditional Italian apartment with breakfast set out and views of colorful coastal houses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANj0Wq8JcPiyiQJLKfg4UtIkG9YWwrUKe1QnpoE4xNPyYup1nL6QlDzDYlXGkGWhR_6btygPAgAh5glVHiZ-JYByfsFVGkdR7a2JzQj-A4ki_2WPZz3F1XgGqTad5kByoJirKTdzGCCvOqyksunlBjfP1qkRRxy8WtrSoZ3Gsa0-f4V3OMOhkn_NCqbG1MXC-SBOmF9O-K_GCjVtjMkzgNCYdJYD-Dh0ufDyMXQWCPx_5BWbKGYACLYCIKRUhbYqy_CsuqO2pT1WI"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                4.6 ★
+                            </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight">Casa del Sole Apartments</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Praiano, Italy</span>
+</div>
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Starting from</p>
+<p class="text-xl font-extrabold text-primary">$180 <span class="text-sm font-normal text-slate-500">/ night</span></p>
+</div>
+<button class="bg-tertiary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:scale-105 transition-all">View Deal</button>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-[0_20px_40px_rgba(25,28,29,0.06)] hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-[280px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Luxurious spa area with marble columns and an indoor pool with view of the Mediterranean coastline through arched windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRLR2CDs0wRZcSb5IUPsQjex7i_eCgyOT0Xi5e5qBrTK4CBbFEh4ScOGZb3RpCpIZmBbnuKiNf7H6RBVgNbUiJcsrCbX-mFGLAF0UbCoRs5J3-lhwcAs_V6U3UbgNWIsnTSws5k7OUhwYveev27IlT8ICYEzpuaTYLBpIpjdm00wp-ugMjLjFeXO-XNPHP00mtgYQPylUfnGxe1kgfoScupzJN8oscye2QozTwTqERECVazOD7jvuCIl5juaSG_xtswDvK8eLFKsc"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                5.0 ★
+                            </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight">Belmond Hotel Caruso</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Ravello, Italy</span>
+</div>
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Starting from</p>
+<p class="text-xl font-extrabold text-primary">$890 <span class="text-sm font-normal text-slate-500">/ night</span></p>
+</div>
+<button class="bg-tertiary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:scale-105 transition-all">View Deal</button>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden group shadow-[0_20px_40px_rgba(25,28,29,0.06)] hover:translate-y-[-4px] transition-all duration-300">
+<div class="relative h-[280px]">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Evening view of a vibrant terrace restaurant with white umbrellas and warm lighting overlooking the Amalfi harbour" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNNc1GNuHAI-OZQHRoa3vAkUzR5KZklCwWDSixhvIGKarCcAHGV0pYvlUAUhvle8VPy11hg4ugrAVpr8zY5U4p7NqpmZ9Ld2ZJ4i_25rX4nvV1HwgvUKt4K8BC8W_zSC4OfM_URHPRGmxygDXlxxKIlxy_c8c_-beaejy_p5hTlUm13xY6rnwfhqfaQB-fkYnEzoUgP3jnPz2KoMRVgibl2pB8VjM1f4icSs3mr0ZdBL9kTosTUD7HHjwFGEzcJKhB48D9cZfahcE"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary shadow-sm">
+                                4.5 ★
+                            </div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-lg font-bold text-on-surface leading-tight">Marina Riviera Hotel</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-sm mb-4">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Amalfi, Italy</span>
+</div>
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-outline-variant/10">
+<div>
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Starting from</p>
+<p class="text-xl font-extrabold text-primary">$210 <span class="text-sm font-normal text-slate-500">/ night</span></p>
+</div>
+<button class="bg-tertiary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:scale-105 transition-all">View Deal</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center mt-12 gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant/20 text-slate-400 hover:bg-primary-container hover:text-white transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant/20 text-slate-600 hover:bg-primary-container hover:text-white transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant/20 text-slate-600 hover:bg-primary-container hover:text-white transition-colors">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant/20 text-slate-400 hover:bg-primary-container hover:text-white transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-20 bg-primary text-white">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-16 w-full max-w-7xl mx-auto">
+<div class="md:col-span-1">
+<span class="text-xl font-bold text-white mb-4 block">Voyager</span>
+<p class="font-body text-xs text-slate-300 leading-relaxed max-w-xs normal-case">
+                    Elevating the travel experience through curation and editorial excellence. Discover the world's most breathtaking stays and itineraries.
+                </p>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold">Quick Links</h4>
+<div class="flex flex-col gap-2">
+<a class="font-label text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors" href="#">About Our Story</a>
+<a class="font-label text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors" href="#">Editorial Policy</a>
+<a class="font-label text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors" href="#">Help Center</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold">Legal</h4>
+<div class="flex flex-col gap-2">
+<a class="font-label text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors" href="#">Privacy</a>
+<a class="font-label text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors" href="#">Terms</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold">Newsletter</h4>
+<p class="text-[10px] text-slate-400 normal-case mb-2">Subscribe for curated travel inspiration.</p>
+<div class="flex">
+<input class="bg-slate-900 border-none rounded-l-lg text-xs w-full focus:ring-1 focus:ring-tertiary" placeholder="Email Address" type="email"/>
+<button class="bg-tertiary px-4 py-2 rounded-r-lg hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="border-t border-white/10 py-8 px-12 flex justify-center">
+<p class="font-label text-xs uppercase tracking-widest text-slate-400">© 2024 The Editorial Voyager. Curated Travel Excellence.</p>
+</div>
+</footer>
+</body></html>

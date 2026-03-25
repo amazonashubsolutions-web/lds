@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Voyager | Curated Travel Excellence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00696B",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1823",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .tonal-transition {
+            transition: background-color 0.3s ease;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-white/10 backdrop-blur-md tonal-transition">
+<nav class="flex justify-between items-center px-8 py-3 max-w-full mx-auto">
+<div class="relative w-40 h-8 font-bold tracking-tighter text-white font-headline">
+<img alt="Voyager Logo" class="h-20 w-auto absolute top-2 left-0 z-50 drop-shadow-md" src="https://lh3.googleusercontent.com/aida/ADBb0ui0xqbQ8sGQQKMyZdLg63ykLtxKOOdmdlFuUTOTwo_RqhnWAidc50KVif9yr3K4tD3UqxR1wnAD30Rp2LxD6niP8dOv6PuQh6FAJVbXpmXlLpHnUn7bOWSnQ59TD8HMUCmbyp-jxtWQynL-diNCHZQFxqUrWVyjbbulwNKimBtzGT642IcMW5isipB_SHCC4crEVxZzAi8W11Gj1mSXIk3t9RwHQnoBFqhF_rUtwidOmH1xkr_i8nrOSwYnIE8A1n2QNg7lAyYM"/>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-headline font-semibold tracking-tight text-white border-b-2 border-white pb-0.5" href="#">Destinations</a>
+<a class="font-headline font-semibold tracking-tight text-white/80 hover:text-white hover:scale-105 transition-transform duration-200" href="#">Itineraries</a>
+<a class="font-headline font-semibold tracking-tight text-white/80 hover:text-white hover:scale-105 transition-transform duration-200" href="#">Journal</a>
+<a class="font-headline font-semibold tracking-tight text-white/80 hover:text-white hover:scale-105 transition-transform duration-200" href="#">Offers</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block text-white font-semibold hover:opacity-80 transition-all scale-95 active:opacity-80">Sign In</button>
+<button class="bg-white text-primary px-5 py-2 rounded-lg font-bold hover:scale-105 transition-transform duration-200 active:scale-95 shadow-lg text-sm">Book Now</button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Compact Hero Section -->
+<section class="relative h-[650px] md:h-screen max-h-[750px] w-full flex items-center justify-start overflow-hidden">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Tropical Aerial View" class="w-full h-full object-cover brightness-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtYwRY3surHkKUyYgzHpu5P60EUf45sPRyw8wFFayi0mQhp3zNMo1mP3uZwu8sgEAFd7J-XeBiDEacaLiC_Eg8PVc0ZkbEzv-8qxIL1cMyvjoY_RhS-tqEi6cv806jH7_9IJFHqNN1P6dkfAZKGCAA7eszRkKCv3mL-7JFrGww_-oQrC5Sx1QghT7spjjpSVL0Q7p4fcmnA0H4I63E3czAFQVsAY3DmfPp_vVW6-GkAXond-7rYPKW4Wz8yZZyvUPRrmFKVGLN_fc"/>
+<div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
+</div>
+<!-- Vertical Shift: Adjusted pt-32 to pt-24 to move content block slightly upwards -->
+<div class="relative z-10 w-full max-w-7xl mx-auto px-8 flex flex-col justify-start pt-24 items-center text-center">
+<!-- Heading Group -->
+<div class="max-w-2xl mb-4 mx-auto">
+<span class="text-white/80 uppercase tracking-widest font-bold text-[10px] mb-1 block">MOUNTAINS | PLAINS | BEACHES</span>
+<h1 class="font-headline text-white text-4xl md:text-5xl font-extrabold tracking-tight mb-1 leading-tight font-display">
+                    Spend your vacation with our activities
+                </h1>
+</div>
+<!-- Search Bar -->
+<div class="w-full max-w-4xl p-2 rounded-xl shadow-2xl flex flex-col md:flex-row items-center gap-2 mb-8 mx-auto bg-white border border-zinc-100">
+<div class="flex-1 flex items-center px-4 py-3 gap-3 w-full">
+<span class="material-symbols-outlined text-primary">travel_explore</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-medium placeholder-zinc-500 text-zinc-800" placeholder="Where to next?" type="text"/>
+</div>
+<div class="w-px h-8 bg-zinc-200 hidden md:block"></div>
+<div class="flex-1 flex items-center px-4 py-3 gap-3 w-full">
+<span class="material-symbols-outlined text-zinc-600">calendar_today</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-medium placeholder-zinc-500 text-zinc-800" placeholder="Dates" type="text"/>
+</div>
+<button class="w-full md:w-auto px-8 py-4 text-white font-bold rounded-lg shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2 bg-primary">
+<span class="material-symbols-outlined">search</span>
+                    Search
+                </button>
+</div>
+<!-- Most Popular Section -->
+<div class="max-w-4xl w-full">
+<div class="flex items-center gap-4 mb-2">
+<h2 class="text-white font-bold uppercase tracking-wider text-[10px]">Most Popular</h2>
+<div class="h-px bg-white/20 flex-1"></div>
+<button class="w-6 h-6 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+<span class="material-symbols-outlined text-[10px]">arrow_forward</span>
+</button>
+</div>
+<!-- Centering: Added justify-center to the flex container -->
+<div class="flex justify-center gap-4 overflow-x-auto pb-4 no-scrollbar">
+<!-- Card 1: Scotland -->
+<!-- Card Resizing: Reduced h-48 to h-44 (~10%) -->
+<div class="min-w-[220px] bg-white rounded-xl overflow-hidden shadow-xl hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+<div class="h-44 overflow-hidden">
+<img alt="Scotland" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiOXccGZtJxZQT4aJD_tA87EEZA7o3OrQvE8QCxipe14O7sDVJMVrL332p6QXejdmyOL4oJ92XOxYFI4T9YIAiehhOtKKwVq0wPK4yrZHldrLD4lyyIRBJtwZul9D7fvD9Rb5dsuY3Vw00J0-wrFZp0zGos1fli9GkFKznnh6lhMUJphbOwbpYMbXtDPo4UHjH95Q8yzIgrEt3YEaT_4ny1HSBXAVS89mhMkID9kje3w0SZ7abR2hmaz7DjhPaL-GAoYgb6y4k16k"/>
+</div>
+<div class="p-4 flex flex-col items-start">
+<h3 class="font-display font-bold text-zinc-900 text-sm">Manaus Jungle</h3>
+<div class="flex items-center gap-1.5 text-[10px] text-zinc-500 mt-1">
+<span class="material-symbols-outlined text-[12px]">group</span>
+                                31 people going
+                            </div>
+</div>
+</div>
+<!-- Card 2: Egypt -->
+<!-- Card Resizing: Reduced h-48 to h-44 (~10%) -->
+<div class="min-w-[220px] bg-white rounded-xl overflow-hidden shadow-xl hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+<div class="h-44 overflow-hidden">
+<img alt="Egypt" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Aim_qiKTyBeeEbzsfGUJ5GtQowUBbsTmr-TiDoJzZN_j4B5Y-bpX-ONsKgabD4HWcg8vWYgaVohUvX7CQ-4KeN00Jk7ELfWx8Frrvntw42VII56Y20oh4j1ED0Xs5FOyUkq4_Bkw4WKLF-jxDNPja-fNoy_KR70i7giwePdTlGtv6mdeobvO6DLCvqdXlsitpFozAQh9X_l9PdpmK4_bLtry-DzWlnUZKxfkNHTq6oCEYNC5VmYdagOSh5_tjitkQKm0XNX2blg"/>
+</div>
+<div class="p-4 flex flex-col items-start">
+<h3 class="font-display font-bold text-zinc-900 text-sm">Manaus Jungle</h3>
+<div class="flex items-center gap-1.5 text-[10px] text-zinc-500 mt-1">
+<span class="material-symbols-outlined text-[12px]">group</span>
+                                27 people going
+                            </div>
+</div>
+</div>
+<!-- Card 3: Greece -->
+<!-- Card Resizing: Reduced h-48 to h-44 (~10%) -->
+<div class="min-w-[220px] bg-white rounded-xl overflow-hidden shadow-xl hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+<div class="h-44 overflow-hidden">
+<img alt="Greece" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp6oOqSh2IylhS7fsFwQOYhZ64-Bt_0VDmVL7pgGG-zi_TAEaZTklag4V14kivrptnXDgG654nb9xGFjFZGoAKLOqYwWs5nXDnU6UPKfIPsptX1f9FgEyogTwtWv-93sCP-vAzAeztHwjW2lOM5HVfKkK_Vpc13JapO5Ly5f94dNcdVsyOGXVG66RhZogglBQL6nIm7OOOWVRj95MkSjXPH5gIFlzaDfpN4JxqZCaKVHWWmby4cKGMQeHo4GNmPF3ZBs_sUg4Yyig"/>
+</div>
+<div class="p-4 flex flex-col items-start">
+<h3 class="font-display font-bold text-zinc-900 text-sm">Yasuni Reserve</h3>
+<div class="flex items-center gap-1.5 text-[10px] text-zinc-500 mt-1">
+<span class="material-symbols-outlined text-[12px]">group</span>
+                                20 people going
+                            </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>
