@@ -386,7 +386,7 @@ export function useProductEditor(detail) {
 
   function createPublicGalleryUrl(fileName) {
     if (!fileName) return "";
-    return `/images/home/${fileName}`;
+    return `/images/productos/${fileName}`;
   }
 
   const handleChooseGalleryFile = useCallback(
