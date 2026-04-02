@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import "./DetalleProductoHeader.css";
+
 export default function ProductAdminActionBar({
   productId,
   couponCount = 0,
@@ -11,10 +14,26 @@ export default function ProductAdminActionBar({
   onCancelEdit,
   onViewSeasonDates,
 }) {
+  const navigate = useNavigate();
+
   return (
     <section className="detalle-producto-admin-actions">
-      <div className="detalle-producto-admin-actions-copy">
-        <p>{isEditing ? "Editando producto" : "Acciones del producto"}</p>
+      <div className="detalle-producto-admin-actions-copy" style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', flexDirection: 'row' }}>
+        {!isEditing && (
+          <button 
+            type="button" 
+            className="detalle-producto-header-back"
+            onClick={() => navigate(-1)}
+            aria-label="Volver"
+            style={{ boxShadow: '0 4px 10px rgba(0, 0, 0, 0.15)' }}
+          >
+            <span className="material-icons-outlined">arrow_back_ios_new</span>
+            <span>Volver</span>
+          </button>
+        )}
+        <div>
+          <p>{isEditing ? "Editando producto" : "Acciones del producto"}</p>
+        </div>
       </div>
 
       <div className="detalle-producto-admin-actions-grid">

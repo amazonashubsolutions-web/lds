@@ -85,15 +85,16 @@ export default function UserStatusAvatar() {
 
       {isOpen ? (
         <div className="header-user-dropdown">
-          <a
-            href="/panel-de-control"
+          <Link
+            to="/panel-de-control"
             className="header-user-dropdown-item"
+            onClick={() => setIsOpen(false)}
           >
             <span className="header-user-dropdown-icon" aria-hidden="true">
               <DashboardIcon />
             </span>
             <span>Panel de Control</span>
-          </a>
+          </Link>
           <div
             className="header-user-dropdown-divider"
             aria-hidden="true"

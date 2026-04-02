@@ -1,0 +1,127 @@
+.detalle-producto-header-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+@media (min-width: 640px) {
+  .detalle-producto-header-shell {
+    padding-inline: 1.5rem;
+  }
+}
+
+.detalle-producto-header {
+  pointer-events: auto;
+  width: min(100%, 88rem);
+  margin: 0 auto;
+  background-color: var(--lds-logo-orange);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1.2rem 1.25rem;
+  border-radius: 0 0 1.15rem 1.15rem;
+  box-shadow: 0 16px 32px rgba(109, 27, 0, 0.18);
+}
+
+.detalle-producto-header-copy {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-direction: row;
+}
+
+.detalle-producto-header-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.detalle-producto-header-grid {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 0.7rem;
+}
+
+.detalle-producto-header-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  min-height: 2.7rem;
+  padding: 0 0.95rem;
+  border: 1px solid rgba(0, 102, 51, 0.15);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--lds-logo-green-dark);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 10px rgba(0, 102, 51, 0.1);
+  text-decoration: none;
+  font-family: inherit;
+}
+
+.detalle-producto-header-action:hover,
+.detalle-producto-header-action:focus-visible {
+  background: #f0fbf4;
+  color: #004d26;
+  border-color: rgba(0, 102, 51, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 102, 51, 0.18);
+  outline: none;
+}
+
+.detalle-producto-header-action:active {
+  background: #e2f5e9;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 102, 51, 0.08);
+}
+
+.detalle-producto-header-action .material-icons-outlined {
+  font-size: 1rem;
+}
+
+.detalle-producto-header-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  min-height: 2.7rem;
+  padding: 0 0.95rem;
+  border: 1px solid rgba(0, 102, 51, 0.15);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--lds-logo-green-dark);
+  text-decoration: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.detalle-producto-header-back:hover,
+.detalle-producto-header-back:focus-visible {
+  background: #f0fbf4;
+  border-color: rgba(0, 102, 51, 0.25);
+  color: #004d26;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 18px rgba(0, 102, 51, 0.08);
+  outline: none;
+}
+
+.detalle-producto-header-back .material-icons-outlined {
+  font-size: 1rem;
+}
+
+.detalle-producto-page .detalle-producto-main {
+  padding-top: 6.4rem;
+}

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import UserStatusAvatar from "./UserStatusAvatar";
 import HeaderNotifications from "./HeaderNotifications";
 
@@ -5,13 +6,13 @@ export default function PrimaryHeader({ links = [] }) {
   return (
     <header className="primary-header">
       <nav className="primary-nav">
-        <a className="primary-logo-link" href="/buscador" aria-label="LDS home">
+        <Link className="primary-logo-link" to="/buscador" aria-label="LDS home">
           <img
             src="/images/Logo/logo-lds-blanco.png"
             alt="LDS"
             className="primary-logo-image"
           />
-        </a>
+        </Link>
 
         {links.length > 0 ? (
           <div className="primary-links">

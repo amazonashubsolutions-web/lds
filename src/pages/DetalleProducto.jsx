@@ -1,5 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
+
+import ProductCouponManager from "../components/detalle-producto/ProductCouponManager";
+import { getPanelProductItemById } from "../utils/panelControlProducts";
+import { getAllProductCouponRecords } from "../utils/productCouponsStorage";
+import { toProductCouponItem } from "../data/couponsData";
 
 import ProductBookingCard from "../components/detalle-producto/ProductBookingCard";
 import ProductExcludes from "../components/detalle-producto/ProductExcludes";
@@ -13,7 +18,8 @@ import ProductRecommendations from "../components/detalle-producto/ProductRecomm
 import ProductTravelNotes from "../components/detalle-producto/ProductTravelNotes";
 import RelatedProductsSection from "../components/detalle-producto/RelatedProductsSection";
 import Footer from "../components/resultados/Footer";
-import ResultadosHeader from "../components/resultados/ResultadosHeader";
+import DetalleProductoHeader from "../components/detalle-producto/DetalleProductoHeader";
+import ProductSeasonDatesModal from "../components/detalle-producto/ProductSeasonDatesModal";
 import {
   footerData,
   getDetalleProducto,
@@ -24,18 +30,33 @@ import {
   subscribeToProductStatusChanges,
 } from "../utils/productStatusStorage";
 
+
 export default function DetalleProductoPage() {
   const { productId } = useParams();
   const [searchParams] = useSearchParams();
   const [statusRefreshVersion, setStatusRefreshVersion] = useState(0);
+  const [couponRefreshKey, setCouponRefreshKey] = useState(0);
+  const [isSeasonDatesModalOpen, setIsSeasonDatesModalOpen] = useState(false);
+  const couponManagerRef = useRef(null);
+
   const detail = getDetalleProducto(productId);
   const relatedItems = getRelatedProducts(detail.id);
   const searchedDate = searchParams.get("fecha") ?? "";
+  
+  const panelProduct = useMemo(() => getPanelProductItemById(detail.id), [detail.id]);
+  
   const resolvedStatus = useMemo(
     () => getResolvedProductStatus(detail.id, detail.status),
     [detail.id, detail.status, statusRefreshVersion],
   );
   const isInactive = resolvedStatus === "inactive";
+
+  const productCouponItems = useMemo(() => {
+    const raw = getAllProductCouponRecords();
+    return raw
+      .filter((coupon) => coupon.productId === detail.id)
+      .map(toProductCouponItem);
+  }, [detail.id, couponRefreshKey]);
 
   useEffect(() => {
     return subscribeToProductStatusChanges(() => {
@@ -45,7 +66,11 @@ export default function DetalleProductoPage() {
 
   return (
     <div className="detalle-producto-page">
-      <ResultadosHeader />
+      <DetalleProductoHeader 
+        onViewCoupons={() => couponManagerRef.current?.openListModal()}
+        onViewSeasonDates={() => setIsSeasonDatesModalOpen(true)}
+        couponCount={productCouponItems.length}
+      />
 
       <main className="detalle-producto-main">
         {isInactive ? (
@@ -101,6 +126,22 @@ export default function DetalleProductoPage() {
       </main>
 
       <Footer data={footerData} />
+
+      <ProductCouponManager
+        ref={couponManagerRef}
+        productName={detail.title}
+        productImage={detail.galleryImages[0] ?? "/images/home/1.jpg"}
+        panelProduct={panelProduct}
+        productCouponItems={productCouponItems}
+        onCouponCreated={() => setCouponRefreshKey((k) => k + 1)}
+      />
+
+      {isSeasonDatesModalOpen ? (
+        <ProductSeasonDatesModal
+          periods={detail.booking?.pricingDetails?.seasons?.high?.periods}
+          onClose={() => setIsSeasonDatesModalOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

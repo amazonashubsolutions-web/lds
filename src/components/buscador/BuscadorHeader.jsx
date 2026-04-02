@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import { Link } from "react-router-dom";
 import UserStatusAvatar from "../layout/UserStatusAvatar";
 import HeaderNotifications from "../layout/HeaderNotifications";
 import DiscountsModal from "../layout/DiscountsModal";
@@ -88,9 +88,9 @@ export default function BuscadorHeader() {
   return (
     <header className="buscador-header">
       <nav className="buscador-nav">
-        <a
+        <Link
           className="buscador-logo-overlay"
-          href="/buscador"
+          to="/buscador"
           aria-label="LDS home"
         >
           <img
@@ -98,7 +98,7 @@ export default function BuscadorHeader() {
             alt="LDS"
             className="buscador-logo-image"
           />
-        </a>
+        </Link>
 
         <div className="buscador-links">
           <button
