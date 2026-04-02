@@ -6,18 +6,18 @@ function cleanPhrase(phrase) {
 }
 
 function collectKeywords(detail) {
-  const metaPhrases = detail.meta
+  const metaPhrases = (detail.meta || [])
     .filter((item) => item.label === "Duracion" || item.label === "Punto de encuentro")
     .map((item) =>
       item.label === "Punto de encuentro" ? `Salida desde: ${item.value}` : item.value,
     );
 
   const phrases = [
-    detail.title,
+    detail.product?.name || detail.title,
     ...metaPhrases,
-    ...detail.includes.map((item) => item.title),
-    ...detail.itinerary.map((item) => item.title),
-  ];
+    ...(detail.includes || []).map((item) => item.title),
+    ...(detail.itinerary || []).map((item) => item.title),
+  ].filter(Boolean);
 
   const uniquePhrases = [...new Set(phrases.map(cleanPhrase).filter((phrase) => phrase.length >= 3))];
   const accentClasses = [

@@ -15,6 +15,7 @@ import ProductOverview from "../components/detalle-producto/ProductOverview";
 import ProductPriceCard from "../components/detalle-producto/ProductPriceCard";
 import ProductRecommendations from "../components/detalle-producto/ProductRecommendations";
 import ProductTravelNotes from "../components/detalle-producto/ProductTravelNotes";
+import ProductKeywordCloud from "../components/detalle-producto/ProductKeywordCloud";
 import ProductSeasonDatesModal from "../components/detalle-producto/ProductSeasonDatesModal";
 import ProductMagicAiModal from "../components/detalle-producto/ProductMagicAiModal";
 import Footer from "../components/resultados/Footer";
@@ -402,6 +403,7 @@ export default function PanelControlProductDetailPage() {
                       considerations={detail.considerations}
                       cancellationPolicies={detail.cancellationPolicies}
                     />
+                    <ProductKeywordCloud detail={detail} />
                   </>
                 )}
               </div>
