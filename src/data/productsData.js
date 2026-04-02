@@ -1,5 +1,5 @@
 import { getStoredCreatedProductRecords } from "../utils/createdProductsRepository";
-
+import { getResolvedProductGalleryUrls } from "../utils/productGalleryRepository";
 export const productCategories = [
   { id: "actividades", label: "Actividades", icon: "local_activity" },
   { id: "hospedaje", label: "Hospedaje", icon: "bed" },
@@ -464,6 +464,12 @@ export function getResultCategoryTree() {
 }
 
 export function toResultCardItem(product) {
+  const resolvedGallery = getResolvedProductGalleryUrls({
+    productId: product.id,
+    fallbackCoverImageUrl: product.coverImageUrl,
+  });
+  const mainImage = resolvedGallery[0] || product.coverImageUrl;
+
   return {
     id: product.id,
     title: product.name,
@@ -471,7 +477,7 @@ export function toResultCardItem(product) {
     price: product.basePriceAmount,
     status: product.status,
     featured: product.isFeatured,
-    image: product.coverImageUrl,
+    image: mainImage,
     badgeLabel: product.isFeatured ? "Destacado" : undefined,
     priceLabel: product.pricingLabel,
     priceSuffix: `/ ${product.pricingUnitLabel}`,
