@@ -1,0 +1,54 @@
+{
+  "titulo": "Rafting en el Cañón Sagrado",
+  "descripcion_breve": "Siente la adrenalina navegando por los rápidos clase III de nuestro paraíso escondido, rodeado de pura selva tropical.",
+  "descripcion_general": [
+    "Sumergite en una de las experiencias más vibrantes que ofrece esta región. Nuestro tour de rafting está diseñado para aquellos aventureros que desean mezclar el deporte extremo natural con un paisaje espectacular inexplorado.",
+    "Contarás con el respaldo de nuestros guías certificados y equipo premium, garantizando que tu única preocupación sea disfrutar del caudal y admirar las cascadas que visten el fondo del cañón."
+  ],
+  "itinerario": [
+    {
+      "titulo": "Punto de Encuentro y Salida",
+      "descripcion": "Presentación a las 08:00 AM en nuestra oficina principal frente a la plaza. Asignación de equipos y charla sobre medidas de seguridad."
+    },
+    {
+      "titulo": "Descenso Inicial Suave",
+      "descripcion": "Entrada al río donde practicaremos remado en equipo durante 20 minutos mientras recorremos la parte más tranquila y observamos aves nativas."
+    },
+    {
+      "titulo": "Zona de Rápidos Principales",
+      "descripcion": "El verdadero desafío comienza. Superaremos 5 caídas tipo clase III mientras trabajamos en total sinergia bajo las órdenes del líder de balsa."
+    },
+    {
+      "titulo": "Llegada y Regreso",
+      "descripcion": "Desembarque en el sector playón sobre las 01:00 PM. Brindis con jugo natural y regreso al punto de salida en nuestro Jeep clásico."
+    }
+  ],
+  "que_incluye": [
+    { "label": "Transporte ida y regreso desde la oficina" },
+    { "label": "Chaleco salvavidas, casco y remo profesional" },
+    { "label": "Guía certificado en rescate de aguas vivas" },
+    { "label": "Póliza de seguro y asistencia médica" },
+    { "label": "Refrigerio e hidratación a mitad de camino" }
+  ],
+  "que_no_incluye": [
+    { "label": "Almuerzo" },
+    { "label": "Propinas a los guías (Opcional)" },
+    { "label": "Servicio de fotografía y video (Vendido extra en oficina)" }
+  ],
+  "recomendaciones": [
+    "Llevar ropa deportiva o vestido de baño que se pueda mojar.",
+    "Utilizar zapatos cerrados con buen agarre (preferiblemente que no te importe si se empapan).",
+    "Llevar bloqueador solar biodegradable y repelente.",
+    "Llevar una muda de ropa extra seca para cambiarte al final en las duchas."
+  ],
+  "consideraciones": [
+    "Actividad prohibida para mujeres en estado de embarazo.",
+    "Edad mínima requerida: 12 años con autorización de tutor legal.",
+    "No se necesita experiencia previa, pero sí condición física básica."
+  ],
+  "politicas": [
+    "Si cancelas con 48 horas de antelación recibirás el 100% de reembolso.",
+    "Las anulaciones dentro de las últimas 24 horas no son reembolsables, pero pueden reprogramarse abonando una penalización.",
+    "Si las condiciones climáticas (tormenta severa) o el nivel del río no permiten salir, la operación se suspende reembolsando el monto completo o posponiendo el viaje."
+  ]
+}

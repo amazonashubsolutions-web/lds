@@ -474,6 +474,31 @@ export function useProductEditor(detail) {
     ],
   );
 
+  const mergeAiDraft = useCallback((aiData) => {
+    setContentDraft((current) => ({
+      ...current,
+      title: aiData.titulo || current.title,
+      summary: aiData.descripcion_breve || current.summary,
+      overview: Array.isArray(aiData.descripcion_general) ? aiData.descripcion_general : current.overview,
+      itinerary: Array.isArray(aiData.itinerario) ? aiData.itinerario.map(it => ({
+        id: createEditableItemId("itinerary"),
+        title: it.titulo || it.label || "",
+        description: it.descripcion || ""
+      })) : current.itinerary,
+      includes: Array.isArray(aiData.que_incluye) ? aiData.que_incluye.map(item => ({
+        id: createEditableItemId("include"),
+        label: item.label || ""
+      })) : current.includes,
+      excludes: Array.isArray(aiData.que_no_incluye) ? aiData.que_no_incluye.map(item => ({
+        id: createEditableItemId("exclude"),
+        label: item.label || ""
+      })) : current.excludes,
+      recommendations: Array.isArray(aiData.recomendaciones) ? aiData.recomendaciones : current.recommendations,
+      considerations: Array.isArray(aiData.consideraciones) ? aiData.consideraciones : current.consideraciones,
+      cancellationPolicies: Array.isArray(aiData.politicas) ? aiData.politicas : current.cancellationPolicies,
+    }));
+  }, []);
+
   return {
     isEditingProduct,
     gallerySlots,
@@ -506,5 +531,6 @@ export function useProductEditor(detail) {
     handleChooseGalleryFile,
     handleSaveGallery,
     releaseGalleryPreviewUrls,
+    mergeAiDraft,
   };
 }

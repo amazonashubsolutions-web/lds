@@ -474,7 +474,7 @@ export default function DashboardProductsSection({ items, totalItems = items.len
                       <strong>{item.departureTime}</strong>
                     </div>
                     <div className="panel-control-product-result-meta-item">
-                      <span>Punto de salida</span>
+                      <span>Punto de encuentro</span>
                       <strong>{item.departurePoint}</strong>
                     </div>
                   </div>

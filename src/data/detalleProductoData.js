@@ -225,7 +225,7 @@ export const productDetailRecords = [
       { id: "PDTM-001", label: "Duracion", value: "Dia completo" },
       {
         id: "PDTM-002",
-        label: "Punto de salida",
+        label: "Punto de encuentro",
         value: "Parque principal de Minca",
       },
       { id: "PDTM-003", label: "Hora de salida", value: "7:00 a. m." },

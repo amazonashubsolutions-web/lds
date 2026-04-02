@@ -42,7 +42,7 @@ export default function ResultCard({ item, searchedDate = "" }) {
             <strong>{cardItem.departureTime}</strong>
           </div>
           <div className="panel-control-product-result-meta-item">
-            <span>Punto de salida</span>
+            <span>Punto de encuentro</span>
             <strong>{cardItem.departurePoint}</strong>
           </div>
         </div>

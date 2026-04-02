@@ -7,9 +7,9 @@ function cleanPhrase(phrase) {
 
 function collectKeywords(detail) {
   const metaPhrases = detail.meta
-    .filter((item) => item.label === "Duracion" || item.label === "Punto de salida")
+    .filter((item) => item.label === "Duracion" || item.label === "Punto de encuentro")
     .map((item) =>
-      item.label === "Punto de salida" ? `Salida desde: ${item.value}` : item.value,
+      item.label === "Punto de encuentro" ? `Salida desde: ${item.value}` : item.value,
     );
 
   const phrases = [

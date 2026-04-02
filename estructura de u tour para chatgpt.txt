@@ -3,7 +3,8 @@ para no tener que subir para clicar en nuevo item
 
 
 
-Traerme todos los datos que a continuacion solicito para el paseo puerto nariño + micos que ofrecen en leticia_
+Traerme todos los datos que a continuacion solicito para el {nombrepaseo} que ofrecen en {nombreciudad}
+
 Sección 1: Datos Generales
 TITULO
 DESCRIPCION breve del paseo

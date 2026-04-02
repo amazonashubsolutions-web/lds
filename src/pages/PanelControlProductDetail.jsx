@@ -16,6 +16,7 @@ import ProductPriceCard from "../components/detalle-producto/ProductPriceCard";
 import ProductRecommendations from "../components/detalle-producto/ProductRecommendations";
 import ProductTravelNotes from "../components/detalle-producto/ProductTravelNotes";
 import ProductSeasonDatesModal from "../components/detalle-producto/ProductSeasonDatesModal";
+import ProductMagicAiModal from "../components/detalle-producto/ProductMagicAiModal";
 import Footer from "../components/resultados/Footer";
 import {
   footerData,
@@ -49,6 +50,7 @@ export default function PanelControlProductDetailPage() {
   const [isDisableConfirmationOpen, setIsDisableConfirmationOpen] = useState(false);
   const [isEnableNoticeOpen, setIsEnableNoticeOpen] = useState(false);
   const [isSeasonDatesModalOpen, setIsSeasonDatesModalOpen] = useState(false);
+  const [isMagicModalOpen, setIsMagicModalOpen] = useState(productId === "nuevo");
   const {
     isEditingProduct,
     gallerySlots,
@@ -76,6 +78,7 @@ export default function PanelControlProductDetailPage() {
     setContentDraft,
     setSelectedGallerySlot,
     setActiveContentBlock,
+    mergeAiDraft,
   } = useProductEditor(detail);
   const isInactive = productStatus === "inactive";
   
@@ -103,13 +106,20 @@ export default function PanelControlProductDetailPage() {
     setProductStatus(getResolvedProductStatus(detail.id, detail.status));
   }, [detail.id, detail.status]);
 
-
+  useEffect(() => {
+    if (productId === "nuevo") {
+      setIsMagicModalOpen(true);
+    } else {
+      setIsMagicModalOpen(false);
+    }
+  }, [productId]);
 
   useEffect(() => {
     if (
       !isDisableConfirmationOpen &&
       !isEnableNoticeOpen &&
-      !isSeasonDatesModalOpen
+      !isSeasonDatesModalOpen &&
+      !isMagicModalOpen
     ) {
       return undefined;
     }
@@ -121,6 +131,9 @@ export default function PanelControlProductDetailPage() {
         setIsDisableConfirmationOpen(false);
         setIsEnableNoticeOpen(false);
         setIsSeasonDatesModalOpen(false);
+        if (productId !== "nuevo") {
+           setIsMagicModalOpen(false);
+        }
         couponManagerRef.current?.closeAll();
       }
     }
@@ -190,8 +203,40 @@ export default function PanelControlProductDetailPage() {
     openDisableConfirmation();
   }
 
+  const handleMagicGenerate = async (category, { tourName, cityName }) => {
+    try {
+      const response = await fetch("/src/data/mockAiResponse.json");
+      const mockData = await response.json();
+      
+      mergeAiDraft(mockData);
+      // Cerramos el modal mágicamente
+      setIsMagicModalOpen(false);
+      // Activamos modo edición si no lo estaba
+      if (!isEditingProduct) {
+        openEditProductMode();
+      }
+    } catch (err) {
+      console.error("Error al cargar mock JSON:", err);
+    }
+  };
+
+  const handleMagicStartManual = () => {
+    setIsMagicModalOpen(false);
+    if (!isEditingProduct) {
+      openEditProductMode();
+    }
+  };
+
   return (
     <div className="detalle-producto-page detalle-producto-page--admin" style={{ '--detalle-admin-header-offset': '0px' }}>
+      
+      <ProductMagicAiModal 
+        isOpen={isMagicModalOpen}
+        onClose={() => setIsMagicModalOpen(false)}
+        onGenerate={handleMagicGenerate}
+        onStartManual={handleMagicStartManual}
+      />
+
       <main className="detalle-producto-main">
         <div className="detalle-producto-admin-sticky-shell" style={{ paddingTop: '0' }}>
           <div className="detalle-producto-admin-sticky-wrap">

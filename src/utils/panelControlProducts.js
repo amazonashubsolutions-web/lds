@@ -21,12 +21,12 @@ function buildDepartureDetails(item) {
   const customDepartureTime =
     createdMeta.find((metaItem) => metaItem.label === "Hora de salida")?.value ?? "";
   const customDeparturePoint =
-    createdMeta.find((metaItem) => metaItem.label === "Punto de salida")?.value ?? "";
+    createdMeta.find((metaItem) => metaItem.label === "Punto de encuentro")?.value ?? "";
 
   if (customDepartureTime || customDeparturePoint) {
     return {
       departureTime: customDepartureTime || "Por definir",
-      departurePoint: customDeparturePoint || "Punto de salida por definir",
+      departurePoint: customDeparturePoint || "Punto de encuentro por definir",
     };
   }
 

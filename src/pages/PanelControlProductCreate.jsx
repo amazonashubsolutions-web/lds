@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import PrimaryHeader from "../components/layout/PrimaryHeader";
 import ProductGalleryEditor from "../components/detalle-producto/ProductGalleryEditor";
 import ProductPriceCard from "../components/detalle-producto/ProductPriceCard";
+import ProductMagicAiModal from "../components/detalle-producto/ProductMagicAiModal";
 import Footer from "../components/resultados/Footer";
 import { footerData } from "../data/panelControlData";
 import {
@@ -20,15 +21,6 @@ import {
   persistCreatedProductRecord,
 } from "../utils/createdProductsRepository";
 import { persistProductStatus } from "../utils/productStatusStorage";
-
-const DURATION_OPTIONS = [
-  { value: "", label: "Selecciona una duracion" },
-  { value: "Media jornada", label: "Media jornada" },
-  { value: "Dia completo", label: "Dia completo" },
-  { value: "2 dias / 1 noche", label: "2 dias / 1 noche" },
-  { value: "3 dias / 2 noches", label: "3 dias / 2 noches" },
-  { value: "4 dias / 3 noches", label: "4 dias / 3 noches" },
-];
 
 const PRICING_UNIT_OPTIONS = [
   { value: "persona", label: "Persona" },
@@ -174,7 +166,6 @@ function createInitialDraft() {
     subcategoryId: "",
     city: "",
     region: "",
-    duration: "",
     departurePoint: "",
     departureTime: "",
     returnTime: "",
@@ -244,6 +235,121 @@ export default function PanelControlProductCreatePage() {
   const [galleryMessageType, setGalleryMessageType] = useState("");
   const [formError, setFormError] = useState("");
   const [createdProductInfo, setCreatedProductInfo] = useState(null);
+  const [isMagicModalOpen, setIsMagicModalOpen] = useState(true);
+
+  const handleMagicGenerate = async (
+    category,
+    {
+      tourName,
+      cityName,
+      regionName,
+      selectedSubcategory,
+      aiData,
+      departureTime,
+      returnTime,
+      departurePoint,
+      pricesLow,
+      pricesHigh,
+      pricesLowGroup,
+      pricesHighGroup,
+      seasons,
+    } = {}
+  ) => {
+    try {
+      if (!aiData) return;
+      
+      setDraft((current) => {
+        const newBooking = JSON.parse(JSON.stringify(current.booking));
+        newBooking.price = pricesLow?.adult || current.booking.price;
+        
+        if (newBooking.pricingDetails?.seasons?.low?.individual && pricesLow) {
+          newBooking.pricingDetails.seasons.low.individual[0].price = pricesLow.adult || "";
+          newBooking.pricingDetails.seasons.low.individual[1].price = pricesLow.child || "";
+          newBooking.pricingDetails.seasons.low.individual[2].price = pricesLow.baby || "";
+        }
+        
+        if (newBooking.pricingDetails?.seasons?.low?.group && pricesLowGroup) {
+          newBooking.pricingDetails.seasons.low.group[0].price = pricesLowGroup.adult || "";
+          newBooking.pricingDetails.seasons.low.group[1].price = pricesLowGroup.child || "";
+          newBooking.pricingDetails.seasons.low.group[2].price = pricesLowGroup.baby || "";
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.individual && pricesHigh) {
+          newBooking.pricingDetails.seasons.high.individual[0].price = pricesHigh.adult || "";
+          newBooking.pricingDetails.seasons.high.individual[1].price = pricesHigh.child || "";
+          newBooking.pricingDetails.seasons.high.individual[2].price = pricesHigh.baby || "";
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.group && pricesHighGroup) {
+          newBooking.pricingDetails.seasons.high.group[0].price = pricesHighGroup.adult || "";
+          newBooking.pricingDetails.seasons.high.group[1].price = pricesHighGroup.child || "";
+          newBooking.pricingDetails.seasons.high.group[2].price = pricesHighGroup.baby || "";
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.periods && seasons && seasons.length > 0) {
+           const newPeriods = seasons.map(s => ({
+             id: createEditableItemId("period"),
+             label: s.title,
+             startMonthDay: s.start ? s.start.substring(5) : "",
+             endMonthDay: s.end ? s.end.substring(5) : ""
+           }));
+           newBooking.pricingDetails.seasons.high.periods = newPeriods;
+        }
+
+        return {
+          ...current,
+          categoryId: category || current.categoryId,
+          subcategoryId: selectedSubcategory ?? current.subcategoryId,
+          title: tourName || aiData.titulo || current.title,
+          city: cityName ?? current.city,
+          region: regionName ?? current.region,
+          
+          summary: aiData.descripcion_breve || current.summary,
+          overview: Array.isArray(aiData.descripcion_general) ? aiData.descripcion_general : current.overview,
+          itinerary: Array.isArray(aiData.itinerario) ? aiData.itinerario.map(it => ({
+            id: createEditableItemId("itinerary"),
+            day: "",
+            title: it.titulo || it.label || "",
+            description: it.descripcion || ""
+          })) : current.itinerary,
+          includes: Array.isArray(aiData.que_incluye) ? aiData.que_incluye.map(item => ({
+            id: createEditableItemId("include"),
+            title: item.label || item.title || "",
+            description: item.description || ""
+          })) : current.includes,
+          excludes: Array.isArray(aiData.que_no_incluye) ? aiData.que_no_incluye.map(item => ({
+            id: createEditableItemId("exclude"),
+            title: item.label || item.title || "",
+            description: item.description || ""
+          })) : current.excludes,
+          recommendations: Array.isArray(aiData.recomendaciones) ? aiData.recomendaciones : current.recommendations,
+          considerations: Array.isArray(aiData.consideraciones) ? aiData.consideraciones : current.considerations,
+          cancellationPolicies: Array.isArray(aiData.politicas) ? aiData.politicas : current.cancellationPolicies,
+          
+          departureTime: departureTime !== undefined ? departureTime : current.departureTime,
+          returnTime: returnTime !== undefined ? returnTime : current.returnTime,
+          departurePoint: departurePoint !== undefined ? departurePoint : current.departurePoint,
+          
+          booking: newBooking
+        };
+      });
+      setIsMagicModalOpen(false);
+    } catch (err) {
+      console.error("Error al cargar mock JSON:", err);
+    }
+  };
+
+  const handleMagicStartManual = (category, { tourName, cityName, regionName, selectedSubcategory } = {}) => {
+    setDraft((current) => ({ 
+      ...current, 
+      categoryId: category || current.categoryId,
+      subcategoryId: selectedSubcategory || current.subcategoryId,
+      title: tourName ?? current.title,
+      city: cityName ?? current.city,
+      region: regionName ?? current.region,
+    }));
+    setIsMagicModalOpen(false);
+  };
 
   const availableSubcategories = useMemo(
     () =>
@@ -597,18 +703,10 @@ export default function PanelControlProductCreatePage() {
   function buildMetaEntries() {
     const entries = [];
 
-    if (draft.duration) {
-      entries.push({
-        id: createEditableItemId("meta"),
-        label: "Duracion",
-        value: draft.duration,
-      });
-    }
-
     if (draft.departurePoint) {
       entries.push({
         id: createEditableItemId("meta"),
-        label: "Punto de salida",
+        label: "Punto de encuentro",
         value: draft.departurePoint,
       });
     }
@@ -649,10 +747,6 @@ export default function PanelControlProductCreatePage() {
 
     if (!normalizeText(draft.city) || !normalizeText(draft.region)) {
       return "Completa ciudad y region del producto.";
-    }
-
-    if (!draft.duration) {
-      return "Selecciona la duracion del producto.";
     }
 
     if (!normalizeText(draft.summary)) {
@@ -833,14 +927,20 @@ export default function PanelControlProductCreatePage() {
     if (!createdProductInfo) {
       return;
     }
-
-    navigate(`/panel-de-control/productos/${createdProductInfo.productId}`);
+    navigate(`/panel-de-control/productos/${createdProductInfo.productId}`, { replace: true });
   }
 
   return (
     <div className="detalle-producto-page detalle-producto-page--admin">
       <PrimaryHeader />
-
+      
+      <ProductMagicAiModal 
+        isOpen={isMagicModalOpen}
+        onClose={() => navigate("/panel-de-control/productos")}
+        onGenerate={handleMagicGenerate}
+        onStartManual={handleMagicStartManual}
+      />
+      
       <main className="detalle-producto-main">
         <div className="detalle-producto-admin-sticky-shell">
           <div className="detalle-producto-admin-sticky-wrap">
@@ -994,36 +1094,9 @@ export default function PanelControlProductCreatePage() {
                       />
                     </label>
 
-                    <label className="detalle-producto-admin-edit-field">
-                      <span>Duracion</span>
-                      <select
-                        value={draft.duration}
-                        onChange={(event) =>
-                          handleGeneralFieldChange("duration", event.target.value)
-                        }
-                      >
-                        {DURATION_OPTIONS.map((option) => (
-                          <option key={option.value || "empty"} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    <label className="detalle-producto-admin-edit-field">
-                      <span>Punto de salida</span>
-                      <input
-                        type="text"
-                        value={draft.departurePoint}
-                        onChange={(event) =>
-                          handleGeneralFieldChange("departurePoint", event.target.value)
-                        }
-                        placeholder="Ej. Parque principal, lobby, recepcion"
-                      />
-                    </label>
 
                     {requiresActivityTimes ? (
-                      <>
+                      <div className="detalle-producto-create-meta-grid" style={{ display: "grid", gap: "0.9rem" }}>
                         <label className="detalle-producto-admin-edit-field">
                           <span>Hora de salida</span>
                           <input
@@ -1051,27 +1124,41 @@ export default function PanelControlProductCreatePage() {
                             }
                           />
                         </label>
-                      </>
+                      </div>
                     ) : null}
 
-                    <label className="detalle-producto-admin-edit-field">
-                      <span>Unidad de precio</span>
-                      <select
-                        value={draft.pricingUnitLabel}
-                        onChange={(event) =>
-                          handleGeneralFieldChange(
-                            "pricingUnitLabel",
-                            event.target.value,
-                          )
-                        }
-                      >
-                        {PRICING_UNIT_OPTIONS.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
+                    <div className="detalle-producto-create-meta-grid" style={{ display: "grid", gap: "0.9rem" }}>
+                      <label className="detalle-producto-admin-edit-field">
+                        <span>Punto de encuentro</span>
+                        <input
+                          type="text"
+                          value={draft.departurePoint}
+                          onChange={(event) =>
+                            handleGeneralFieldChange("departurePoint", event.target.value)
+                          }
+                          placeholder="Ej. Parque principal, lobby, recepcion"
+                        />
+                      </label>
+
+                      <label className="detalle-producto-admin-edit-field">
+                        <span>Unidad de precio</span>
+                        <select
+                          value={draft.pricingUnitLabel}
+                          onChange={(event) =>
+                            handleGeneralFieldChange(
+                              "pricingUnitLabel",
+                              event.target.value,
+                            )
+                          }
+                        >
+                          {PRICING_UNIT_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
                   </div>
                 </section>
 

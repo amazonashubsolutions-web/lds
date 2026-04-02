@@ -3300,6 +3300,7 @@ p {
 
 .detalle-producto-inline-action .material-icons-outlined {
   font-size: 0.92rem;
+  text-transform: none !important;
 }
 
 .detalle-producto-admin-edit-fields,
@@ -3472,7 +3473,7 @@ p {
   padding-top: 0.15rem;
 }
 
-.detalle-producto-timeline-body span {
+.detalle-producto-timeline-body span:not(.material-icons-outlined) {
   display: inline-block;
   margin-bottom: 0.3rem;
   color: #6f7783;
