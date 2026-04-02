@@ -1,8 +1,12 @@
 export default function ResultsPagination({ pages, currentPage = 1 }) {
+  if (pages.length <= 1) {
+    return null;
+  }
+
   return (
     <nav className="resultados-pagination" aria-label="Pagination">
       <button className="resultados-page-arrow" type="button" aria-label="Previous page">
-        ‹
+        {"<"}
       </button>
 
       {pages.map((page) => (
@@ -20,7 +24,7 @@ export default function ResultsPagination({ pages, currentPage = 1 }) {
       ))}
 
       <button className="resultados-page-arrow" type="button" aria-label="Next page">
-        ›
+        {">"}
       </button>
     </nav>
   );

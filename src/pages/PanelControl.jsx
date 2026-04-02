@@ -8,7 +8,6 @@ import DashboardUpcomingTripCard from "../components/panel-control/DashboardUpco
 import DashboardWelcome from "../components/panel-control/DashboardWelcome";
 import Footer from "../components/resultados/Footer";
 import {
-  buscadorNavLinks,
   footerData,
   panelControlActivity,
   panelControlMenu,
@@ -22,7 +21,7 @@ import {
 export default function PanelControlPage() {
   return (
     <div className="panel-control-page">
-      <PrimaryHeader links={buscadorNavLinks} />
+      <PrimaryHeader />
 
       <main className="panel-control-main">
         <div className="panel-control-layout">

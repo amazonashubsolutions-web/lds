@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { destinosColombia } from "../../data/buscadorData";
 
 function formatDateForInput(date) {
@@ -27,12 +27,59 @@ function parseInputDate(value) {
   return parsedDate;
 }
 
-export default function SearchPanel() {
+function normalizeDestinationText(value) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function resetViewportToTop() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const scrollingElement = document.scrollingElement ?? document.documentElement;
+  const root = document.documentElement;
+  const body = document.body;
+
+  root.style.scrollBehavior = "auto";
+  body.style.scrollBehavior = "auto";
+
+  scrollingElement.scrollTop = 0;
+  root.scrollTop = 0;
+  body.scrollTop = 0;
+  window.scrollTo(0, 0);
+
+  window.requestAnimationFrame(() => {
+    scrollingElement.scrollTop = 0;
+    root.scrollTop = 0;
+    body.scrollTop = 0;
+    window.scrollTo(0, 0);
+  });
+
+  window.setTimeout(() => {
+    root.style.scrollBehavior = "";
+    body.style.scrollBehavior = "";
+  }, 250);
+}
+
+export default function SearchPanel({
+  className = "",
+  initialDestination = "",
+  initialTravelDate = "",
+  onSearch,
+  submitLabel = "Buscar",
+}) {
+  const location = useLocation();
   const navigate = useNavigate();
   const destinationFieldRef = useRef(null);
   const dateInputRef = useRef(null);
-  const [destinationQuery, setDestinationQuery] = useState("");
-  const [travelDate, setTravelDate] = useState("");
+  const [destinationQuery, setDestinationQuery] = useState(initialDestination);
+  const [travelDate, setTravelDate] = useState(initialTravelDate);
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
 
   const today = new Date();
@@ -53,19 +100,34 @@ export default function SearchPanel() {
         year: "numeric",
       }).format(new Date(`${travelDate}T00:00:00`))
     : "Fecha de viaje";
+  const normalizedInitialDestination = normalizeDestinationText(initialDestination);
+  const normalizedDestinationQuery = normalizeDestinationText(destinationQuery);
+  const shouldShowAllSuggestionsOnFocus =
+    normalizedDestinationQuery.length > 0 &&
+    normalizedDestinationQuery === normalizedInitialDestination;
   const filteredDestinations = useMemo(() => {
-    const normalizedQuery = destinationQuery.trim().toLowerCase();
+    const normalizedQuery = shouldShowAllSuggestionsOnFocus
+      ? ""
+      : normalizedDestinationQuery;
 
     if (!normalizedQuery) {
       return destinosColombia;
     }
 
     return destinosColombia.filter((destination) =>
-      `${destination.city} ${destination.region}`
-        .toLowerCase()
-        .includes(normalizedQuery),
+      normalizeDestinationText(`${destination.city} ${destination.region}`).includes(
+        normalizedQuery,
+      ),
     );
-  }, [destinationQuery]);
+  }, [normalizedDestinationQuery, shouldShowAllSuggestionsOnFocus]);
+
+  useEffect(() => {
+    setDestinationQuery(initialDestination);
+  }, [initialDestination]);
+
+  useEffect(() => {
+    setTravelDate(initialTravelDate);
+  }, [initialTravelDate]);
 
   useEffect(() => {
     const handlePointerDown = (event) => {
@@ -117,6 +179,10 @@ export default function SearchPanel() {
     event.preventDefault();
     setIsSuggestionsOpen(false);
 
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     const params = new URLSearchParams();
     const trimmedDestination = destinationQuery.trim();
 
@@ -129,11 +195,26 @@ export default function SearchPanel() {
     }
 
     const queryString = params.toString();
-    navigate(queryString ? `/resultados?${queryString}` : "/resultados");
+    const targetUrl = queryString ? `/resultados?${queryString}` : "/resultados";
+    const currentUrl = `${location.pathname}${location.search}`;
+
+    if (onSearch) {
+      onSearch();
+    }
+
+    resetViewportToTop();
+
+    if (currentUrl !== targetUrl) {
+      navigate(targetUrl);
+    }
+
+    window.requestAnimationFrame(() => {
+      resetViewportToTop();
+    });
   };
 
   return (
-    <form className="search-panel" onSubmit={handleSubmit}>
+    <form className={`search-panel ${className}`.trim()} onSubmit={handleSubmit}>
       <div
         ref={destinationFieldRef}
         className="search-panel-field search-panel-field--destination"
@@ -216,7 +297,7 @@ export default function SearchPanel() {
       </div>
 
       <button className="search-panel-button" type="submit">
-        Buscar
+        {submitLabel}
       </button>
     </form>
   );

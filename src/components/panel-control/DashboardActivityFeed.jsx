@@ -31,7 +31,7 @@ export default function DashboardActivityFeed({ items }) {
     <section className="panel-control-card">
       <div className="panel-control-card-head">
         <h3>Actividad</h3>
-        <button type="button">•••</button>
+        <button type="button">...</button>
       </div>
 
       <div className="panel-control-activity-list">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ChevronDownIcon() {
   return (
@@ -85,16 +85,15 @@ export default function UserStatusAvatar() {
 
       {isOpen ? (
         <div className="header-user-dropdown">
-          <Link
+          <a
+            href="/panel-de-control"
             className="header-user-dropdown-item"
-            to="/panel-de-control"
-            onClick={() => setIsOpen(false)}
           >
             <span className="header-user-dropdown-icon" aria-hidden="true">
               <DashboardIcon />
             </span>
             <span>Panel de Control</span>
-          </Link>
+          </a>
           <div
             className="header-user-dropdown-divider"
             aria-hidden="true"

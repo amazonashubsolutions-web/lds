@@ -1,3 +1,5 @@
+import { NavLink, useLocation } from "react-router-dom";
+
 function MenuIcon({ type }) {
   if (type === "card") {
     return (
@@ -27,6 +29,25 @@ function MenuIcon({ type }) {
     );
   }
 
+  if (type === "ticket") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4V7z"></path>
+        <path d="M12 5v14"></path>
+      </svg>
+    );
+  }
+
+  if (type === "package") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 8.5 12 13l9-4.5"></path>
+        <path d="M12 13v8"></path>
+        <path d="M20 16V8l-8-4-8 4v8l8 4 8-4Z"></path>
+      </svg>
+    );
+  }
+
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M20 21a8 8 0 1 0-16 0"></path>
@@ -36,6 +57,8 @@ function MenuIcon({ type }) {
 }
 
 export default function DashboardSidebar({ profile, menu }) {
+  const location = useLocation();
+
   return (
     <aside className="panel-control-sidebar">
       <div className="panel-control-profile-card">
@@ -54,20 +77,40 @@ export default function DashboardSidebar({ profile, menu }) {
       <nav className="panel-control-nav-card">
         <h3>Cuenta</h3>
         <div className="panel-control-nav-list">
-          {menu.map((item) => (
-            <button
-              className={
-                item.active ? "panel-control-nav-item panel-control-nav-item--active" : "panel-control-nav-item"
-              }
-              key={item.id}
-              type="button"
-            >
-              <span className="panel-control-nav-icon" aria-hidden="true">
-                <MenuIcon type={item.icon} />
-              </span>
-              <span>{item.label}</span>
-            </button>
-          ))}
+          {menu.map((item) => {
+            const isActive = item.path
+              ? location.pathname === item.path ||
+                location.pathname.startsWith(`${item.path}/`)
+              : Boolean(item.active);
+
+            if (item.path) {
+              return (
+                <NavLink
+                  className={
+                    isActive
+                      ? "panel-control-nav-item panel-control-nav-item--active"
+                      : "panel-control-nav-item"
+                  }
+                  key={item.id}
+                  to={item.path}
+                >
+                  <span className="panel-control-nav-icon" aria-hidden="true">
+                    <MenuIcon type={item.icon} />
+                  </span>
+                  <span>{item.label}</span>
+                </NavLink>
+              );
+            }
+
+            return (
+              <button className="panel-control-nav-item" key={item.id} type="button">
+                <span className="panel-control-nav-icon" aria-hidden="true">
+                  <MenuIcon type={item.icon} />
+                </span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </div>
       </nav>
     </aside>

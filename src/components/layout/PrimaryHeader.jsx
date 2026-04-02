@@ -1,7 +1,7 @@
 import UserStatusAvatar from "./UserStatusAvatar";
 import HeaderNotifications from "./HeaderNotifications";
 
-export default function PrimaryHeader({ links }) {
+export default function PrimaryHeader({ links = [] }) {
   return (
     <header className="primary-header">
       <nav className="primary-nav">
@@ -13,19 +13,21 @@ export default function PrimaryHeader({ links }) {
           />
         </a>
 
-        <div className="primary-links">
-          {links.map((link, index) => (
-            <a
-              key={link.label}
-              className={
-                index === 0 ? "primary-link primary-link--active" : "primary-link"
-              }
-              href={link.href}
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
+        {links.length > 0 ? (
+          <div className="primary-links">
+            {links.map((link, index) => (
+              <a
+                key={link.label}
+                className={
+                  index === 0 ? "primary-link primary-link--active" : "primary-link"
+                }
+                href={link.href}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
 
         <div className="primary-actions">
           <UserStatusAvatar />

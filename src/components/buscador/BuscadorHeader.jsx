@@ -180,6 +180,7 @@ export default function BuscadorHeader() {
           <UserStatusAvatar />
         </div>
       </nav>
+
       {discountsOpen && <DiscountsModal onClose={() => setDiscountsOpen(false)} />}
       {faqOpen && <FAQModal onClose={() => setFaqOpen(false)} />}
       {privacyOpen && <PrivacyModal onClose={() => setPrivacyOpen(false)} />}

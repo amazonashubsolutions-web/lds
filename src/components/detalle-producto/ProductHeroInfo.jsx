@@ -11,16 +11,14 @@ function ProductMeta({ items }) {
   );
 }
 
-export default function ProductHeroInfo({ detail }) {
+export default function ProductHeroInfo({ detail, showBadges = true }) {
   return (
     <section className="detalle-producto-hero-info">
-      <div className="detalle-producto-badges">
-        <span className="detalle-producto-badge">{detail.eyebrow}</span>
-        <div className="detalle-producto-rating">
-          <strong>{detail.rating.toFixed(1)}</strong>
-          <span>{detail.reviewsCount} resenas</span>
+      {showBadges ? (
+        <div className="detalle-producto-badges">
+          <span className="detalle-producto-badge">{detail.eyebrow}</span>
         </div>
-      </div>
+      ) : null}
 
       <h1>{detail.title}</h1>
 

@@ -1,0 +1,45 @@
+Agregar item debajo del nbuevo item 
+para no tener que subir para clicar en nuevo item 
+
+
+
+Traerme todos los datos que a continuacion solicito para el paseo puerto nariño + micos que ofrecen en leticia_
+Sección 1: Datos Generales
+TITULO
+DESCRIPCION breve del paseo
+PUNTO DE SALIDA
+HORA DE SALIDA 
+HORA DE REGRESO 
+PRECIO
+
+Sección 2: 
+Descripción General del paseo
+
+
+Sección 3: Itinerario
+Cada parada tiene:
+Titulo
+Descripcion
+
+
+Sección 4: Qué Incluye
+
+cada item tiene:
+Titulo
+Descripcion
+
+
+Sección 5: Qué No Incluye
+
+Cada item tiene:
+Titulo
+Descripcion
+
+Sección 6: Recomendaciones
+Cada item tiene Texto 
+
+Sección 7: Consideraciones
+Cada item tiene un texto
+
+Sección 8: Políticas de Cancelación
+Cada item tiene un texto

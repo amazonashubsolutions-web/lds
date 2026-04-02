@@ -8,7 +8,7 @@ export default function Footer({ data }) {
         </div>
 
         <div className="resultados-footer-col">
-          <h4>Quick Links</h4>
+          <h4>Enlaces</h4>
           <div>
             {data.quickLinks.map((item) => (
               <a key={item} href="#">
@@ -30,11 +30,11 @@ export default function Footer({ data }) {
         </div>
 
         <div className="resultados-footer-col">
-          <h4>Newsletter</h4>
+          <h4>Novedades</h4>
           <p>{data.newsletterLabel}</p>
           <div className="resultados-footer-newsletter">
-            <input placeholder="Email Address" type="email" />
-            <button type="button">→</button>
+            <input placeholder="Correo electronico" type="email" />
+            <button type="button">Ir</button>
           </div>
         </div>
       </div>

@@ -134,7 +134,7 @@ export default function DashboardNotifications() {
                 onClick={() => setSelectedNotification(null)}
                 type="button"
               >
-                ×
+                x
               </button>
             </div>
 
