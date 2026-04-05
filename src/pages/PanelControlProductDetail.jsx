@@ -13,6 +13,8 @@ import ProductIncludes from "../components/detalle-producto/ProductIncludes";
 import ProductItinerary from "../components/detalle-producto/ProductItinerary";
 import ProductOverview from "../components/detalle-producto/ProductOverview";
 import ProductPriceCard from "../components/detalle-producto/ProductPriceCard";
+import ProductTransportPriceCard from "../components/detalle-producto/ProductTransportPriceCard";
+import ProductRestaurantPriceCard from "../components/detalle-producto/ProductRestaurantPriceCard";
 import ProductRecommendations from "../components/detalle-producto/ProductRecommendations";
 import ProductTravelNotes from "../components/detalle-producto/ProductTravelNotes";
 import ProductKeywordCloud from "../components/detalle-producto/ProductKeywordCloud";
@@ -236,6 +238,11 @@ export default function PanelControlProductDetailPage() {
         onClose={() => setIsMagicModalOpen(false)}
         onGenerate={handleMagicGenerate}
         onStartManual={handleMagicStartManual}
+        onSwitchToRestaurant={() => {
+          // In a real scenario, we might want to switch to a dedicated Restaurant Wizard here too, 
+          // but for now we'll just handle the create flux better.
+          setIsMagicModalOpen(false);
+        }}
       />
 
       <main className="detalle-producto-main">
@@ -409,18 +416,46 @@ export default function PanelControlProductDetailPage() {
               </div>
 
               <div className="detalle-producto-sidebar">
-                <ProductPriceCard
-                  booking={isEditingProduct ? contentDraft.booking : detail.booking}
-                  status={productStatus}
-                  isEditingEnabled={isEditingProduct}
-                  activeBlock={activeContentBlock}
-                  onActivateBlock={setActiveContentBlock}
-                  onBasePriceChange={updateBookingBasePrice}
-                  onGridPriceChange={updateBookingGridPrice}
-                  onHighSeasonPeriodChange={updateHighSeasonPeriod}
-                  onAddHighSeasonPeriod={addHighSeasonPeriod}
-                  onRemoveHighSeasonPeriod={removeHighSeasonPeriod}
-                />
+                {detail.categoryId === "transporte" || (isEditingProduct && contentDraft?.categoryId === "transporte") ? (
+                  <ProductTransportPriceCard
+                    booking={isEditingProduct ? contentDraft.booking : detail.booking}
+                    status={productStatus}
+                    isEditingEnabled={isEditingProduct}
+                    activeBlock={activeContentBlock}
+                    onActivateBlock={setActiveContentBlock}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onHighSeasonPeriodChange={updateHighSeasonPeriod}
+                    onAddHighSeasonPeriod={addHighSeasonPeriod}
+                    onRemoveHighSeasonPeriod={removeHighSeasonPeriod}
+                  />
+                ) : detail.categoryId === "restaurantes" || (isEditingProduct && contentDraft?.categoryId === "restaurantes") ? (
+                  <ProductRestaurantPriceCard
+                    draft={isEditingProduct ? contentDraft : { booking: detail.booking }}
+                    status={productStatus}
+                    isEditingEnabled={isEditingProduct}
+                    activeBlock={activeContentBlock}
+                    onActivateBlock={setActiveContentBlock}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onUpdatePeriod={updateHighSeasonPeriod}
+                    onAddPeriod={addHighSeasonPeriod}
+                    onRemovePeriod={removeHighSeasonPeriod}
+                  />
+                ) : (
+                  <ProductPriceCard
+                    booking={isEditingProduct ? contentDraft.booking : detail.booking}
+                    status={productStatus}
+                    isEditingEnabled={isEditingProduct}
+                    activeBlock={activeContentBlock}
+                    onActivateBlock={setActiveContentBlock}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onHighSeasonPeriodChange={updateHighSeasonPeriod}
+                    onAddHighSeasonPeriod={addHighSeasonPeriod}
+                    onRemoveHighSeasonPeriod={removeHighSeasonPeriod}
+                  />
+                )}
               </div>
             </div>
           </div>

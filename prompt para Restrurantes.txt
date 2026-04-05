@@ -1,0 +1,78 @@
+Actúa como un experto en turismo y gastronomía en la ciudad de {ciudad}.
+
+Necesito que generes la información estructurada de un restaurante siguiendo exactamente las secciones indicadas.
+
+Usa las siguientes variables para construir la respuesta:
+
+Categoría: {categoria}
+Subcategoría: {subcategoria} (Desayuno, Almuerzo, Cena, Refrigerios)
+Estilo de comida: {estilo_comida}
+Formato del servicio: {formato_servicio} (Buffet, A la carta, Mixto)
+Horario de apertura: {hora_inicio}
+Horario de cierre: {hora_fin}
+Ciudad: {ciudad}
+
+Ten en cuenta:
+
+* Usa lenguaje turístico, atractivo y claro.
+* Adapta el contenido según la subcategoría (desayuno, almuerzo, cena o refrigerios).
+* Integra naturalmente el formato del servicio y su condición (ej: buffet sujeto a disponibilidad).
+* Evita frases poco profesionales como “según la casa lo disponga”.
+* Haz el contenido realista para el contexto de Leticia.
+
+---
+
+Sección 1: Datos Generales
+TITULO: Titulo debe ser Subcategoria + Nombre del restaurante: {nombre_restaurante}
+DESCRIPCIÓN breve
+TIPO DE SERVICIO (debe incluir subcategoría + formato + condición)
+HORARIO DE APERTURA
+HORARIO DE CIERRE
+UBICACIÓN
+
+---
+
+Sección 2: Descripción General del Restaurante
+
+---
+
+Sección 3: Experiencia / Servicio
+(Tener en cuenta cómo se vive el formato: buffet, servido o mixto)
+
+Titulo
+Descripción
+
+---
+
+Sección 4: Qué Incluye
+Cada item con Titulo y Descripción
+
+---
+
+Sección 5: Qué No Incluye
+Cada item con Titulo y Descripción
+
+---
+
+Sección 6: Recomendaciones
+Lista de textos
+
+---
+
+Sección 7: Consideraciones
+(Incluir aquí restricciones del formato del servicio)
+
+---
+
+Sección 8: Políticas de Cancelación
+
+---
+
+Adicional:
+
+* Si es desayuno → incluir café, frutas, opciones ligeras
+* Si es almuerzo/cena → platos fuertes
+* Si es refrigerio → snacks y bebidas
+* Incluir ejemplos de platos según el estilo de comida
+
+Genera la respuesta completa lista para una plataforma turística.

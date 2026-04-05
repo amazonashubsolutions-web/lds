@@ -11,7 +11,7 @@ DESCRIPCION breve del paseo
 PUNTO DE SALIDA
 HORA DE SALIDA 
 HORA DE REGRESO 
-PRECIO
+FECHAS DE TEMPORADA ALTA
 
 Sección 2: 
 Descripción General del paseo
@@ -44,3 +44,32 @@ Cada item tiene un texto
 
 Sección 8: Políticas de Cancelación
 Cada item tiene un texto
+
+
+modalpaso 2
+TITULO PRODUCTO
+PASO 2 HORARIOS
+  HORA SALIDA 
+  HORA DE REGRESO
+  PUNTO DE SALIDA
+
+modalpaso 3
+TITULO DE PRODUCTO 
+PASO 3 PRECIOS
+PRECIO ADULTO BAJA
+PRECIO NIÑO BAJA
+PRECIO BEBE BAJA
+
+PRECIO ADULTO ALTA
+PRECIO NIÑO ALTA
+PRECIO BEBE ALTA
+
+PRECIO = PRECIO ADULTO BAJA
+
+modalpaso 4
+TITULO DE PRODUCTO 
+PASO 4 - FECHAS DE TEMPORADA ALTA
+Titulo Fecha (Ejemplo Navidad. Vaciones etc...)
+Fecha Inicio
+Fecha Fin
+

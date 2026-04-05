@@ -597,6 +597,7 @@ function buildDetailView(record, product) {
     detailId: record.id,
     productId: product.id,
     slug: record.slug,
+    categoryId: product.categoryId,
     title: resolvedContent.title,
     location: getProductLocationLabel(product),
     featured: product.isFeatured,

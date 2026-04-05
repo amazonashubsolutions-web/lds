@@ -1,0 +1,60 @@
+{
+  "datosGenerales": {
+    "titulo": "Servicio de Transporte Privado en Van - Leticia",
+    "descripcionBreve": "Muevete con total libertad y comodidad por Leticia y sus alrededores en un vehiculo privado a tu entera disposicion.",
+    "horaInicio": "08:00 AM",
+    "horaFin": "05:00 PM"
+  },
+  "descripcionGeneral": [
+    "Olvidate de la logistica y el estres de conseguir transporte. Nuestro servicio privado esta disenado para brindarte un nivel superior de comodidad y seguridad, adaptandose a tus planes y tiempos. Ideal para grupos, familias o traslados ejecutivos.",
+    "Contaras con un conductor profesional y experimentado que conoce a la perfeccion las vias principales y alternas, asegurando que tu unica preocupacion sea disfrutar del paisaje o relajarte mientras te diriges a tu proximo destino."
+  ],
+  "itinerario": [
+    {
+      "titulo": "Disponibilidad Total en la Franja Horaria",
+      "descripcion": "El vehiculo y su conductor estaran asignados de manera exclusiva para tu grupo durante la franja horaria pactada. Tendras total libertad para coordinar tus rutas y movilizarte hacia restaurantes, hoteles o puertos turisticos dentro del perimetro municipal."
+    }
+  ],
+  "incluye": [
+    {
+      "titulo": "Conductor profesional",
+      "descripcion": "Chofer con experiencia y certificaciones vigentes, amplio conocedor de la zona."
+    },
+    {
+      "titulo": "Combustible",
+      "descripcion": "Todos los consumos de gasolina generados en el area urbana contratada estan cubiertos."
+    },
+    {
+      "titulo": "Climatizacion y comodidad",
+      "descripcion": "Vehiculo en optimas condiciones mecanicas con aire acondicionado continuo."
+    }
+  ],
+  "noIncluye": [
+    {
+      "titulo": "Guianza turistica",
+      "descripcion": "El conductor es exclusivamente operador del traslado, no funge como guia local."
+    },
+    {
+      "titulo": "Consumos o peajes fuera de zona",
+      "descripcion": "Gastos extra por recorridos hacia municipios lejanos o peajes departamentales no detallados."
+    },
+    {
+      "titulo": "Horas extra no pactadas",
+      "descripcion": "Servicios prolongados despues de la hora fin tendran un costo adicional que debe acordarse."
+    }
+  ],
+  "recomendaciones": [
+    "Notifica el punto exacto de recogida con suficiente antelacion.",
+    "Guarda los objetos de valor siempre cerca contigo al descender del vehiculo.",
+    "Si viajas con equipaje voluminoso, adviertelo con tiempo para reconfirmar la distribucion."
+  ],
+  "consideraciones": [
+    "La capacidad estricta estipulada no puede superarse bajo ninguna circunstancia por normativa de seguros.",
+    "Por limpieza y seguridad, no esta permitido fumar o consumir bebidas alcoholicas dentro del vehiculo.",
+    "El servicio se enfoca en el corredor vial del destino base programado."
+  ],
+  "politicasCancelacion": [
+    "Cancelacion gratuita avisando con mas de 48 horas de antelacion al inicio del servicio.",
+    "Cancelaciones de ultimo minuto tendran una penalidad del 30% del valor pactado por concepto de lucro cesante y reserva del vehiculo."
+  ]
+}

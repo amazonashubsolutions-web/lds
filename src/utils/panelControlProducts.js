@@ -53,13 +53,6 @@ function buildDepartureDetails(item) {
     };
   }
 
-  if (item.categoryId === "hospedaje") {
-    return {
-      departureTime: "3:00 PM",
-      departurePoint: `Recepcion principal en ${city}`,
-    };
-  }
-
   if (item.categoryId === "transporte") {
     return {
       departureTime: "8:00 AM",

@@ -1,0 +1,68 @@
+Traerme todos los datos que a continuacion solicito para el servicio de trasnporte privado en un {tipo de vehilculo} que tiene una capacidad de {capacidad de vehiculo} pasajeros en la ciudad de {nombreciudad} desde las {horario inicio} hasta {horario fin}
+
+Sección 1: Datos Generales
+TITULO
+DESCRIPCION breve del servicio de transporte
+HORA DE INICIO 
+HORA DE FIN  
+
+Sección 2: 
+Descripción General del servicio
+
+
+Sección 3: Itinerario
+PAra transporte el itinerario se refiere a la disponibilidad para que el vehiculo transporte a los turistas a donde ellos crean necesario durante el horario contratado
+Titulo
+Descripcion
+
+
+Sección 4: Qué Incluye
+El servicio de transporte incluye
+cada item tiene:
+Titulo
+Descripcion
+
+
+Sección 5: Qué No Incluye
+El servicio de transporte no incluye
+Cada item tiene:
+Titulo
+Descripcion
+
+Sección 6: Recomendaciones
+Cada item tiene Texto 
+
+Sección 7: Consideraciones
+Cada item tiene un texto
+
+Sección 8: Políticas de Cancelación
+Cada item tiene un texto
+
+
+modalpaso 2
+TITULO PRODUCTO
+PASO 2 HORARIOS
+  HORA SALIDA 
+  HORA DE REGRESO
+  PUNTO DE SALIDA
+
+modalpaso 3
+TITULO DE PRODUCTO 
+PASO 3 PRECIOS
+PRECIO ADULTO BAJA
+PRECIO NIÑO BAJA
+PRECIO BEBE BAJA
+
+PRECIO ADULTO ALTA
+PRECIO NIÑO ALTA
+PRECIO BEBE ALTA
+
+PRECIO = PRECIO ADULTO BAJA
+
+modalpaso 4
+TITULO DE PRODUCTO 
+PASO 4 - FECHAS DE TEMPORADA ALTA
+Titulo Fecha (Ejemplo Navidad. Vaciones etc...)
+Fecha Inicio
+Fecha Fin
+

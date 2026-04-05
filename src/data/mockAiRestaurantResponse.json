@@ -1,0 +1,44 @@
+{
+  "titulo": "Cena - El Sabor Amazónico",
+  "descripcion_breve": "Una velada inolvidable con los sabores más auténticos de Leticia, servidos a la mesa con ingredientes frescos del día.",
+  "tipo_servicio": "Cena - A la carta (Sujeto a disponibilidad de pesca del día)",
+  "horario_apertura": "19:00",
+  "horario_cierre": "22:30",
+  "ubicacion": "Calle 8 # 10-20, Barrio Centro, Leticia, Amazonas",
+  "descripcion_general": [
+    "Ubicado en el corazón de Leticia, El Sabor Amazónico ofrece una propuesta gastronómica que honra la biodiversidad de nuestra selva.",
+    "Nuestra cocina se especializa en técnicas tradicionales combinadas con un toque contemporáneo, resaltamos el valor de los frutos locales y la pesca responsable."
+  ],
+  "experiencia_servicio": {
+    "titulo": "Servicio a la Mesa con Aroma de Selva",
+    "descripcion": "Vive una experiencia íntima donde cada plato es servido a la mesa, permitiéndote disfrutar de la calma y los sonidos de la naturaleza mientras degustas nuestra selección de pescados de río. El ambiente es relajado y acogedor, perfecto para compartir historias de viaje."
+  },
+  "que_incluye": [
+    { "title": "Entrada de la casa", "description": "Patacones con hogao amazónico y ají de cocona." },
+    { "title": "Plato Fuerte", "description": "Pirarucú en salsa de coco o Tucupí con acompañamiento regional." },
+    { "title": "Bebida Natural", "description": "Jugo de frutos de temporada (Copoazú o Camu-Camu)." }
+  ],
+  "que_no_incluye": [
+    { "title": "Bebidas Alcohólicas", "description": "Vinos, cervezas y licores importados." },
+    { "title": "Servicios Extra", "description": "Transporte ida y vuelta al establecimiento." }
+  ],
+  "recomendaciones": [
+    "Realizar reserva con al menos 2 horas de antelación.",
+    "Informar sobre restricciones alimentarias o alergias.",
+    "Se sugiere uso de repelente si decide cenar en la zona de terraza."
+  ],
+  "consideraciones": [
+    "Formato a la carta sujeto a disponibilidad de pesca del día.",
+    "El restaurante no cuenta con zona de fumadores.",
+    "No se permite el ingreso de mascotas."
+  ],
+  "politicas": [
+    "Cancelación sin costo hasta 4 horas antes del servicio.",
+    "El no show genera un cobro del 50% sobre la reserva base."
+  ],
+  "itinerario_basico": [
+    { "titulo": "Llegada al Restaurante", "description": "Recepción y asignación de mesa según su reserva previa." },
+    { "titulo": "Elección del Menú", "description": "El cliente selecciona sus platos preferidos de nuestra carta del día, interactuando con el chef si lo desea." },
+    { "titulo": "Servicio y Degustación", "description": "Los platos son preparados al momento y servidos a la mesa con una breve explicación de origen." }
+  ]
+}

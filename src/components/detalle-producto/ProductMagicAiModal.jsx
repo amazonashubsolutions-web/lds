@@ -2,8 +2,13 @@ import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { productCategories, productSubcategories } from "../../data/productsData";
 
-export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onStartManual }) {
+export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onStartManual, onSwitchToTransport, onSwitchToRestaurant }) {
   const [step, setStep] = useState(1);
+  const today = new Date().toISOString().split('T')[0];
+  const oneYearLater = new Date();
+  oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
+  const maxDate = oneYearLater.toISOString().split('T')[0];
+
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [tourName, setTourName] = useState("");
@@ -31,6 +36,9 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
   const [newSeasonTitle, setNewSeasonTitle] = useState("");
   const [newSeasonStart, setNewSeasonStart] = useState("");
   const [newSeasonEnd, setNewSeasonEnd] = useState("");
+
+  // Step 5 State (Images)
+  const [images, setImages] = useState([]);
 
   const availableSubcategories = useMemo(
     () =>
@@ -75,6 +83,28 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
     setSeasons(seasons.filter((_, idx) => idx !== indexToRemove));
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    // Verificar que no se excedan las 5 imagenes en total
+    const limit = 5 - images.length;
+    const allowedFiles = files.slice(0, limit);
+    
+    if (files.length > limit) {
+      alert("Puedes seleccionar un máximo de 5 imágenes.");
+    }
+    
+    const newImages = allowedFiles.map(file => ({
+      file,
+      preview: URL.createObjectURL(file)
+    }));
+    
+    setImages([...images, ...newImages]);
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
   const handleFinishWizard = () => {
     const wizardData = {
       selectedSubcategory,
@@ -89,15 +119,28 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
       pricesHigh,
       pricesLowGroup,
       pricesHighGroup,
-      seasons
+      seasons,
+      images
     };
     onGenerate(selectedCategory, wizardData);
   };
 
-  const renderStepIndicator = () => {
-    return (
-      <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", marginBottom: "1.5rem" }}>
-        {[1, 2, 3, 4, 5].map(s => (
+  const getStepTitle = () => {
+    switch(step) {
+      case 1: return "Configuración Inicial";
+      case 2: return "Detalle y Horarios";
+      case 3: return "Configuración de Precios";
+      case 4: return "Fechas Especiales";
+      case 5: return "Galería de Imágenes";
+      case 6: return "Confirmación Final";
+      default: return "";
+    }
+  };
+
+  const renderStepIndicator = () => (
+    <div style={{ marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", marginBottom: "0.75rem" }}>
+        {[1, 2, 3, 4, 5, 6].map(s => (
           <div key={s} style={{ 
             height: "6px", 
             width: "35px", 
@@ -107,8 +150,16 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
           }} />
         ))}
       </div>
-    );
-  };
+      <div style={{ textAlign: "center" }}>
+        <p style={{ margin: 0, fontSize: "0.75rem", fontWeight: "800", color: "#F78A00", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "0.25rem" }}>
+          Paso {step} de 6
+        </p>
+        <h2 style={{ margin: 0, color: "#111", fontSize: "1.25rem", fontWeight: "800" }}>
+          {getStepTitle()}
+        </h2>
+      </div>
+    </div>
+  );
 
   const inputStyle = { width: "100%", padding: "0.75rem", borderRadius: "8px", border: "1px solid #ddd", fontSize: "0.95rem" };
   const labelStyle = { display: "block", marginBottom: "0.25rem", fontWeight: "600", fontSize: "0.9rem", color: "#444" };
@@ -175,16 +226,15 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
           <span className="material-icons-outlined" style={{ fontSize: "1.5rem" }}>close</span>
         </button>
 
-        {step > 1 && renderStepIndicator()}
+        {renderStepIndicator()}
 
         {step === 1 && (
           <div style={{ animation: "fadeIn 0.3s ease" }}>
-            <span className="material-icons-outlined" style={{ fontSize: "36px", color: "#F78A00", marginBottom: "0.5rem" }}>
-              auto_awesome
-            </span>
-            <h2 style={{ margin: "0 0 1rem 0", color: "#111", fontSize: "1.25rem", fontWeight: "700" }}>
-              ¿Qué tipo de oferta vas a crear hoy?
-            </h2>
+            <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+              <span className="material-icons-outlined" style={{ fontSize: "36px", color: "#F78A00", marginBottom: "0.5rem" }}>
+                auto_awesome
+              </span>
+            </div>
             
             <div style={{ marginBottom: "1rem", textAlign: "left" }}>
               <label style={labelStyle}>Categoría del producto</label>
@@ -283,6 +333,56 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
                   Continuar creación manualmente
                 </button>
               </div>
+            ) : selectedCategory === "transporte" ? (
+              <div style={{ animation: "fadeIn 0.3s ease" }}>
+                <div style={{ padding: "1rem", background: "#f0fdf4", border: "1px solid #10b981", borderRadius: "8px", marginBottom: "1rem", color: "#047857" }}>
+                  <span className="material-icons-outlined" style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>directions_car</span>
+                  <p style={{ margin: 0, fontWeight: "600", fontSize: "0.95rem" }}>
+                    Modo exclusivo para Transporte.
+                  </p>
+                  <p style={{ margin: "0.5rem 0 0", fontSize: "0.85rem" }}>
+                    Hemos habilitado un Wizard avanzado para configurar servicios de transporte.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => onSwitchToTransport({ 
+                    selectedCategory, 
+                    selectedSubcategory, 
+                    tourName, 
+                    cityName, 
+                    regionName 
+                  })}
+                  style={{ ...buttonStylePrimary, background: "#10b981" }}
+                >
+                  <span className="material-icons-outlined">open_in_new</span>
+                  Iniciar Asistente de Transporte
+                </button>
+              </div>
+            ) : selectedCategory === "restaurantes" ? (
+              <div style={{ animation: "fadeIn 0.3s ease" }}>
+                <div style={{ padding: "1rem", background: "#fffbeb", border: "1px solid #f59e0b", borderRadius: "8px", marginBottom: "1rem", color: "#92400e" }}>
+                  <span className="material-icons-outlined" style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>restaurant</span>
+                  <p style={{ margin: 0, fontWeight: "600", fontSize: "0.95rem" }}>
+                    Modo Gastronómico Activado.
+                  </p>
+                  <p style={{ margin: "0.5rem 0 0", fontSize: "0.85rem" }}>
+                    Habilita el asistente inteligente para configurar menús, horarios y estilo de cocina.
+                  </p>
+                </div>
+                <button 
+                  onClick={() => onSwitchToRestaurant({ 
+                    selectedCategory, 
+                    selectedSubcategory, 
+                    tourName, 
+                    cityName, 
+                    regionName 
+                  })}
+                  style={{ ...buttonStylePrimary, background: "#f59e0b" }}
+                >
+                  <span className="material-icons-outlined">open_in_new</span>
+                  Iniciar Asistente de Restaurante
+                </button>
+              </div>
             ) : selectedCategory !== "" ? (
               <div style={{ animation: "fadeIn 0.3s ease" }}>
                 <div style={{ padding: "1rem", background: "#f0f4f8", borderRadius: "8px", marginBottom: "1rem", color: "#00357f" }}>
@@ -307,9 +407,6 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
 
         {step === 2 && (
           <div style={{ animation: "fadeIn 0.3s ease", textAlign: "left" }}>
-            <h2 style={{ margin: "0 0 0.5rem 0", color: "#111", fontSize: "1.25rem", fontWeight: "700" }}>
-              {tourName || aiData?.titulo}
-            </h2>
             <div style={{ padding: "0.8rem", background: "#e8f5e9", border: "1px solid #c8e6c9", borderRadius: "8px", marginBottom: "1.5rem" }}>
               <p style={{ margin: "0 0 0.5rem 0", color: "#2e7d32", fontWeight: "700", display: "flex", alignItems: "center", gap: "0.3rem" }}>
                 <span className="material-icons-outlined" style={{ fontSize: "1.2rem" }}>check_circle</span>
@@ -320,8 +417,6 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
               </p>
             </div>
 
-            <h3 style={{ margin: "0 0 1rem 0", color: "#444", fontSize: "1.1rem" }}>PASO 2 - HORARIOS</h3>
-            
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
               <div>
                 <label style={labelStyle}>Hora salida</label>
@@ -344,10 +439,6 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
 
         {step === 3 && (
           <div style={{ animation: "fadeIn 0.3s ease", textAlign: "left" }}>
-            <h2 style={{ margin: "0 0 0.5rem 0", color: "#111", fontSize: "1.25rem", fontWeight: "700" }}>
-              {tourName || aiData?.titulo}
-            </h2>
-            <h3 style={{ margin: "0 0 1rem 0", color: "#444", fontSize: "1.1rem" }}>PASO 3 - PRECIOS</h3>
 
             <div style={{ maxHeight: "40vh", overflowY: "auto", paddingRight: "0.5rem", marginBottom: "1rem" }}>
               <div style={{ background: "#f8f9fa", padding: "1rem", borderRadius: "8px", border: "1px solid #ddd", marginBottom: "1rem" }}>
@@ -427,10 +518,6 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
 
         {step === 4 && (
           <div style={{ animation: "fadeIn 0.3s ease", textAlign: "left" }}>
-            <h2 style={{ margin: "0 0 0.5rem 0", color: "#111", fontSize: "1.25rem", fontWeight: "700" }}>
-              {tourName || aiData?.titulo}
-            </h2>
-            <h3 style={{ margin: "0 0 1rem 0", color: "#444", fontSize: "1.1rem" }}>PASO 4 - FECHAS TEMPORADA ALTA</h3>
 
             <div style={{ background: "#f8f9fa", padding: "1rem", borderRadius: "8px", border: "1px solid #ddd", marginBottom: "1rem" }}>
               <div style={{ marginBottom: "0.8rem" }}>
@@ -440,11 +527,28 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", marginBottom: "0.8rem" }}>
                 <div>
                   <label style={{...labelStyle, fontSize: "0.8rem"}}>Fecha Inicio</label>
-                  <input type="date" value={newSeasonStart} onChange={e => setNewSeasonStart(e.target.value)} style={{...inputStyle, padding: "0.5rem"}} />
+                  <input 
+                    type="date" 
+                    value={newSeasonStart} 
+                    min={today}
+                    max={maxDate}
+                    onChange={e => {
+                      setNewSeasonStart(e.target.value);
+                      setNewSeasonEnd(e.target.value);
+                    }} 
+                    style={{...inputStyle, padding: "0.5rem"}} 
+                  />
                 </div>
                 <div>
                   <label style={{...labelStyle, fontSize: "0.8rem"}}>Fecha Fin</label>
-                  <input type="date" value={newSeasonEnd} onChange={e => setNewSeasonEnd(e.target.value)} style={{...inputStyle, padding: "0.5rem"}} />
+                  <input 
+                    type="date" 
+                    value={newSeasonEnd} 
+                    min={newSeasonStart || today}
+                    max={maxDate}
+                    onChange={e => setNewSeasonEnd(e.target.value)} 
+                    style={{...inputStyle, padding: "0.5rem"}} 
+                  />
                 </div>
               </div>
               <button 
@@ -479,13 +583,98 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
         )}
 
         {step === 5 && (
+          <div style={{ animation: "fadeIn 0.3s ease", textAlign: "left" }}>
+
+            <div style={{ background: "#f8f9fa", padding: "1rem", borderRadius: "8px", border: "1px solid #ddd", marginBottom: "1rem" }}>
+              <p style={{ fontSize: "0.85rem", color: "#555", marginBottom: "0.8rem" }}>
+                Sube de 1 a 5 imágenes relacionadas al producto. <strong>La imagen 1 será la de portada.</strong>
+              </p>
+
+              {images.length < 5 && (
+                <div style={{ marginBottom: "1rem" }}>
+                   <label 
+                     style={{
+                       display: "inline-block",
+                       padding: "0.5rem 1rem",
+                       background: "#e2e8f0",
+                       borderRadius: "6px",
+                       cursor: "pointer",
+                       fontSize: "0.85rem",
+                       fontWeight: "600",
+                       color: "#333",
+                       textAlign: "center",
+                       width: "100%",
+                       boxSizing: "border-box"
+                     }}
+                   >
+                     <span className="material-icons-outlined" style={{ verticalAlign: "middle", marginRight: "5px", fontSize: "1.1rem" }}>add_photo_alternate</span>
+                     Seleccionar Imágenes
+                     <input 
+                       type="file" 
+                       accept="image/*" 
+                       multiple 
+                       onChange={handleImageChange} 
+                       style={{ display: "none" }} 
+                     />
+                   </label>
+                </div>
+              )}
+
+              {images.length > 0 && (
+                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-start", marginTop: "0.5rem" }}>
+                  {images.map((imgObj, idx) => (
+                    <div key={idx} style={{ position: "relative", width: "70px", height: "70px", borderRadius: "8px", overflow: "hidden", border: idx === 0 ? "2px solid #F78A00" : "1px solid #ccc" }}>
+                      <img src={imgObj.preview} alt={`preview-${idx}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <button 
+                        onClick={() => handleRemoveImage(idx)}
+                        style={{
+                          position: "absolute",
+                          top: "2px",
+                          right: "2px",
+                          background: "rgba(0,0,0,0.6)",
+                          color: "#fff",
+                          border: "none",
+                          borderRadius: "50%",
+                          width: "20px",
+                          height: "20px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          cursor: "pointer",
+                          padding: 0
+                        }}
+                      >
+                        <span className="material-icons-outlined" style={{ fontSize: "12px" }}>close</span>
+                      </button>
+                      {idx === 0 && (
+                        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "#F78A00", color: "#fff", fontSize: "10px", textAlign: "center", padding: "2px 0", fontWeight: "bold" }}>
+                          PORTADA
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button 
+              onClick={() => setStep(6)} 
+              style={{...buttonStylePrimary, background: "#0d3b66" }}
+              disabled={images.length === 0}
+            >
+              {images.length === 0 ? "Agrega al menos 1 imagen" : "Continuar al Paso 6"}
+            </button>
+            <button onClick={() => setStep(4)} style={{...buttonStylePrimary, background: "transparent", color: "#888", border: "1px solid #ddd", marginTop: "0.5rem"}}>Volver</button>
+          </div>
+        )}
+
+        {step === 6 && (
           <div style={{ animation: "fadeIn 0.3s ease", textAlign: "center" }}>
-            <span className="material-icons-outlined" style={{ fontSize: "56px", color: "#2e7d32", marginBottom: "0.5rem" }}>
-              playlist_add_check_circle
-            </span>
-            <h2 style={{ margin: "0 0 1.5rem 0", color: "#111", fontSize: "1.3rem", fontWeight: "800" }}>
-              ¡Felicitaciones! Ya vamos a finalizar
-            </h2>
+            <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+              <span className="material-icons-outlined" style={{ fontSize: "56px", color: "#2e7d32", marginBottom: "0.5rem" }}>
+                playlist_add_check_circle
+              </span>
+            </div>
 
             <div style={{ padding: "1.5rem", background: "#fffbeb", border: "2px dashed #F59E0B", borderRadius: "12px", marginBottom: "1.5rem" }}>
               <span className="material-icons-outlined" style={{ fontSize: "64px", color: "#F59E0B", marginBottom: "0.5rem" }}>
@@ -493,22 +682,13 @@ export default function ProductMagicAiModal({ isOpen, onClose, onGenerate, onSta
               </span>
               <h3 style={{ margin: "0 0 0.8rem 0", color: "#92400e", fontSize: "1.1rem" }}>¡Atención antes de finalizar!</h3>
               
-              <p style={{ color: "#b45309", fontSize: "0.95rem", lineHeight: "1.5", margin: "0 0 1rem 0" }}>
+              <p style={{ color: "#b45309", fontSize: "0.95rem", lineHeight: "1.5", margin: "0" }}>
                 Al presionar el botón abajo, serás llevado al formulario detallado. <strong>Por favor, revisa cuidadosamente toda la información</strong> que la IA ha generado para asegurar que no haya errores o detalles que omitir.
               </p>
-              
-              <div style={{ padding: "0.8rem", background: "#fef3c7", borderRadius: "8px", border: "1px solid #fde68a" }}>
-                <p style={{ margin: 0, color: "#92400e", fontWeight: "700", fontSize: "0.95rem" }}>
-                  🖼️ Importante sobre la Galería:
-                </p>
-                <p style={{ margin: "0.3rem 0 0 0", color: "#b45309", fontSize: "0.85rem" }}>
-                  Para que el producto se considere válido y publicable, debes cargar un <strong>mínimo de 1 imagen</strong> y un <strong>máximo de 5 imágenes</strong> en la sección correspondiente.
-                </p>
-              </div>
             </div>
 
             <button onClick={handleFinishWizard} style={{...buttonStylePrimary, background: "#0d3b66"}}>Entendido, ir a revisar y crear</button>
-            <button onClick={() => setStep(4)} style={{...buttonStylePrimary, background: "transparent", color: "#888", border: "1px solid #ddd", marginTop: "0.5rem"}}>Volver</button>
+            <button onClick={() => setStep(5)} style={{...buttonStylePrimary, background: "transparent", color: "#888", border: "1px solid #ddd", marginTop: "0.5rem"}}>Volver</button>
           </div>
         )}
 

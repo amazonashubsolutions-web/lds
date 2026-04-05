@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import PrimaryHeader from "../components/layout/PrimaryHeader";
 import ProductGalleryEditor from "../components/detalle-producto/ProductGalleryEditor";
 import ProductPriceCard from "../components/detalle-producto/ProductPriceCard";
+import ProductTransportPriceCard from "../components/detalle-producto/ProductTransportPriceCard";
 import ProductMagicAiModal from "../components/detalle-producto/ProductMagicAiModal";
+import ProductTransportMagicAiModal from "../components/detalle-producto/ProductTransportMagicAiModal";
+import ProductRestaurantMagicAiModal from "../components/modals/ProductRestaurantMagicAiModal";
+import ProductRestaurantPriceCard from "../components/detalle-producto/ProductRestaurantPriceCard";
 import Footer from "../components/resultados/Footer";
 import { footerData } from "../data/panelControlData";
 import {
@@ -177,6 +181,14 @@ function createInitialDraft() {
     recommendations: [""],
     considerations: [""],
     cancellationPolicies: [""],
+    metaVehicleOriginal: "",
+    metaCapacityOriginal: "",
+    metaRestaurant: {
+      foodStyle: "",
+      serviceFormat: "",
+      openingTime: "",
+      closingTime: ""
+    },
     booking: createBookingDraft("persona"),
   };
 }
@@ -236,6 +248,9 @@ export default function PanelControlProductCreatePage() {
   const [formError, setFormError] = useState("");
   const [createdProductInfo, setCreatedProductInfo] = useState(null);
   const [isMagicModalOpen, setIsMagicModalOpen] = useState(true);
+  const [isTransportMagicModalOpen, setIsTransportMagicModalOpen] = useState(false);
+  const [isRestaurantMagicModalOpen, setIsRestaurantMagicModalOpen] = useState(false);
+  const [wizardInitialData, setWizardInitialData] = useState(null);
 
   const handleMagicGenerate = async (
     category,
@@ -253,10 +268,34 @@ export default function PanelControlProductCreatePage() {
       pricesLowGroup,
       pricesHighGroup,
       seasons,
+      images,
     } = {}
   ) => {
     try {
       if (!aiData) return;
+      
+      if (images && images.length > 0) {
+        setGallerySlots((current) => 
+          current.map((slot, index) => {
+            const imgData = images[index];
+            if (imgData && imgData.file) {
+              const file = imgData.file;
+              return {
+                ...slot,
+                image: {
+                  ...(slot.image || { id: `product-draft-gallery-${slot.slot + 1}` }),
+                  url: createPublicGalleryUrl(file.name),
+                  previewUrl: imgData.preview,
+                  fileName: file.name,
+                  position: slot.slot,
+                  isPrimary: slot.slot === 0,
+                }
+              };
+            }
+            return slot;
+          })
+        );
+      }
       
       setDraft((current) => {
         const newBooking = JSON.parse(JSON.stringify(current.booking));
@@ -351,6 +390,274 @@ export default function PanelControlProductCreatePage() {
     setIsMagicModalOpen(false);
   };
 
+  const handleSwitchToTransport = (initialData) => {
+    setWizardInitialData(initialData);
+    setIsMagicModalOpen(false);
+    setIsTransportMagicModalOpen(true);
+  };
+
+  const handleSwitchToRestaurant = (initialData) => {
+    setWizardInitialData(initialData);
+    setIsMagicModalOpen(false);
+    setIsRestaurantMagicModalOpen(true);
+  };
+
+  const handleMagicGenerateRestaurant = async (
+    category,
+    {
+      selectedSubcategory,
+      tourName,
+      cityName,
+      regionName,
+      foodStyle,
+      serviceFormat,
+      openingTime,
+      closingTime,
+      aiData,
+      pricesLow,
+      pricesHigh,
+      pricesLowGroup,
+      pricesHighGroup,
+      seasons,
+      images
+    } = {}
+  ) => {
+    try {
+      if (!aiData) return;
+      
+      // Image Handling (Reuse logic)
+      if (images && images.length > 0) {
+        setGallerySlots((current) => 
+          current.map((slot, index) => {
+            const imgData = images[index];
+            if (imgData && imgData.file) {
+              const file = imgData.file;
+              return {
+                ...slot,
+                image: {
+                  ...(slot.image || { id: `product-draft-gallery-${slot.slot + 1}` }),
+                  url: createPublicGalleryUrl(file.name),
+                  previewUrl: imgData.preview,
+                  fileName: file.name,
+                  position: slot.slot,
+                  isPrimary: slot.slot === 0,
+                }
+              };
+            }
+            return slot;
+          })
+        );
+      }
+      
+      setDraft((current) => {
+        const newBooking = JSON.parse(JSON.stringify(current.booking));
+        newBooking.price = pricesLow?.adult || current.booking.price;
+        
+        // Price Mapping (Same as Activities)
+        if (newBooking.pricingDetails?.seasons?.low?.individual && pricesLow) {
+          newBooking.pricingDetails.seasons.low.individual[0].price = pricesLow.adult || "";
+          newBooking.pricingDetails.seasons.low.individual[1].price = pricesLow.child || "";
+          newBooking.pricingDetails.seasons.low.individual[2].price = pricesLow.baby || "";
+        }
+        
+        if (newBooking.pricingDetails?.seasons?.low?.group && pricesLowGroup) {
+          newBooking.pricingDetails.seasons.low.group[0].price = pricesLowGroup.adult || "";
+          newBooking.pricingDetails.seasons.low.group[1].price = pricesLowGroup.child || "";
+          newBooking.pricingDetails.seasons.low.group[2].price = pricesLowGroup.baby || "";
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.individual && pricesHigh) {
+          newBooking.pricingDetails.seasons.high.individual[0].price = pricesHigh.adult || "";
+          newBooking.pricingDetails.seasons.high.individual[1].price = pricesHigh.child || "";
+          newBooking.pricingDetails.seasons.high.individual[2].price = pricesHigh.baby || "";
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.group && pricesHighGroup) {
+          newBooking.pricingDetails.seasons.high.group[0].price = pricesHighGroup.adult || "";
+          newBooking.pricingDetails.seasons.high.group[1].price = pricesHighGroup.child || "";
+          newBooking.pricingDetails.seasons.high.group[2].price = pricesHighGroup.baby || "";
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.periods && seasons && seasons.length > 0) {
+           const newPeriods = seasons.map(s => ({
+             id: createEditableItemId("period"),
+             label: s.title,
+             startMonthDay: s.start ? s.start.substring(5) : "",
+             endMonthDay: s.end ? s.end.substring(5) : ""
+           }));
+           newBooking.pricingDetails.seasons.high.periods = newPeriods;
+        }
+
+        const overviewParagraphs = Array.isArray(aiData.descripcion_general) ? [...aiData.descripcion_general] : [];
+        if (aiData.experiencia_servicio?.descripcion) {
+          overviewParagraphs.push(aiData.experiencia_servicio.descripcion);
+        }
+
+        return {
+          ...current,
+          categoryId: category || current.categoryId,
+          subcategoryId: selectedSubcategory ?? current.subcategoryId,
+          title: aiData.titulo || tourName || current.title,
+          city: cityName ?? current.city,
+          region: regionName ?? current.region,
+          
+          summary: aiData.descripcion_breve || current.summary,
+          departurePoint: aiData.ubicacion || current.departurePoint,
+          overview: overviewParagraphs.length > 0 ? overviewParagraphs : current.overview,
+          itinerary: Array.isArray(aiData.itinerario_basico) ? aiData.itinerario_basico.map(it => ({
+            id: createEditableItemId("itinerary"),
+            day: "",
+            title: it.titulo || "",
+            description: it.descripcion || ""
+          })) : (Array.isArray(aiData.itinerario) ? aiData.itinerario.map(it => ({
+            id: createEditableItemId("itinerary"),
+            day: "",
+            title: it.titulo || "",
+            description: it.descripcion || ""
+          })) : current.itinerary),
+          includes: Array.isArray(aiData.que_incluye) ? aiData.que_incluye.map(item => ({
+            id: createEditableItemId("include"),
+            title: item.title || "",
+            description: item.description || ""
+          })) : current.includes,
+          excludes: Array.isArray(aiData.que_no_incluye) ? aiData.que_no_incluye.map(item => ({
+            id: createEditableItemId("exclude"),
+            title: item.title || "",
+            description: item.description || ""
+          })) : current.excludes,
+          recommendations: Array.isArray(aiData.recomendaciones) ? aiData.recomendaciones : current.recommendations,
+          considerations: Array.isArray(aiData.consideraciones) ? aiData.consideraciones : current.considerations,
+          cancellationPolicies: Array.isArray(aiData.politicas) ? aiData.politicas : current.cancellationPolicies,
+          
+          departureTime: openingTime !== undefined ? openingTime : current.departureTime,
+          returnTime: closingTime !== undefined ? closingTime : current.returnTime,
+          
+          metaRestaurant: {
+            foodStyle: foodStyle || "",
+            serviceFormat: aiData.tipo_servicio || serviceFormat || "",
+            openingTime: openingTime || "",
+            closingTime: closingTime || ""
+          },
+
+          booking: newBooking
+        };
+      });
+      setIsRestaurantMagicModalOpen(false);
+    } catch (err) {
+      console.error("Error al cargar mock JSON de restaurante:", err);
+    }
+  };
+
+  const handleMagicGenerateTransport = async (
+    category,
+    {
+      selectedSubcategory,
+      cityName,
+      vehicleType,
+      capacity,
+      departureTime,
+      returnTime,
+      aiData,
+      priceLow,
+      priceHigh,
+      seasons,
+      images
+    } = {}
+  ) => {
+    try {
+      if (!aiData) return;
+      
+      if (images && images.length > 0) {
+        setGallerySlots((current) => 
+          current.map((slot, index) => {
+            const imgData = images[index];
+            if (imgData && imgData.file) {
+              const file = imgData.file;
+              return {
+                ...slot,
+                image: {
+                  ...(slot.image || { id: `product-draft-gallery-${slot.slot + 1}` }),
+                  url: createPublicGalleryUrl(file.name),
+                  previewUrl: imgData.preview,
+                  fileName: file.name,
+                  position: slot.slot,
+                  isPrimary: slot.slot === 0,
+                }
+              };
+            }
+            return slot;
+          })
+        );
+      }
+      
+      setDraft((current) => {
+        const newBooking = JSON.parse(JSON.stringify(current.booking));
+        newBooking.price = priceLow || current.booking.price;
+        
+        if (newBooking.pricingDetails?.seasons?.low?.individual && priceLow) {
+          newBooking.pricingDetails.seasons.low.individual[0].price = priceLow;
+        }
+        
+        if (newBooking.pricingDetails?.seasons?.high?.individual && priceHigh) {
+          newBooking.pricingDetails.seasons.high.individual[0].price = priceHigh;
+        }
+
+        if (newBooking.pricingDetails?.seasons?.high?.periods && seasons && seasons.length > 0) {
+           const newPeriods = seasons.map(s => ({
+             id: createEditableItemId("period"),
+             label: s.title,
+             startMonthDay: s.start ? s.start.substring(5) : "",
+             endMonthDay: s.end ? s.end.substring(5) : ""
+           }));
+           newBooking.pricingDetails.seasons.high.periods = newPeriods;
+        }
+
+        return {
+          ...current,
+          categoryId: category || current.categoryId,
+          subcategoryId: selectedSubcategory ?? current.subcategoryId,
+          title: aiData.datosGenerales?.titulo || current.title,
+          city: cityName ?? current.city,
+          region: current.region, // Can leave as is
+          
+          summary: aiData.datosGenerales?.descripcionBreve || current.summary,
+          overview: Array.isArray(aiData.descripcionGeneral) ? aiData.descripcionGeneral : current.overview,
+          itinerary: Array.isArray(aiData.itinerario) ? aiData.itinerario.map(it => ({
+            id: createEditableItemId("itinerary"),
+            day: "",
+            title: it.titulo || "",
+            description: it.descripcion || ""
+          })) : current.itinerary,
+          includes: Array.isArray(aiData.incluye) ? aiData.incluye.map(item => ({
+            id: createEditableItemId("include"),
+            title: item.titulo || "",
+            description: item.descripcion || ""
+          })) : current.includes,
+          excludes: Array.isArray(aiData.noIncluye) ? aiData.noIncluye.map(item => ({
+            id: createEditableItemId("exclude"),
+            title: item.titulo || "",
+            description: item.descripcion || ""
+          })) : current.excludes,
+          recommendations: Array.isArray(aiData.recomendaciones) ? aiData.recomendaciones : current.recommendations,
+          considerations: Array.isArray(aiData.consideraciones) ? aiData.consideraciones : current.considerations,
+          cancellationPolicies: Array.isArray(aiData.politicasCancelacion) ? aiData.politicasCancelacion : current.cancellationPolicies,
+          
+          departureTime: departureTime !== undefined ? departureTime : current.departureTime,
+          returnTime: returnTime !== undefined ? returnTime : current.returnTime,
+          
+          // Meta transport specific details (will be appended during save)
+          metaVehicleOriginal: vehicleType,
+          metaCapacityOriginal: capacity,
+
+          booking: newBooking
+        };
+      });
+      setIsTransportMagicModalOpen(false);
+    } catch (err) {
+      console.error("Error al cargar mock JSON de transporte:", err);
+    }
+  };
+
   const availableSubcategories = useMemo(
     () =>
       productSubcategories.filter(
@@ -398,6 +705,13 @@ export default function PanelControlProductCreatePage() {
       },
     }));
   }, [draft.pricingUnitLabel]);
+
+  useEffect(() => {
+    if (formError) {
+      const timer = setTimeout(() => setFormError(""), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [formError]);
 
   const bookingForSidebar = useMemo(
     () => ({
@@ -727,6 +1041,43 @@ export default function PanelControlProductCreatePage() {
       });
     }
 
+    if (draft.categoryId === "transporte") {
+      if (draft.metaVehicleOriginal) {
+        entries.push({
+          id: createEditableItemId("meta"),
+          label: "Vehículo",
+          value: draft.metaVehicleOriginal,
+        });
+      }
+      if (draft.metaCapacityOriginal) {
+        entries.push({
+          id: createEditableItemId("meta"),
+          label: "Capacidad",
+          value: `Hasta ${draft.metaCapacityOriginal} Pasajeros`,
+        });
+      }
+      if (draft.departureTime && draft.returnTime) {
+        entries.push({
+          id: createEditableItemId("meta"),
+          label: "Franja Horaria",
+          value: `${formatTimeToMeridiem(draft.departureTime)} a ${formatTimeToMeridiem(draft.returnTime)}`,
+        });
+      }
+    }
+
+    if (draft.categoryId === "restaurantes") {
+      const { foodStyle, serviceFormat, openingTime, closingTime } = draft.metaRestaurant || {};
+      if (foodStyle) {
+        entries.push({ id: createEditableItemId("meta"), label: "Estilo", value: `Cocina ${foodStyle}` });
+      }
+      if (serviceFormat) {
+        entries.push({ id: createEditableItemId("meta"), label: "Servicio", value: serviceFormat });
+      }
+      if (openingTime || closingTime) {
+        entries.push({ id: createEditableItemId("meta"), label: "Horario", value: `${formatTimeToMeridiem(openingTime)} a ${formatTimeToMeridiem(closingTime)}` });
+      }
+    }
+
     return entries;
   }
 
@@ -939,6 +1290,23 @@ export default function PanelControlProductCreatePage() {
         onClose={() => navigate("/panel-de-control/productos")}
         onGenerate={handleMagicGenerate}
         onStartManual={handleMagicStartManual}
+        onSwitchToTransport={handleSwitchToTransport}
+        onSwitchToRestaurant={handleSwitchToRestaurant}
+      />
+      
+      <ProductTransportMagicAiModal 
+        isOpen={isTransportMagicModalOpen}
+        initialData={wizardInitialData}
+        onClose={() => navigate("/panel-de-control/productos")}
+        onGenerate={handleMagicGenerateTransport}
+      />
+
+      <ProductRestaurantMagicAiModal 
+        isOpen={isRestaurantMagicModalOpen}
+        initialData={wizardInitialData}
+        onClose={() => navigate("/panel-de-control/productos")}
+        onGenerate={handleMagicGenerateRestaurant}
+        onStartManual={handleMagicStartManual}
       />
       
       <main className="detalle-producto-main">
@@ -994,8 +1362,44 @@ export default function PanelControlProductCreatePage() {
 
           <div className="detalle-producto-content-wrap">
             {formError ? (
-              <div className="detalle-producto-gallery-editor-feedback detalle-producto-gallery-editor-feedback--error">
-                {formError}
+              <div
+                style={{
+                  position: "fixed",
+                  bottom: "40px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  backgroundColor: "#d32f2f",
+                  color: "#fff",
+                  padding: "16px 24px",
+                  borderRadius: "12px",
+                  boxShadow: "0 10px 30px rgba(211,47,47,0.4)",
+                  zIndex: 9999,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  fontWeight: "600",
+                  fontSize: "1rem",
+                  letterSpacing: "0.2px",
+                  animation: "slideUpFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
+                }}
+                role="alert"
+              >
+                <span className="material-icons-outlined" style={{ fontSize: "26px" }}>warning_amber</span>
+                <span>{formError}</span>
+                <button 
+                  onClick={() => setFormError("")}
+                  style={{ background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", cursor: "pointer", marginLeft: "12px", display: "flex", borderRadius: "50%", padding: "4px", transition: "background 0.2s" }}
+                  onMouseOver={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.3)"}
+                  onMouseOut={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
+                >
+                  <span className="material-icons-outlined" style={{ fontSize: "18px" }}>close</span>
+                </button>
+                <style>{`
+                  @keyframes slideUpFade {
+                    from { transform: translate(-50%, 30px); opacity: 0; }
+                    to { transform: translate(-50%, 0); opacity: 1; }
+                  }
+                `}</style>
               </div>
             ) : null}
 
@@ -1537,18 +1941,46 @@ export default function PanelControlProductCreatePage() {
               </div>
 
               <div className="detalle-producto-sidebar">
-                <ProductPriceCard
-                  booking={bookingForSidebar}
-                  status="inactive"
-                  isEditingEnabled={true}
-                  alwaysEditable={true}
-                  showEditToggle={false}
-                  onBasePriceChange={updateBookingBasePrice}
-                  onGridPriceChange={updateBookingGridPrice}
-                  onHighSeasonPeriodChange={updateHighSeasonPeriod}
-                  onAddHighSeasonPeriod={addHighSeasonPeriod}
-                  onRemoveHighSeasonPeriod={removeHighSeasonPeriod}
-                />
+                {draft.categoryId === "transporte" ? (
+                  <ProductTransportPriceCard
+                    booking={bookingForSidebar}
+                    status="inactive"
+                    isEditingEnabled={true}
+                    alwaysEditable={true}
+                    showEditToggle={false}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onHighSeasonPeriodChange={updateHighSeasonPeriod}
+                    onAddHighSeasonPeriod={addHighSeasonPeriod}
+                    onRemoveHighSeasonPeriod={removeHighSeasonPeriod}
+                  />
+                ) : draft.categoryId === "restaurantes" ? (
+                  <ProductRestaurantPriceCard
+                    draft={draft}
+                    status="inactive"
+                    isEditingEnabled={true}
+                    alwaysEditable={true}
+                    showEditToggle={false}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onUpdatePeriod={updateHighSeasonPeriod}
+                    onAddPeriod={addHighSeasonPeriod}
+                    onRemovePeriod={removeHighSeasonPeriod}
+                  />
+                ) : (
+                  <ProductPriceCard
+                    booking={bookingForSidebar}
+                    status="inactive"
+                    isEditingEnabled={true}
+                    alwaysEditable={true}
+                    showEditToggle={false}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onHighSeasonPeriodChange={updateHighSeasonPeriod}
+                    onAddHighSeasonPeriod={addHighSeasonPeriod}
+                    onRemoveHighSeasonPeriod={removeHighSeasonPeriod}
+                  />
+                )}
               </div>
             </div>
           </div>

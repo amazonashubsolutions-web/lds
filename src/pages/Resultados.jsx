@@ -90,8 +90,6 @@ function getKeywordSearchTitle(activeCategoryId) {
   switch (activeCategoryId) {
     case "actividades":
       return "Busca una actividad";
-    case "hospedaje":
-      return "Busca un hospedaje";
     case "transporte":
       return "Busca un transporte";
     case "restaurantes":

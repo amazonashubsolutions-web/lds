@@ -7,6 +7,8 @@ import { getAllProductCouponRecords } from "../utils/productCouponsStorage";
 import { toProductCouponItem } from "../data/couponsData";
 
 import ProductBookingCard from "../components/detalle-producto/ProductBookingCard";
+import ProductTransportBookingCard from "../components/detalle-producto/ProductTransportBookingCard";
+import ProductRestaurantBookingCard from "../components/detalle-producto/ProductRestaurantBookingCard";
 import ProductExcludes from "../components/detalle-producto/ProductExcludes";
 import ProductGallery from "../components/detalle-producto/ProductGallery";
 import ProductHeroInfo from "../components/detalle-producto/ProductHeroInfo";
@@ -111,10 +113,23 @@ export default function DetalleProductoPage() {
                   </div>
 
                   <div className="detalle-producto-sidebar">
-                    <ProductBookingCard
-                      booking={detail.booking}
-                      initialTravelDate={searchedDate}
-                    />
+                    {detail.categoryId === "transporte" ? (
+                      <ProductTransportBookingCard
+                        booking={detail.booking}
+                        initialTravelDate={searchedDate}
+                        meta={detail.meta}
+                      />
+                    ) : detail.categoryId === "restaurantes" ? (
+                      <ProductRestaurantBookingCard
+                        booking={detail.booking}
+                        initialTravelDate={searchedDate}
+                      />
+                    ) : (
+                      <ProductBookingCard
+                        booking={detail.booking}
+                        initialTravelDate={searchedDate}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
