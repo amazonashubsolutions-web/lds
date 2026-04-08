@@ -68,8 +68,8 @@ export default function DetalleProductoPage() {
 
 function DetalleProductoResolvedPage({ detail }) {
   const [searchParams] = useSearchParams();
-  const [statusRefreshVersion, setStatusRefreshVersion] = useState(0);
-  const [couponRefreshKey, setCouponRefreshKey] = useState(0);
+  const [, setStatusRefreshVersion] = useState(0);
+  const [, setCouponRefreshKey] = useState(0);
   const [isSeasonDatesModalOpen, setIsSeasonDatesModalOpen] = useState(false);
   const couponManagerRef = useRef(null);
   const relatedItems = getRelatedProducts(detail.id);
@@ -77,18 +77,12 @@ function DetalleProductoResolvedPage({ detail }) {
   
   const panelProduct = useMemo(() => getPanelProductItemById(detail.id), [detail.id]);
   
-  const resolvedStatus = useMemo(
-    () => getResolvedProductStatus(detail.id, detail.status),
-    [detail.id, detail.status, statusRefreshVersion],
-  );
+  const resolvedStatus = getResolvedProductStatus(detail.id, detail.status);
   const isInactive = resolvedStatus === "inactive";
 
-  const productCouponItems = useMemo(() => {
-    const raw = getAllProductCouponRecords();
-    return raw
-      .filter((coupon) => coupon.productId === detail.id)
-      .map(toProductCouponItem);
-  }, [detail.id, couponRefreshKey]);
+  const productCouponItems = getAllProductCouponRecords()
+    .filter((coupon) => coupon.productId === detail.id)
+    .map(toProductCouponItem);
 
   useEffect(() => {
     return subscribeToProductStatusChanges(() => {
@@ -145,6 +139,7 @@ function DetalleProductoResolvedPage({ detail }) {
                   <div className="detalle-producto-sidebar">
                     {detail.categoryId === "transporte" ? (
                       <ProductTransportBookingCard
+                        key={`transport-booking-${detail.id}-${searchedDate || "sin-fecha"}`}
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
                         meta={detail.meta}
@@ -171,6 +166,7 @@ function DetalleProductoResolvedPage({ detail }) {
                       />
                     ) : (
                       <ProductBookingCard
+                        key={`activity-booking-${detail.id}-${searchedDate || "sin-fecha"}`}
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
                       />

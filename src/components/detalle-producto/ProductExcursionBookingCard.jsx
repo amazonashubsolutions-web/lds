@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   getProductCategoryCssVars,
   getProductCategoryTheme,
@@ -30,7 +30,7 @@ export default function ProductExcursionBookingCard({ booking, initialTravelDate
   const [travelDate, setTravelDate] = useState(initialTravelDate || new Date().toISOString().split("T")[0]);
 
   const pricingDetails = booking.pricingDetails || {};
-  const seasons = pricingDetails.seasons || {};
+  const seasons = useMemo(() => pricingDetails.seasons || {}, [pricingDetails.seasons]);
   const groupMin = pricingDetails.groupMinPassengers || 6;
 
   // Comfort Details

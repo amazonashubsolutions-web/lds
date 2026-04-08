@@ -131,7 +131,6 @@ function HighSeasonPeriodsEditor({ periods = [], isEditing = false, onPeriodChan
 
 export default function ProductRestaurantPriceCard({
   draft,
-  status = "active",
   isEditingEnabled = false,
   activeBlock = null,
   onActivateBlock = () => {},

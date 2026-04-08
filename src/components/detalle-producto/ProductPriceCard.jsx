@@ -272,7 +272,6 @@ function HighSeasonPeriodsEditor({
 
 export default function ProductPriceCard({
   booking,
-  status = "active",
   isEditingEnabled = false,
   activeBlock = null,
   onActivateBlock = () => {},
@@ -287,7 +286,6 @@ export default function ProductPriceCard({
   const categoryThemeStyle = getProductCategoryCssVars("actividades");
   const pricingDetails = booking.pricingDetails;
   const seasonalPricing = pricingDetails?.seasons;
-  const statusLabel = status === "inactive" ? "Inactivo" : "Activo";
   const isPricingActive =
     isEditingEnabled && (alwaysEditable || activeBlock === "pricing");
 

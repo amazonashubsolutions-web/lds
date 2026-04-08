@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import PrimaryHeader from "../components/layout/PrimaryHeader";
 import ProductAdminActionBar from "../components/detalle-producto/ProductAdminActionBar";
@@ -21,7 +21,6 @@ import ProductRecommendations from "../components/detalle-producto/ProductRecomm
 import ProductTravelNotes from "../components/detalle-producto/ProductTravelNotes";
 import ProductKeywordCloud from "../components/detalle-producto/ProductKeywordCloud";
 import ProductSeasonDatesModal from "../components/detalle-producto/ProductSeasonDatesModal";
-import ProductMagicAiModal from "../components/detalle-producto/ProductMagicAiModal";
 import Footer from "../components/resultados/Footer";
 import {
   footerData,
@@ -43,7 +42,6 @@ import { useProductEditor } from "../hooks/useProductEditor";
 
 export default function PanelControlProductDetailPage() {
   const { productId } = useParams();
-  const navigate = useNavigate();
   const detail = getDetalleProducto(productId);
 
   if (!detail) {
@@ -75,26 +73,23 @@ export default function PanelControlProductDetailPage() {
 
   return (
     <PanelControlProductDetailResolvedPage
+      key={detail.id}
       detail={detail}
-      navigate={navigate}
       productId={productId}
     />
   );
 }
 
-function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) {
+function PanelControlProductDetailResolvedPage({ detail, productId }) {
   const panelProduct = getPanelProductItemById(productId);
-  const [productStatus, setProductStatus] = useState(() =>
-    getResolvedProductStatus(detail.id, detail.status),
-  );
+  const [productStatusOverrides, setProductStatusOverrides] = useState({});
   
   const couponManagerRef = useRef(null);
-  const [couponRefreshKey, setCouponRefreshKey] = useState(0);
+  const [, setCouponRefreshKey] = useState(0);
 
   const [isDisableConfirmationOpen, setIsDisableConfirmationOpen] = useState(false);
   const [isEnableNoticeOpen, setIsEnableNoticeOpen] = useState(false);
   const [isSeasonDatesModalOpen, setIsSeasonDatesModalOpen] = useState(false);
-  const [isMagicModalOpen, setIsMagicModalOpen] = useState(productId === "nuevo");
   const {
     isEditingProduct,
     gallerySlots,
@@ -122,21 +117,15 @@ function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) 
     setContentDraft,
     setSelectedGallerySlot,
     setActiveContentBlock,
-    mergeAiDraft,
   } = useProductEditor(detail);
+  const resolvedProductStatus = getResolvedProductStatus(detail.id, detail.status);
+  const productStatus = productStatusOverrides[detail.id] ?? resolvedProductStatus;
   const isInactive = productStatus === "inactive";
   
-  const productCouponItems = useMemo(
-    () =>
-      getAllProductCouponRecords()
-        .filter((coupon) => coupon.productId === detail.id)
-        .map(toProductCouponItem),
-    [detail.id, couponRefreshKey],
-  );
-  const productCouponCount = useMemo(
-    () => productCouponItems.length,
-    [productCouponItems],
-  );
+  const productCouponItems = getAllProductCouponRecords()
+    .filter((coupon) => coupon.productId === detail.id)
+    .map(toProductCouponItem);
+  const productCouponCount = productCouponItems.length;
 
   const detailWithStatus = useMemo(
     () => ({
@@ -147,23 +136,10 @@ function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) 
   );
 
   useEffect(() => {
-    setProductStatus(getResolvedProductStatus(detail.id, detail.status));
-  }, [detail.id, detail.status]);
-
-  useEffect(() => {
-    if (productId === "nuevo") {
-      setIsMagicModalOpen(true);
-    } else {
-      setIsMagicModalOpen(false);
-    }
-  }, [productId]);
-
-  useEffect(() => {
     if (
       !isDisableConfirmationOpen &&
       !isEnableNoticeOpen &&
-      !isSeasonDatesModalOpen &&
-      !isMagicModalOpen
+      !isSeasonDatesModalOpen
     ) {
       return undefined;
     }
@@ -226,7 +202,10 @@ function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) 
 
   function applyProductStatus(nextStatus) {
     persistProductStatus(detail.id, nextStatus);
-    setProductStatus(nextStatus);
+    setProductStatusOverrides((current) => ({
+      ...current,
+      [detail.id]: nextStatus,
+    }));
   }
 
   function confirmDisableProduct() {
@@ -244,45 +223,12 @@ function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) 
     openDisableConfirmation();
   }
 
-  const handleMagicGenerate = async (category, { tourName, cityName }) => {
-    try {
-      const response = await fetch("/src/data/mockAiResponse.json");
-      const mockData = await response.json();
-      
-      mergeAiDraft(mockData);
-      // Cerramos el modal mágicamente
-      setIsMagicModalOpen(false);
-      // Activamos modo edición si no lo estaba
-      if (!isEditingProduct) {
-        openEditProductMode();
-      }
-    } catch (err) {
-      console.error("Error al cargar mock JSON:", err);
-    }
-  };
-
-  const handleMagicStartManual = () => {
-    setIsMagicModalOpen(false);
-    if (!isEditingProduct) {
-      openEditProductMode();
-    }
-  };
 
   return (
-    <div className="detalle-producto-page detalle-producto-page--admin" style={{ '--detalle-admin-header-offset': '0px' }}>
-      
-      <ProductMagicAiModal 
-        isOpen={isMagicModalOpen}
-        onClose={() => navigate("/panel-de-control/productos")}
-        onGenerate={handleMagicGenerate}
-        onStartManual={handleMagicStartManual}
-        onSwitchToRestaurant={() => {
-          // In a real scenario, we might want to switch to a dedicated Restaurant Wizard here too, 
-          // but for now we'll just handle the create flux better.
-          setIsMagicModalOpen(false);
-        }}
-      />
-
+    <div
+      className="detalle-producto-page detalle-producto-page--admin"
+      style={{ "--detalle-admin-header-offset": "0px" }}
+    >
       <main className="detalle-producto-main">
         <div className="detalle-producto-admin-sticky-shell" style={{ paddingTop: '0' }}>
           <div className="detalle-producto-admin-sticky-wrap">
@@ -640,3 +586,4 @@ function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) 
     </div>
   );
 }
+

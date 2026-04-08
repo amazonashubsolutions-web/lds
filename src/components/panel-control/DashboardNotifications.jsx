@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import {
@@ -8,23 +8,12 @@ import {
 
 export default function DashboardNotifications() {
   const [searchParams] = useSearchParams();
-  const [selectedNotification, setSelectedNotification] = useState(null);
+  const selectedNotificationId = searchParams.get("notification");
+  const [selectedNotification, setSelectedNotification] = useState(() =>
+    headerNotifications.find((item) => item.id === selectedNotificationId) ?? null
+  );
   const sectionRef = useRef(null);
   const unreadCount = headerNotifications.filter((item) => !item.read).length;
-  const selectedNotificationId = searchParams.get("notification");
-  const initialNotification = useMemo(
-    () =>
-      headerNotifications.find((item) => item.id === selectedNotificationId) ?? null,
-    [selectedNotificationId]
-  );
-
-  useEffect(() => {
-    if (!initialNotification) {
-      return;
-    }
-
-    setSelectedNotification(initialNotification);
-  }, [initialNotification]);
 
   useEffect(() => {
     if (!selectedNotificationId) {

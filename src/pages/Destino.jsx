@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import DestinationActivities from "../components/destino/DestinationActivities";
 import DestinationHero from "../components/destino/DestinationHero";
@@ -47,19 +47,22 @@ export default function DestinoPage() {
     setIsGalleryModalOpen(true);
   };
 
-  const sectionItems = [
-    { id: "hero", label: "La Ciudad", ref: heroSectionRef },
-    { id: "logistics", label: "Como llegar", ref: logisticsSectionRef },
-    { id: "climate", label: "Clima y cuando viajar", ref: climateSectionRef },
-    { id: "activities", label: "Que hacer", ref: activitiesSectionRef },
-    { id: "stay", label: "Donde hospedarse", ref: staySectionRef },
-    { id: "cuisine", label: "Gastronomia", ref: cuisineSectionRef },
-    { id: "planning", label: "Transporte y Presupuesto Diario", ref: planningSectionRef },
-    { id: "tips", label: "Consejos de experto", ref: tipsSectionRef },
-    { id: "gallery", label: "Galeria", ref: mediaSectionRef },
-    { id: "journey", label: "Disena tu ruta", ref: journeySectionRef },
-    { id: "faq", label: "Preguntas frecuentes", ref: faqSectionRef },
-  ];
+  const sectionItems = useMemo(
+    () => [
+      { id: "hero", label: "La Ciudad", ref: heroSectionRef },
+      { id: "logistics", label: "Como llegar", ref: logisticsSectionRef },
+      { id: "climate", label: "Clima y cuando viajar", ref: climateSectionRef },
+      { id: "activities", label: "Que hacer", ref: activitiesSectionRef },
+      { id: "stay", label: "Donde hospedarse", ref: staySectionRef },
+      { id: "cuisine", label: "Gastronomia", ref: cuisineSectionRef },
+      { id: "planning", label: "Transporte y Presupuesto Diario", ref: planningSectionRef },
+      { id: "tips", label: "Consejos de experto", ref: tipsSectionRef },
+      { id: "gallery", label: "Galeria", ref: mediaSectionRef },
+      { id: "journey", label: "Disena tu ruta", ref: journeySectionRef },
+      { id: "faq", label: "Preguntas frecuentes", ref: faqSectionRef },
+    ],
+    [],
+  );
 
   useEffect(() => {
     const updateActiveSection = () => {
@@ -96,7 +99,7 @@ export default function DestinoPage() {
       window.removeEventListener("scroll", updateActiveSection);
       window.removeEventListener("resize", updateActiveSection);
     };
-  }, []);
+  }, [sectionItems]);
 
   const handleScrollToSection = (sectionItem) => {
     if (!sectionItem.ref.current) {

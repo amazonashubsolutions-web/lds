@@ -1,25 +1,8 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-
-import {
-  formatProductCouponRuleLabel,
-  getCouponDiscountTargetLabel,
-} from "../../data/couponsData";
-import {
-  evaluateProductCouponForBooking,
-  findProductCouponByCode,
-  getDateAvailableProductCoupons,
-} from "../../utils/bookingCouponEngine";
+import { useState } from "react";
 import {
   getProductCategoryCssVars,
   getProductCategoryTheme,
 } from "../../utils/productCategoryThemes";
-
-function formatBookingPrice(value) {
-  if (!value) return null;
-  const digits = String(value).replace(/\D/g, "");
-  return digits ? `$${new Intl.NumberFormat("es-CO").format(Number(digits))}` : value;
-}
 
 function formatBookingAmount(value) {
   return `$${new Intl.NumberFormat("es-CO").format(value)}`;
@@ -29,13 +12,45 @@ function parseBookingPrice(value) {
   return value ? Number(String(value).replace(/\D/g, "")) : 0;
 }
 
+function isMonthDayWithinRange(monthDay, startMonthDay, endMonthDay) {
+  if (!monthDay || !startMonthDay || !endMonthDay) {
+    return false;
+  }
+
+  if (startMonthDay <= endMonthDay) {
+    return monthDay >= startMonthDay && monthDay <= endMonthDay;
+  }
+
+  return monthDay >= startMonthDay || monthDay <= endMonthDay;
+}
+
+function getActiveSeasonKey(travelDate, seasons) {
+  if (!travelDate) {
+    return "low";
+  }
+
+  const [year, month, day] = travelDate.split("-");
+
+  if (!year || !month || !day) {
+    return "low";
+  }
+
+  if (!seasons?.high?.periods?.length) {
+    return "low";
+  }
+
+  const monthDay = `${month}-${day}`;
+
+  return seasons.high.periods.some((period) =>
+    isMonthDayWithinRange(monthDay, period.startMonthDay, period.endMonthDay),
+  )
+    ? "high"
+    : "low";
+}
+
 export default function ProductRestaurantBookingCard({ booking, initialTravelDate = "" }) {
   const theme = getProductCategoryTheme("restaurantes");
   const categoryThemeStyle = getProductCategoryCssVars("restaurantes");
-  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
-  const [couponCode, setCouponCode] = useState("");
-  const [appliedCouponCode, setAppliedCouponCode] = useState("");
-  const [couponFeedback, setCouponFeedback] = useState(null);
 
   // Restaurant Specific Metadata (Extracted from booking or product object)
   const { foodStyle, serviceFormat, openingTime, closingTime } = booking.metaRestaurant || {};
@@ -52,14 +67,11 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
   const pricingDetails = booking.pricingDetails;
   const [travelDate, setTravelDate] = useState(initialTravelDate || new Date().toISOString().split("T")[0]);
 
-  // Pricing Logic (Isolated instance)
   const seasonalPricing = pricingDetails?.seasons;
-  // Simplified season check for this isolated component
-  const activeSeasonKey = "low"; // TODO: Implement full season logic if needed, or keep simple for restaurants
+  const activeSeasonKey = getActiveSeasonKey(travelDate, seasonalPricing);
   const activeSeason = seasonalPricing?.[activeSeasonKey] ?? seasonalPricing?.low ?? null;
   const activeIndividualPricing = activeSeason?.individual ?? pricingDetails?.individual ?? [];
-  
-  const totalPassengers = Object.values(passengerCounts).reduce((a, b) => a + b, 0);
+
   const passengerBreakdown = passengerFields.map(f => {
     const count = passengerCounts[f.id] || 0;
     const priceItem = activeIndividualPricing.find(p => p.id === f.id);
@@ -68,12 +80,6 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
   }).filter(i => i.count > 0);
 
   const estimatedTotal = passengerBreakdown.reduce((s, i) => s + i.subtotal, 0);
-
-  const handleApplyCoupon = () => {
-     // Simulation of coupon application
-     setAppliedCouponCode(couponCode);
-     setCouponFeedback({ tone: "success", message: "Cupon aplicado!" });
-  };
 
   return (
     <aside className="detalle-producto-booking-card restaurant-theme" style={categoryThemeStyle}>

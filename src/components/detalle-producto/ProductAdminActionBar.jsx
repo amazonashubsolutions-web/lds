@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import "./DetalleProductoHeader.css";
 
 export default function ProductAdminActionBar({
-  productId,
   couponCount = 0,
   isInactive,
   isEditing = false,

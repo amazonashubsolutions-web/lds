@@ -242,7 +242,6 @@ function HighSeasonPeriodsEditor({
 
 export default function ProductTransportPriceCard({
   booking,
-  status = "active",
   isEditingEnabled = false,
   activeBlock = null,
   onActivateBlock = () => {},

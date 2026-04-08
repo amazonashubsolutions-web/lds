@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import CategoryChips from "../components/resultados/CategoryChips";
@@ -135,7 +135,7 @@ function scrollToPageTop() {
 
 export default function ResultadosPage() {
   const [searchParams] = useSearchParams();
-  const [statusRefreshVersion, setStatusRefreshVersion] = useState(0);
+  const [, setStatusRefreshVersion] = useState(0);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileFiltersMounted, setMobileFiltersMounted] = useState(false);
   const [activeCategoryId, setActiveCategoryId] = useState(ALL_RESULTS_CATEGORY_ID);
@@ -161,12 +161,8 @@ export default function ResultadosPage() {
     });
   }, []);
 
-  const activeResultsCards = useMemo(
-    () =>
-      getResultsCards().filter(
-        (item) => getResolvedProductStatus(item.id, item.status) === "active"
-      ),
-    [statusRefreshVersion],
+  const activeResultsCards = getResultsCards().filter(
+    (item) => getResolvedProductStatus(item.id, item.status) === "active"
   );
   const resultsPriceValues = activeResultsCards.map((item) => item.price);
   const resultsMinPrice =
@@ -191,6 +187,12 @@ export default function ResultadosPage() {
     activeResultsCards,
     activeCategoryId
   );
+  const validSelectedSubcategoryIds = new Set(
+    availableSubcategoryOptions.map((subcategory) => subcategory.id)
+  );
+  const effectiveSelectedSubcategoryIds = selectedSubcategoryIds.filter(
+    (subcategoryId) => validSelectedSubcategoryIds.has(subcategoryId)
+  );
   const normalizedKeywordQuery = normalizeSearchText(keywordQuery);
   const keywordSearchTitle = getKeywordSearchTitle(activeCategoryId);
   const filteredResults = activeResultsCards.filter((item) => {
@@ -198,8 +200,8 @@ export default function ResultadosPage() {
       activeCategoryId === ALL_RESULTS_CATEGORY_ID ||
       item.categoryId === activeCategoryId;
     const matchesSubcategory =
-      selectedSubcategoryIds.length === 0 ||
-      selectedSubcategoryIds.some((subcategoryId) =>
+      effectiveSelectedSubcategoryIds.length === 0 ||
+      effectiveSelectedSubcategoryIds.some((subcategoryId) =>
         item.subcategoryIds.includes(subcategoryId)
       );
     const searchableText = normalizeSearchText(`${item.title} ${item.location}`);
@@ -236,6 +238,52 @@ export default function ResultadosPage() {
     max: formatCurrencyLabel(effectiveSelectedPriceLimit),
   };
 
+  const handleToggleSubcategory = (subcategoryId) => {
+    if (!validSelectedSubcategoryIds.has(subcategoryId)) {
+      return;
+    }
+
+    setSelectedSubcategoryIds((current) => {
+      const sanitizedCurrent = current.filter((item) =>
+        validSelectedSubcategoryIds.has(item)
+      );
+
+      return sanitizedCurrent.includes(subcategoryId)
+        ? sanitizedCurrent.filter((item) => item !== subcategoryId)
+        : [...sanitizedCurrent, subcategoryId];
+    });
+  };
+
+  const scrollToResultsHeading = () => {
+    if (!resultsHeadingRef.current || typeof window === "undefined") {
+      scrollToPageTop();
+      return;
+    }
+
+    const headingTop =
+      resultsHeadingRef.current.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: Math.max(0, headingTop - RESULTS_HEADING_SCROLL_OFFSET_MOBILE),
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+
+  function openMobileFilters() {
+    if (closeMobileFiltersTimeoutRef.current) {
+      window.clearTimeout(closeMobileFiltersTimeoutRef.current);
+      closeMobileFiltersTimeoutRef.current = null;
+    }
+
+    setMobileFiltersMounted(true);
+    setMobileFiltersOpen(true);
+  }
+
+  function closeMobileFilters() {
+    setMobileFiltersOpen(false);
+  }
+
   useEffect(() => {
     if (mobileFiltersOpen) {
       if (closeMobileFiltersTimeoutRef.current) {
@@ -243,7 +291,6 @@ export default function ResultadosPage() {
         closeMobileFiltersTimeoutRef.current = null;
       }
 
-      setMobileFiltersMounted(true);
       return undefined;
     }
 
@@ -317,68 +364,12 @@ export default function ResultadosPage() {
   }, []);
 
   useEffect(() => {
-    const validSubcategoryIds = new Set(
-      availableSubcategoryOptions.map((subcategory) => subcategory.id)
-    );
-
-    setSelectedSubcategoryIds((current) => {
-      const nextSelectedSubcategoryIds = current.filter((subcategoryId) =>
-        validSubcategoryIds.has(subcategoryId)
-      );
-
-      if (nextSelectedSubcategoryIds.length === current.length) {
-        return current;
-      }
-
-      return nextSelectedSubcategoryIds;
-    });
-  }, [activeCategoryId]);
-
-  useEffect(() => {
     if (!hasCategorySelectionStartedRef.current) {
       return;
     }
 
     scrollToPageTop();
   }, [activeCategoryId]);
-
-  const handleToggleSubcategory = (subcategoryId) => {
-    setSelectedSubcategoryIds((current) =>
-      current.includes(subcategoryId)
-        ? current.filter((item) => item !== subcategoryId)
-        : [...current, subcategoryId]
-    );
-  };
-
-  const scrollToResultsHeading = () => {
-    if (!resultsHeadingRef.current || typeof window === "undefined") {
-      scrollToPageTop();
-      return;
-    }
-
-    const headingTop =
-      resultsHeadingRef.current.getBoundingClientRect().top + window.scrollY;
-
-    window.scrollTo({
-      top: Math.max(0, headingTop - RESULTS_HEADING_SCROLL_OFFSET_MOBILE),
-      left: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const openMobileFilters = () => {
-    if (closeMobileFiltersTimeoutRef.current) {
-      window.clearTimeout(closeMobileFiltersTimeoutRef.current);
-      closeMobileFiltersTimeoutRef.current = null;
-    }
-
-    setMobileFiltersMounted(true);
-    setMobileFiltersOpen(true);
-  };
-
-  const closeMobileFilters = () => {
-    setMobileFiltersOpen(false);
-  };
 
   const handleMobileFilterOptionSelect = () => {
     closeMobileFilters();
@@ -403,10 +394,19 @@ export default function ResultadosPage() {
   };
 
   const handleSelectCategory = (categoryId) => {
+    const nextValidSubcategoryIds = new Set(
+      getAvailableSubcategoryOptions(activeResultsCards, categoryId).map(
+        (subcategory) => subcategory.id
+      )
+    );
+
     hasCategorySelectionStartedRef.current = true;
     document.activeElement?.blur?.();
     setKeywordQuery("");
     scrollToPageTop();
+    setSelectedSubcategoryIds((current) =>
+      current.filter((subcategoryId) => nextValidSubcategoryIds.has(subcategoryId))
+    );
     setActiveCategoryId(categoryId);
   };
 
@@ -439,7 +439,7 @@ export default function ResultadosPage() {
             priceRangeMax={resultsMaxPrice}
             priceRangeMin={resultsMinPrice}
             selectedPriceLimit={effectiveSelectedPriceLimit}
-            selectedSubcategoryIds={selectedSubcategoryIds}
+            selectedSubcategoryIds={effectiveSelectedSubcategoryIds}
             subcategoryContextLabel={subcategoryContextLabel}
             subcategoryOptions={availableSubcategoryOptions}
           />
@@ -478,7 +478,7 @@ export default function ResultadosPage() {
                   priceRangeMax={resultsMaxPrice}
                   priceRangeMin={resultsMinPrice}
                   selectedPriceLimit={effectiveSelectedPriceLimit}
-                  selectedSubcategoryIds={selectedSubcategoryIds}
+                  selectedSubcategoryIds={effectiveSelectedSubcategoryIds}
                   subcategoryContextLabel={subcategoryContextLabel}
                   subcategoryOptions={availableSubcategoryOptions}
                 />

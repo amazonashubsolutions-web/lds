@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   getAllProductRecords,
@@ -28,7 +28,41 @@ export default function useProductCreateForm({
   onCancelNavigate,
   onSuccessNavigate,
 }) {
-  const [draft, setDraft] = useState(() => createInitialDraft());
+  const normalizeDraftState = useCallback((nextDraft) => {
+    const nextAvailableSubcategories = productSubcategories.filter(
+      (subcategory) => subcategory.categoryId === nextDraft.categoryId,
+    );
+    const normalizedSubcategoryId =
+      nextDraft.subcategoryId &&
+      nextAvailableSubcategories.some(
+        (subcategory) => subcategory.id === nextDraft.subcategoryId,
+      )
+        ? nextDraft.subcategoryId
+        : "";
+
+    return {
+      ...nextDraft,
+      subcategoryId: normalizedSubcategoryId,
+      booking: {
+        ...(nextDraft.booking ?? {}),
+        unitLabel: `por ${nextDraft.pricingUnitLabel}`,
+      },
+    };
+  }, []);
+
+  const [draft, setDraftState] = useState(() =>
+    normalizeDraftState(createInitialDraft()),
+  );
+  const setDraft = useCallback(
+    (nextDraft) => {
+      setDraftState((current) =>
+        normalizeDraftState(
+          typeof nextDraft === "function" ? nextDraft(current) : nextDraft,
+        ),
+      );
+    },
+    [normalizeDraftState],
+  );
   const [gallerySlots, setGallerySlots] = useState(() =>
     createProductGallerySlots([], MAX_PRODUCT_GALLERY_IMAGES),
   );
@@ -64,30 +98,6 @@ export default function useProductCreateForm({
       });
     };
   }, [gallerySlots]);
-
-  useEffect(() => {
-    if (
-      draft.subcategoryId &&
-      !availableSubcategories.some(
-        (subcategory) => subcategory.id === draft.subcategoryId,
-      )
-    ) {
-      setDraft((current) => ({
-        ...current,
-        subcategoryId: "",
-      }));
-    }
-  }, [availableSubcategories, draft.subcategoryId]);
-
-  useEffect(() => {
-    setDraft((current) => ({
-      ...current,
-      booking: {
-        ...current.booking,
-        unitLabel: `por ${current.pricingUnitLabel}`,
-      },
-    }));
-  }, [draft.pricingUnitLabel]);
 
   useEffect(() => {
     if (!formError) {

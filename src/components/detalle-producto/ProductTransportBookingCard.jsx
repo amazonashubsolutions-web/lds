@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import {
-  formatProductCouponRuleLabel,
   getCouponDiscountTargetLabel,
 } from "../../data/couponsData";
 import {
@@ -180,7 +179,6 @@ export default function ProductTransportBookingCard({
   const startingPrice = booking.price || activePricingItem.price;
   
   const isHighSeasonActive = activeSeasonKey === "high";
-  const isLowSeasonActive = activeSeasonKey === "low";
   const highSeasonPeriodsLabel =
     seasonalPricing?.high?.periods?.map((period) => formatSeasonPeriodLabel(period)).join(" - ") ?? "";
 
@@ -195,13 +193,6 @@ export default function ProductTransportBookingCard({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isPricingModalOpen]);
-
-  useEffect(() => {
-    setTravelDate(getClampedTravelDateValue(initialTravelDate, today, maxTravelDate));
-    setCouponCode("");
-    setAppliedCouponCode("");
-    setCouponFeedback(null);
-  }, [initialTravelDate, minTravelDateValue, maxTravelDateValue]);
 
   function handleTravelDateChange(event) {
     setTravelDate(getClampedTravelDateValue(event.target.value, today, maxTravelDate));

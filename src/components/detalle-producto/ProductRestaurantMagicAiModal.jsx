@@ -1,6 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
-import { productSubcategories } from "../../data/productsData";
+
+function buildInitialRestaurantWizardState(initialData = {}) {
+  return {
+    selectedSubcategory: initialData.selectedSubcategory ?? "",
+    cityName: initialData.cityName ?? "Leticia",
+    tourName: initialData.tourName ?? "",
+    regionName: initialData.regionName ?? "",
+    foodStyle: "",
+    serviceFormat: "",
+    departureTime: "",
+    returnTime: "",
+  };
+}
 
 export default function ProductRestaurantMagicAiModal({
   isOpen,
@@ -8,54 +20,29 @@ export default function ProductRestaurantMagicAiModal({
   onGenerate,
   initialData,
 }) {
+  const initialWizardState = buildInitialRestaurantWizardState(initialData);
   const [step, setStep] = useState(1);
   const selectedCategory = "restaurantes";
   
   // Step 1 State (Pre-IA Restaurant Details)
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
-  const [cityName, setCityName] = useState("Leticia");
-  const [tourName, setTourName] = useState("");
-  const [regionName, setRegionName] = useState("");
-  const [foodStyle, setFoodStyle] = useState("");
-  const [serviceFormat, setServiceFormat] = useState("");
-  const [departureTime, setDepartureTime] = useState("");
-  const [returnTime, setReturnTime] = useState("");
+  const [selectedSubcategory] = useState(() => initialWizardState.selectedSubcategory);
+  const [cityName, setCityName] = useState(() => initialWizardState.cityName);
+  const [tourName] = useState(() => initialWizardState.tourName);
+  const [regionName] = useState(() => initialWizardState.regionName);
+  const [foodStyle, setFoodStyle] = useState(() => initialWizardState.foodStyle);
+  const [serviceFormat, setServiceFormat] = useState(
+    () => initialWizardState.serviceFormat,
+  );
+  const [departureTime, setDepartureTime] = useState(
+    () => initialWizardState.departureTime,
+  );
+  const [returnTime, setReturnTime] = useState(() => initialWizardState.returnTime);
   
   const [isGenerating, setIsGenerating] = useState(false);
   const [aiData, setAiData] = useState(null);
 
   // Step 3 State (Images)
   const [images, setImages] = useState([]);
-
-  const availableSubcategories = useMemo(
-    () =>
-      productSubcategories.filter(
-        (subcategory) => subcategory.categoryId === selectedCategory,
-      ),
-    [selectedCategory]
-  );
-
-  useEffect(() => {
-    if (!isOpen || !initialData) {
-      return;
-    }
-
-    if (initialData.selectedSubcategory) {
-      setSelectedSubcategory(initialData.selectedSubcategory);
-    }
-
-    if (initialData.cityName) {
-      setCityName(initialData.cityName);
-    }
-
-    if (initialData.tourName) {
-      setTourName(initialData.tourName);
-    }
-
-    if (initialData.regionName) {
-      setRegionName(initialData.regionName);
-    }
-  }, [isOpen, initialData]);
 
   if (!isOpen) {
     return null;

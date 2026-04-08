@@ -195,6 +195,56 @@ function getInitialPassengerCounts(fields) {
   }, {});
 }
 
+function getPassengerPricingState(
+  fields,
+  passengerCounts,
+  activeIndividualPricing,
+  activeGroupPricing,
+  groupMinPassengers,
+) {
+  const totalPassengers = fields.reduce(
+    (sum, field) => sum + Number(passengerCounts[field.id] ?? 0),
+    0,
+  );
+  const isGroupPricingActive = totalPassengers >= groupMinPassengers;
+  const appliedPassengerPricing = isGroupPricingActive
+    ? activeGroupPricing
+    : activeIndividualPricing;
+  const passengerBreakdown = fields
+    .map((field) => {
+      const count = Number(passengerCounts[field.id] ?? 0);
+      const pricingItem =
+        appliedPassengerPricing.find((item) => item.id === field.id) ??
+        activeIndividualPricing.find((item) => item.id === field.id);
+      const unitPrice = parseBookingPrice(pricingItem?.price);
+
+      return {
+        id: field.id,
+        label: field.label,
+        count,
+        subtotal: count * unitPrice,
+      };
+    })
+    .filter((item) => item.count > 0);
+  const passengerSubtotal = passengerBreakdown.reduce(
+    (sum, item) => sum + item.subtotal,
+    0,
+  );
+  const passengerSubtotals = passengerBreakdown.reduce((accumulator, item) => {
+    accumulator[item.id] = item.subtotal;
+    return accumulator;
+  }, {});
+
+  return {
+    totalPassengers,
+    isGroupPricingActive,
+    appliedPassengerPricing,
+    passengerBreakdown,
+    passengerSubtotal,
+    passengerSubtotals,
+  };
+}
+
 export default function ProductBookingCard({
   booking,
   initialTravelDate = "",
@@ -232,38 +282,19 @@ export default function ProductBookingCard({
     activeSeason?.individual ?? pricingDetails?.individual ?? [];
   const activeGroupPricing = activeSeason?.group ?? pricingDetails?.group ?? [];
   const groupMinPassengers = pricingDetails?.groupMinPassengers ?? 9999;
-  const totalPassengers = passengerFields.reduce(
-    (sum, field) => sum + Number(passengerCounts[field.id] ?? 0),
-    0,
+  const {
+    isGroupPricingActive,
+    appliedPassengerPricing,
+    passengerBreakdown,
+    passengerSubtotal,
+    passengerSubtotals,
+  } = getPassengerPricingState(
+    passengerFields,
+    passengerCounts,
+    activeIndividualPricing,
+    activeGroupPricing,
+    groupMinPassengers,
   );
-  const isGroupPricingActive = totalPassengers >= groupMinPassengers;
-  const appliedPassengerPricing = isGroupPricingActive
-    ? activeGroupPricing
-    : activeIndividualPricing;
-  const passengerBreakdown = passengerFields
-    .map((field) => {
-      const count = Number(passengerCounts[field.id] ?? 0);
-      const pricingItem =
-        appliedPassengerPricing.find((item) => item.id === field.id) ??
-        activeIndividualPricing.find((item) => item.id === field.id);
-      const unitPrice = parseBookingPrice(pricingItem?.price);
-
-      return {
-        id: field.id,
-        label: field.label,
-        count,
-        subtotal: count * unitPrice,
-      };
-    })
-    .filter((item) => item.count > 0);
-  const passengerSubtotal = passengerBreakdown.reduce(
-    (sum, item) => sum + item.subtotal,
-    0,
-  );
-  const passengerSubtotals = passengerBreakdown.reduce((accumulator, item) => {
-    accumulator[item.id] = item.subtotal;
-    return accumulator;
-  }, {});
   const additionalCharges = booking.additionalCharges ?? [];
   const fixedChargesTotal = additionalCharges.reduce(
     (sum, item) =>
@@ -326,40 +357,58 @@ export default function ProductBookingCard({
     };
   }, [isPricingModalOpen]);
 
-  useEffect(() => {
-    setTravelDate(getClampedTravelDateValue(initialTravelDate, today, maxTravelDate));
-    setCouponCode("");
-    setAppliedCouponCode("");
-    setCouponFeedback(null);
-  }, [initialTravelDate, minTravelDateValue, maxTravelDateValue]);
-
-  useEffect(() => {
-    if (!appliedCouponCode || appliedCouponEvaluation?.isEligible) {
-      return;
-    }
-
-    setAppliedCouponCode("");
-    setCouponFeedback({
-      tone: "error",
-      message:
-        appliedCouponEvaluation?.reason ||
-        "El cupon ya no aplica con la configuracion actual de la reserva.",
-    });
-  }, [
-    appliedCouponCode,
-    appliedCouponEvaluation?.isEligible,
-    appliedCouponEvaluation?.reason,
-  ]);
-
   function handlePassengerChange(field, value) {
     const numericValue = Number(value);
     const safeValue = Number.isNaN(numericValue) ? 0 : numericValue;
     const min = field.min ?? 0;
+    let nextPassengerCounts = passengerCounts;
 
-    setPassengerCounts((current) => ({
-      ...current,
-      [field.id]: Math.max(min, safeValue),
-    }));
+    setPassengerCounts((current) => {
+      nextPassengerCounts = {
+        ...current,
+        [field.id]: Math.max(min, safeValue),
+      };
+
+      return nextPassengerCounts;
+    });
+
+    if (!appliedCouponCode) {
+      return;
+    }
+
+    const selectedCoupon = findProductCouponByCode(
+      appliedCouponCode,
+      booking.productId,
+    );
+
+    if (!selectedCoupon) {
+      setAppliedCouponCode("");
+      return;
+    }
+
+    const nextPricingState = getPassengerPricingState(
+      passengerFields,
+      nextPassengerCounts,
+      activeIndividualPricing,
+      activeGroupPricing,
+      groupMinPassengers,
+    );
+    const evaluation = evaluateProductCouponForBooking({
+      coupon: selectedCoupon,
+      productId: booking.productId,
+      passengerCounts: nextPassengerCounts,
+      passengerSubtotals: nextPricingState.passengerSubtotals,
+      travelDate,
+      totalAmount: nextPricingState.passengerSubtotal + fixedChargesTotal,
+    });
+
+    if (!evaluation.isEligible) {
+      setAppliedCouponCode("");
+      showCouponError(
+        evaluation.reason ||
+          "El cupon ya no aplica con la configuracion actual de la reserva.",
+      );
+    }
   }
 
   function handleTravelDateChange(event) {

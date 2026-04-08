@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   createProductGallerySlots,
   persistProductGallery,
@@ -93,7 +93,9 @@ function sanitizePriceValue(value) {
 
 export function useProductEditor(detail) {
   const [isEditingProduct, setIsEditingProduct] = useState(false);
-  const [gallerySlots, setGallerySlots] = useState(() => []);
+  const [gallerySlots, setGallerySlots] = useState(() =>
+    createProductGallerySlots(detail.galleryEntries),
+  );
   const [selectedGallerySlot, setSelectedGallerySlot] = useState(0);
   const [contentDraft, setContentDraft] = useState(() =>
     createEditableContentDraft(detail),
@@ -101,23 +103,6 @@ export function useProductEditor(detail) {
   const [activeContentBlock, setActiveContentBlock] = useState(null);
   const [galleryEditorMessage, setGalleryEditorMessage] = useState("");
   const [galleryEditorMessageType, setGalleryEditorMessageType] = useState("");
-
-  useEffect(() => {
-    if (isEditingProduct) {
-      return;
-    }
-    setContentDraft(createEditableContentDraft(detail));
-  }, [detail, isEditingProduct]);
-
-  useEffect(() => {
-    if (!isEditingProduct) {
-      return;
-    }
-    setGallerySlots(createProductGallerySlots(detail.galleryEntries));
-    setContentDraft(createEditableContentDraft(detail));
-    setSelectedGallerySlot(0);
-    setActiveContentBlock(null);
-  }, [detail.id, isEditingProduct]);
 
   const releaseGalleryPreviewUrls = useCallback((slots) => {
     slots.forEach((slot) => {
@@ -136,19 +121,30 @@ export function useProductEditor(detail) {
   );
 
   const openEditProductMode = useCallback(() => {
+    setGallerySlots(createProductGallerySlots(detail.galleryEntries));
+    setContentDraft(createEditableContentDraft(detail));
+    setSelectedGallerySlot(0);
+    setActiveContentBlock(null);
     setIsEditingProduct(true);
     setGalleryEditorMessage("");
     setGalleryEditorMessageType("");
-  }, []);
+  }, [detail]);
 
-  const closeEditProductMode = useCallback(() => {
+  const closeEditProductMode = useCallback((options = {}) => {
+    const {
+      nextGallerySlots = createProductGallerySlots(detail.galleryEntries),
+      nextContentDraft = createEditableContentDraft(detail),
+    } = options;
+
     releaseGalleryPreviewUrls(gallerySlots);
     setIsEditingProduct(false);
+    setGallerySlots(nextGallerySlots);
+    setContentDraft(nextContentDraft);
     setSelectedGallerySlot(0);
     setActiveContentBlock(null);
     setGalleryEditorMessage("");
     setGalleryEditorMessageType("");
-  }, [gallerySlots, releaseGalleryPreviewUrls]);
+  }, [detail, gallerySlots, releaseGalleryPreviewUrls]);
 
   const updateContentListField = useCallback((fieldName, index, nextValue) => {
     setContentDraft((current) => ({
@@ -457,7 +453,14 @@ export function useProductEditor(detail) {
         releaseGalleryPreviewUrls(gallerySlots);
         setGalleryEditorMessage("Producto actualizado correctamente.");
         setGalleryEditorMessageType("success");
-        closeEditProductMode();
+        closeEditProductMode({
+          nextGallerySlots: createProductGallerySlots(nextImages),
+          nextContentDraft: createEditableContentDraft({
+            ...detail,
+            ...contentDraft,
+            galleryEntries: nextImages,
+          }),
+        });
       } catch {
         setGalleryEditorMessage(
           "No fue posible guardar los cambios del producto. Intenta de nuevo.",
@@ -466,7 +469,7 @@ export function useProductEditor(detail) {
       }
     },
     [
-      detail.id,
+      detail,
       gallerySlots,
       contentDraft,
       releaseGalleryPreviewUrls,

@@ -27,7 +27,7 @@ export default function usePanelCoupons({
   clientCoupons,
   searchParams,
 }) {
-  const [activeTab, setActiveTab] = useState("products");
+  const [activeTabState, setActiveTabState] = useState("products");
   const [couponForm, setCouponForm] = useState(null);
   const [couponError, setCouponError] = useState("");
   const [isDiscountValueFocused, setIsDiscountValueFocused] = useState(false);
@@ -39,6 +39,7 @@ export default function usePanelCoupons({
   const productCouponRecords = getAllProductCouponRecords();
   const selectedProductId = Number(searchParams.get("producto"));
   const hasProductFilter = Number.isFinite(selectedProductId) && selectedProductId > 0;
+  const activeTab = hasProductFilter ? "products" : activeTabState;
 
   const filteredProductCouponRecords = useMemo(
     () =>
@@ -136,16 +137,15 @@ export default function usePanelCoupons({
     };
   }, [couponForm, couponStatusNotice]);
 
-  useEffect(() => {
+  function setActiveTab(nextTab) {
     if (hasProductFilter) {
-      setActiveTab("products");
+      return;
     }
-  }, [hasProductFilter]);
 
-  useEffect(() => {
+    setActiveTabState(nextTab);
     setSearchTerm("");
     setStatusFilter("all");
-  }, [activeTab]);
+  }
 
   function openEditCouponModal(item) {
     const couponRecord = productCouponRecords.find((coupon) => coupon.id === item.id);

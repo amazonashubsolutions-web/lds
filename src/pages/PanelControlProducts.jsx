@@ -34,12 +34,9 @@ export default function PanelControlProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORY_FILTER);
   const [selectedStatus, setSelectedStatus] = useState(ALL_STATUS_FILTER);
-  const [dataRefreshVersion, setDataRefreshVersion] = useState(0);
+  const [, setDataRefreshVersion] = useState(0);
 
-  const productItems = useMemo(
-    () => getPanelProductItems(),
-    [dataRefreshVersion],
-  );
+  const productItems = getPanelProductItems();
   const normalizedSearchTerm = normalizeValue(searchTerm);
   const filteredProductItems = useMemo(
     () =>
