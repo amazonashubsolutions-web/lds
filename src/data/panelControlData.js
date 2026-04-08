@@ -16,11 +16,10 @@ export const panelControlProfile = {
 export const panelControlMenu = [
   {
     id: "perfil",
-    label: "Configuracion de perfil",
+    label: "Panel de Control",
     icon: "user",
     path: "/panel-de-control",
   },
-  { id: "pagos", label: "Metodos de pago", icon: "card" },
   {
     id: "cupones",
     label: "Cupones",
@@ -33,8 +32,6 @@ export const panelControlMenu = [
     icon: "package",
     path: "/panel-de-control/productos",
   },
-  { id: "guardados", label: "Guardados", icon: "bookmark" },
-  { id: "soporte", label: "Soporte", icon: "support" },
 ];
 
 export const panelControlWelcome = {

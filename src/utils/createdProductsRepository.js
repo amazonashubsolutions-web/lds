@@ -1,4 +1,5 @@
 const CREATED_PRODUCTS_STORAGE_KEY = "lds-panel-control-created-products";
+const CREATED_PRODUCTS_CHANGE_EVENT = "lds-created-products-changed";
 
 function canUseStorage() {
   return (
@@ -276,6 +277,14 @@ function writeStoredRecords(records) {
   );
 }
 
+function emitCreatedProductsChange() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new window.Event(CREATED_PRODUCTS_CHANGE_EVENT));
+}
+
 export function getStoredCreatedProductRecords() {
   return readStoredRecords();
 }
@@ -315,8 +324,45 @@ export function persistCreatedProductRecord(record) {
       : [...storedRecords, normalizedRecord];
 
   writeStoredRecords(nextRecords);
+  emitCreatedProductsChange();
 
   return normalizedRecord;
+}
+
+export function subscribeToCreatedProductChanges(onChange) {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  const handleStorage = (event) => {
+    if (event.key && event.key !== CREATED_PRODUCTS_STORAGE_KEY) {
+      return;
+    }
+
+    onChange();
+  };
+
+  const handleFocus = () => {
+    onChange();
+  };
+
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      onChange();
+    }
+  };
+
+  window.addEventListener("storage", handleStorage);
+  window.addEventListener("focus", handleFocus);
+  window.addEventListener(CREATED_PRODUCTS_CHANGE_EVENT, handleFocus);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  return () => {
+    window.removeEventListener("storage", handleStorage);
+    window.removeEventListener("focus", handleFocus);
+    window.removeEventListener(CREATED_PRODUCTS_CHANGE_EVENT, handleFocus);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+  };
 }
 
 export function getNextCreatedProductId(baseProductIds = []) {

@@ -1,0 +1,78 @@
+{
+  "titulo": "Cena en Restaurante Sabores de la Triple Frontera",
+  "descripcion_breve": "Descubre una propuesta gastronomica que mezcla ingredientes amazonicos, cocina casera y recetas representativas de Colombia, Brasil y Peru en una experiencia pensada para viajeros y locales.",
+  "ubicacion": "Zona central de Leticia, a pocos minutos del malecon turistico",
+  "tipo_servicio": "Cena a la carta sujeta a disponibilidad del restaurante",
+  "horario_apertura": "18:00",
+  "horario_cierre": "22:30",
+  "descripcion_general": [
+    "Este restaurante fue concebido para quienes quieren probar la identidad culinaria de Leticia en un ambiente relajado, fresco y cercano a los principales puntos de encuentro del destino. Cada plato busca resaltar sabores locales como pescados de rio, yuca, fariña y frutas propias de la region.",
+    "La experiencia combina servicio agil, atencion calida y una carta versatil que permite compartir entradas, disfrutar platos fuertes abundantes y cerrar con bebidas o postres inspirados en la biodiversidad amazonica."
+  ],
+  "experiencia_servicio": {
+    "titulo": "Experiencia de cena amazonica a la carta",
+    "descripcion": "El servicio esta organizado para ofrecer una atencion amable durante toda la jornada, con recomendacion de platos, apoyo para grupos familiares y flexibilidad para viajeros que llegan entre actividades o traslados."
+  },
+  "itinerario_basico": [
+    {
+      "titulo": "Bienvenida y ubicacion en mesa",
+      "descripcion": "Recepcion del visitante, acomodacion en salon principal o terraza y presentacion breve de la propuesta gastronomica del dia."
+    },
+    {
+      "titulo": "Seleccion de entradas y bebidas",
+      "descripcion": "Sugerencia de bebidas tropicales, jugos naturales o cocteles suaves, junto con entradas tipicas para compartir mientras se prepara el servicio principal."
+    },
+    {
+      "titulo": "Servicio del plato fuerte",
+      "descripcion": "Entrega de platos a la carta con opciones de pescado, carnes, preparaciones regionales y alternativas mas ligeras para diferentes perfiles de cliente."
+    },
+    {
+      "titulo": "Cierre de experiencia gastronomica",
+      "descripcion": "Espacio para postre, cafe o bebida final antes del cierre de cuenta, con recomendacion de nuevos platos para una futura visita."
+    }
+  ],
+  "que_incluye": [
+    {
+      "title": "Atencion en mesa",
+      "description": "Servicio de anfitrion y personal de sala durante toda la experiencia."
+    },
+    {
+      "title": "Propuesta gastronomica regional",
+      "description": "Carta inspirada en sabores amazonicos y cocina de la triple frontera."
+    },
+    {
+      "title": "Ambiente climatizado o ventilado",
+      "description": "Espacios pensados para una comida comoda durante el dia o la noche."
+    }
+  ],
+  "que_no_incluye": [
+    {
+      "title": "Consumos premium no incluidos",
+      "description": "Licores especiales, maridajes y platos fuera del menu base se cobran por separado."
+    },
+    {
+      "title": "Transporte al restaurante",
+      "description": "El desplazamiento desde hotel, puerto o aeropuerto no hace parte del servicio."
+    },
+    {
+      "title": "Decoraciones o montajes especiales",
+      "description": "Celebraciones privadas, reservas tematicas y adecuaciones especiales requieren coordinacion adicional."
+    }
+  ],
+  "recomendaciones": [
+    "Reservar con anticipacion si viajas en puentes festivos o temporada alta.",
+    "Consultar opciones vegetarianas, infantiles o sin picante antes de ordenar.",
+    "Probar una entrada para compartir y una bebida local para completar la experiencia.",
+    "Informar con tiempo si el grupo tiene alergias o restricciones alimentarias."
+  ],
+  "consideraciones": [
+    "La disponibilidad de algunos pescados y frutas depende de la temporada y del abastecimiento local.",
+    "Los tiempos de salida pueden variar en horas de alta demanda o durante eventos especiales.",
+    "Los grupos grandes requieren confirmacion previa para garantizar mesa y flujo de cocina."
+  ],
+  "politicas": [
+    "Las reservas para grupos pueden requerir confirmacion previa por mensaje o llamada.",
+    "Llegadas con retraso superior a 20 minutos pueden liberar la mesa segun disponibilidad.",
+    "Cancelaciones de reservas especiales deben informarse con anticipacion para evitar cargos operativos."
+  ]
+}

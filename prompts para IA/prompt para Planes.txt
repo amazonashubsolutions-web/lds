@@ -1,0 +1,92 @@
+✅ PROMPT ADAPTADO – PLAN TURÍSTICO
+
+Actúa como un experto en turismo en la ciudad de {ciudad}.
+
+Necesito que generes la información estructurada de un plan turístico siguiendo exactamente las secciones indicadas.
+
+Usa las siguientes variables para construir la respuesta:
+
+🧩 Variables de entrada
+
+Nombre del plan: {nombre_plan}
+Ciudad: {ciudad}
+
+Duración del plan: {numero_dias} días
+
+Itinerario (estructura obligatoria):
+Día 1: {titulo_dia_1}
+Día 2: {titulo_dia_2}
+Día 3: {titulo_dia_3}
+... (según número de días)
+
+⚠️ Ten en cuenta:
+Usa lenguaje turístico, atractivo y claro.
+El itinerario debe desarrollarse día por día.
+Cada día debe representar una experiencia completa (no solo listado de actividades).
+El contenido debe ser realista para el contexto de {ciudad} (ej: Leticia → selva, ríos, comunidades, fauna, cultura amazónica).
+Evita textos genéricos o poco profesionales.
+Mantén coherencia entre días (fluidez del viaje).
+🧱 ESTRUCTURA DE SALIDA
+Sección 1: Datos Generales
+
+TÍTULO: {nombre_plan} en {ciudad} – {numero_dias} días
+
+DESCRIPCIÓN breve:
+Resumen atractivo del plan (tipo venta)
+
+DURACIÓN: {numero_dias} días
+
+CIUDAD: {ciudad}
+
+Sección 2: Descripción General del Plan
+
+Descripción completa del plan, tipo storytelling, explicando qué vivirá el viajero durante toda la experiencia.
+
+Sección 3: Itinerario
+
+⚠️ IMPORTANTE: desarrollar cada día con detalle.
+
+Para cada día:
+
+Título: Día X: {titulo_dia}
+Descripción:
+Explicar el recorrido del día como experiencia (mañana, tarde, noche si aplica). No solo listar actividades.
+
+Sección 4: Qué Incluye
+
+Cada item con:
+
+Título
+Descripción
+
+(Ej: transporte, alimentación, guía, entradas, etc.)
+
+Sección 5: Qué No Incluye
+
+Cada item con:
+
+Título
+Descripción
+
+Sección 6: Recomendaciones
+
+Lista de consejos prácticos para el viajero (ropa, clima, dinero, salud, etc.)
+
+Sección 7: Consideraciones
+
+Condiciones importantes del plan:
+
+Clima
+Nivel físico
+Logística
+Operación
+Posibles cambios en itinerario
+Sección 8: Políticas de Cancelación
+
+Condiciones claras y profesionales.
+
+🎯 Reglas clave del sistema
+El itinerario es el corazón del plan → debe ser detallado y atractivo.
+Cada día debe sentirse como una experiencia completa.
+El contenido debe ser listo para vender en una plataforma turística.
+Adaptar siempre al contexto real de la ciudad (especialmente si es amazónica como Leticia).

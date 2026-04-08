@@ -1,0 +1,147 @@
+✅ PROMPT ADAPTADO – EXCURSIONES TURÍSTICAS
+
+Actúa como un experto en turismo de naturaleza y aventura en la ciudad de {ciudad}.
+
+Necesito que generes la información estructurada de una excursión turística siguiendo exactamente las secciones indicadas.
+
+🧩 Variables de entrada
+
+Nombre de la excursión: {nombre_excursion}
+Ciudad: {ciudad}
+
+Duración: {numero_dias} días
+
+Tipo de confort: {tipo_confort}
+(Valores posibles: Confort, Aventura, Básico)
+
+Itinerario (estructura obligatoria):
+Día 1: {titulo_dia_1}
+Día 2: {titulo_dia_2}
+Día 3: {titulo_dia_3}
+... (según número de días)
+
+⚠️ Lógica clave del sistema (MUY IMPORTANTE)
+La excursión mantiene estructura por días igual que un plan turístico.
+La diferencia principal es el nivel de confort, determinado por el tipo de dormida.
+🔹 Reglas según tipo de confort:
+
+Confort:
+
+Hospedaje en reservas naturales o eco-lodges
+Habitaciones con cama, colchón, baño (privado o compartido)
+Experiencia cómoda en entorno natural
+
+Aventura:
+
+Dormida en la selva
+Uso de hamacas o cambuches
+Experiencia inmersiva, rústica y guiada
+
+Básico:
+
+Hospedaje en comunidades indígenas
+Camas básicas de uso local
+Experiencia cultural auténtica con menor nivel de comodidad
+
+👉 El contenido DEBE reflejar claramente esta diferencia en:
+
+Descripción general
+Itinerario
+Incluye / No incluye
+Recomendaciones
+Consideraciones
+🧱 ESTRUCTURA DE SALIDA
+Sección 1: Datos Generales
+
+TÍTULO: {nombre_excursion} en {ciudad} – {numero_dias} días
+
+DESCRIPCIÓN breve:
+Resumen atractivo tipo venta, destacando experiencia y tipo de confort
+
+DURACIÓN: {numero_dias} días
+
+CIUDAD: {ciudad}
+
+TIPO DE CONFORT: {tipo_confort}
+
+Sección 2: Descripción General de la Excursión
+
+Descripción completa tipo storytelling:
+
+Qué vivirá el viajero
+Nivel de aventura
+Tipo de hospedaje según confort
+Conexión con naturaleza / cultura local
+Sección 3: Itinerario
+
+⚠️ IMPORTANTE: desarrollar cada día como experiencia completa.
+
+Para cada día:
+
+Título: Día X: {titulo_dia}
+Descripción:
+Narrar el día (mañana, tarde, noche si aplica)
+
+👉 Incluir SIEMPRE:
+
+Actividades
+Entorno (selva, río, comunidad)
+Tipo de dormida según confort
+Sección 4: Qué Incluye
+
+Cada item con:
+
+Título
+Descripción
+
+(Ej: transporte, alimentación, guía, alojamiento según confort, equipos, etc.)
+
+Sección 5: Qué No Incluye
+
+Cada item con:
+
+Título
+Descripción
+
+Sección 6: Recomendaciones
+
+Lista de consejos prácticos, adaptados al tipo de excursión:
+
+Ropa adecuada (selva, lluvia, calor)
+Equipamiento
+Preparación física
+Expectativas según confort
+Sección 7: Consideraciones
+
+Condiciones importantes:
+
+Nivel físico requerido
+Condiciones climáticas
+Logística en selva
+Adaptación al tipo de dormida
+Posibles cambios en itinerario
+Sección 8: Políticas de Cancelación
+
+Condiciones claras, profesionales y aplicables a turismo de naturaleza.
+
+🎯 Reglas clave
+El itinerario sigue siendo el corazón del producto.
+Cada día debe sentirse como una experiencia inmersiva.
+El tipo de confort debe percibirse claramente en todo el contenido.
+Lenguaje turístico, atractivo y realista para {ciudad} (ej: Leticia → selva amazónica, fauna, comunidades, ríos).
+El contenido debe estar listo para vender en plataforma turística.
+💡 Estructura estratégica (para escalar)
+✅ Clasificación del Producto
+
+Categoría: Excursión
+
+✅ Variables clave
+
+Nombre
+Ciudad
+Duración
+Tipo de confort
+
+✅ Core
+
+Itinerario por días

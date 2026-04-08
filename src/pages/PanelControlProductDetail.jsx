@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import PrimaryHeader from "../components/layout/PrimaryHeader";
 import ProductAdminActionBar from "../components/detalle-producto/ProductAdminActionBar";
@@ -15,6 +15,8 @@ import ProductOverview from "../components/detalle-producto/ProductOverview";
 import ProductPriceCard from "../components/detalle-producto/ProductPriceCard";
 import ProductTransportPriceCard from "../components/detalle-producto/ProductTransportPriceCard";
 import ProductRestaurantPriceCard from "../components/detalle-producto/ProductRestaurantPriceCard";
+import ProductPlanPriceCard from "../components/detalle-producto/ProductPlanPriceCard";
+import ProductExcursionPriceCard from "../components/detalle-producto/ProductExcursionPriceCard";
 import ProductRecommendations from "../components/detalle-producto/ProductRecommendations";
 import ProductTravelNotes from "../components/detalle-producto/ProductTravelNotes";
 import ProductKeywordCloud from "../components/detalle-producto/ProductKeywordCloud";
@@ -41,7 +43,46 @@ import { useProductEditor } from "../hooks/useProductEditor";
 
 export default function PanelControlProductDetailPage() {
   const { productId } = useParams();
+  const navigate = useNavigate();
   const detail = getDetalleProducto(productId);
+
+  if (!detail) {
+    return (
+      <div className="detalle-producto-page detalle-producto-page--admin">
+        <main className="detalle-producto-main">
+          <section className="detalle-producto-unavailable">
+            <div className="detalle-producto-unavailable-card">
+              <p>Producto no encontrado</p>
+              <h1>No pudimos abrir esta ficha del panel</h1>
+              <span>
+                El producto que buscas no existe en el catalogo o ya no tiene una
+                ruta valida dentro del panel de control.
+              </span>
+              <Link
+                className="detalle-producto-unavailable-button"
+                to="/panel-de-control/productos"
+              >
+                Volver al panel de productos
+              </Link>
+            </div>
+          </section>
+        </main>
+
+        <Footer data={footerData} />
+      </div>
+    );
+  }
+
+  return (
+    <PanelControlProductDetailResolvedPage
+      detail={detail}
+      navigate={navigate}
+      productId={productId}
+    />
+  );
+}
+
+function PanelControlProductDetailResolvedPage({ detail, navigate, productId }) {
   const panelProduct = getPanelProductItemById(productId);
   const [productStatus, setProductStatus] = useState(() =>
     getResolvedProductStatus(detail.id, detail.status),
@@ -134,9 +175,6 @@ export default function PanelControlProductDetailPage() {
         setIsDisableConfirmationOpen(false);
         setIsEnableNoticeOpen(false);
         setIsSeasonDatesModalOpen(false);
-        if (productId !== "nuevo") {
-           setIsMagicModalOpen(false);
-        }
         couponManagerRef.current?.closeAll();
       }
     }
@@ -235,7 +273,7 @@ export default function PanelControlProductDetailPage() {
       
       <ProductMagicAiModal 
         isOpen={isMagicModalOpen}
-        onClose={() => setIsMagicModalOpen(false)}
+        onClose={() => navigate("/panel-de-control/productos")}
         onGenerate={handleMagicGenerate}
         onStartManual={handleMagicStartManual}
         onSwitchToRestaurant={() => {
@@ -433,6 +471,33 @@ export default function PanelControlProductDetailPage() {
                   <ProductRestaurantPriceCard
                     draft={isEditingProduct ? contentDraft : { booking: detail.booking }}
                     status={productStatus}
+                    isEditingEnabled={isEditingProduct}
+                    activeBlock={activeContentBlock}
+                    onActivateBlock={setActiveContentBlock}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onUpdatePeriod={updateHighSeasonPeriod}
+                    onAddPeriod={addHighSeasonPeriod}
+                    onRemovePeriod={removeHighSeasonPeriod}
+                  />
+                ) : detail.categoryId === "excursiones" || (isEditingProduct && contentDraft?.categoryId === "excursiones") ? (
+                  <ProductExcursionPriceCard
+                    draft={{
+                      ...(isEditingProduct ? contentDraft : { booking: detail.booking }),
+                      subcategoryIds: panelProduct?.subcategoryIds ?? [],
+                    }}
+                    isEditingEnabled={isEditingProduct}
+                    activeBlock={activeContentBlock}
+                    onActivateBlock={setActiveContentBlock}
+                    onBasePriceChange={updateBookingBasePrice}
+                    onGridPriceChange={updateBookingGridPrice}
+                    onUpdatePeriod={updateHighSeasonPeriod}
+                    onAddPeriod={addHighSeasonPeriod}
+                    onRemovePeriod={removeHighSeasonPeriod}
+                  />
+                ) : (detail.categoryId === "planes" || (isEditingProduct && contentDraft?.categoryId === "planes")) ? (
+                  <ProductPlanPriceCard
+                    draft={isEditingProduct ? contentDraft : { booking: detail.booking }}
                     isEditingEnabled={isEditingProduct}
                     activeBlock={activeContentBlock}
                     onActivateBlock={setActiveContentBlock}

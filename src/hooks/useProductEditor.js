@@ -487,11 +487,13 @@ export function useProductEditor(detail) {
       })) : current.itinerary,
       includes: Array.isArray(aiData.que_incluye) ? aiData.que_incluye.map(item => ({
         id: createEditableItemId("include"),
-        label: item.label || ""
+        title: item.title || item.label || "",
+        description: item.description || ""
       })) : current.includes,
       excludes: Array.isArray(aiData.que_no_incluye) ? aiData.que_no_incluye.map(item => ({
         id: createEditableItemId("exclude"),
-        label: item.label || ""
+        title: item.title || item.label || "",
+        description: item.description || ""
       })) : current.excludes,
       recommendations: Array.isArray(aiData.recomendaciones) ? aiData.recomendaciones : current.recommendations,
       considerations: Array.isArray(aiData.consideraciones) ? aiData.consideraciones : current.consideraciones,

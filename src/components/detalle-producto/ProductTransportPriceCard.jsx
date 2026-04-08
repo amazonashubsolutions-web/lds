@@ -1,3 +1,5 @@
+import { getProductCategoryCssVars } from "../../utils/productCategoryThemes";
+
 function formatBookingPrice(value) {
   if (!value) {
     return null;
@@ -222,7 +224,7 @@ function HighSeasonPeriodsEditor({
             ) : (
               <span
                 key={period.id}
-                style={{ backgroundColor: "var(--lds-logo-green-dark)", color: "white", padding: "4px 9px", fontSize: "0.72rem", borderRadius: "12px", fontWeight: "600", display: "inline-block" }}
+                style={{ backgroundColor: "var(--product-theme-primary)", color: "white", padding: "4px 9px", fontSize: "0.72rem", borderRadius: "12px", fontWeight: "600", display: "inline-block" }}
               >
                 {formatSeasonPeriodLabel(period)}
               </span>
@@ -252,6 +254,7 @@ export default function ProductTransportPriceCard({
   alwaysEditable = false,
   showEditToggle = true,
 }) {
+  const categoryThemeStyle = getProductCategoryCssVars("transporte");
   const pricingDetails = booking.pricingDetails;
   const seasonalPricing = pricingDetails?.seasons;
   const isPricingActive =
@@ -266,7 +269,8 @@ export default function ProductTransportPriceCard({
     <aside
       className={`detalle-producto-booking-card detalle-producto-price-card${
         isPricingActive ? " detalle-producto-price-card--editing" : ""
-      }`} style={{ borderTop: "4px solid #00357f" }}
+      }`}
+      style={categoryThemeStyle}
     >
       <div className="detalle-producto-booking-top" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1.1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
@@ -284,7 +288,7 @@ export default function ProductTransportPriceCard({
               {seasonalPricing.high.periods.map((period) => (
                 <span
                   key={period.id}
-                  style={{ backgroundColor: "#ffffff", color: "var(--lds-logo-green-dark)", padding: "3px 6px", fontSize: "0.66rem", borderRadius: "12px", fontWeight: "800", display: "inline-block", textAlign: "center", boxShadow: "0 2px 4px rgba(0,0,0,0.15)" }}
+                  style={{ backgroundColor: "var(--product-theme-chip-bg)", color: "var(--product-theme-chip-text)", padding: "3px 6px", fontSize: "0.66rem", borderRadius: "12px", fontWeight: "800", display: "inline-block", textAlign: "center", boxShadow: "0 2px 4px rgba(0,0,0,0.15)" }}
                 >
                   {formatSeasonPeriodLabel(period)}
                 </span>

@@ -10,6 +10,7 @@ import {
   findProductCouponByCode,
   getDateAvailableProductCoupons,
 } from "../../utils/bookingCouponEngine";
+import { getProductCategoryCssVars } from "../../utils/productCategoryThemes";
 
 function formatBookingPrice(value) {
   if (!value) {
@@ -198,6 +199,7 @@ export default function ProductBookingCard({
   booking,
   initialTravelDate = "",
 }) {
+  const categoryThemeStyle = getProductCategoryCssVars("actividades");
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCouponCode, setAppliedCouponCode] = useState("");
@@ -446,7 +448,7 @@ export default function ProductBookingCard({
 
   return (
     <>
-      <aside className="detalle-producto-booking-card">
+      <aside className="detalle-producto-booking-card" style={categoryThemeStyle}>
         <div className="detalle-producto-booking-top">
           <div className="detalle-producto-booking-top-row">
             <span>Tarifa</span>

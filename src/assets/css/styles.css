@@ -646,8 +646,8 @@
   gap: 0.32rem;
   padding: 1rem 1.05rem;
   border-radius: 1rem;
-  background: #f8fbfb;
-  box-shadow: inset 0 0 0 1px rgba(6, 107, 112, 0.08);
+  background: var(--product-theme-soft, #f8fbfb);
+  box-shadow: inset 0 0 0 1px var(--product-theme-border, rgba(6, 107, 112, 0.08));
 }
 
 .detalle-producto-price-card-summary p,
@@ -686,9 +686,9 @@
   min-width: 0;
   min-height: 3.2rem;
   padding: 0.78rem 0.65rem;
-  border: 2px dashed rgba(249, 115, 22, 0.55);
+  border: 2px dashed var(--product-theme-border, rgba(249, 115, 22, 0.55));
   border-radius: 0.8rem;
-  background: #fffaf5;
+  background: var(--product-theme-surface, #fffaf5);
   text-align: center;
   font-weight: 700;
   font-size: 1.18rem;
@@ -718,9 +718,9 @@
   display: grid;
   gap: 0.9rem;
   padding: 1rem 1.05rem;
-  border: 1px solid rgba(15, 118, 110, 0.12);
+  border: 1px solid var(--product-theme-border, rgba(15, 118, 110, 0.12));
   border-radius: 1rem;
-  background: #f8fbfc;
+  background: var(--product-theme-soft, #f8fbfc);
 }
 
 .detalle-producto-price-card-periods-head {
@@ -3239,10 +3239,14 @@ p {
 }
 
 .detalle-producto-edit-action--active {
-  border-color: rgba(238, 132, 20, 0.32);
-  background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  border-color: var(--product-theme-border, rgba(238, 132, 20, 0.32));
+  background: linear-gradient(
+    135deg,
+    var(--product-theme-primary, #f59e0b) 0%,
+    var(--product-theme-secondary, #ea580c) 100%
+  );
   color: #ffffff;
-  box-shadow: 0 18px 34px rgba(234, 88, 12, 0.22);
+  box-shadow: 0 18px 34px var(--product-theme-shadow, rgba(234, 88, 12, 0.22));
 }
 
 .detalle-producto-edit-action .material-icons-outlined {
@@ -3256,7 +3260,7 @@ p {
   gap: 0.38rem;
   min-height: 2.15rem;
   padding: 0 0.8rem;
-  border: 1px solid rgba(6, 107, 112, 0.14);
+  border: 1px solid var(--product-theme-border, rgba(6, 107, 112, 0.14));
   border-radius: 999px;
   background: #ffffff;
   font: inherit;
@@ -3278,13 +3282,13 @@ p {
 }
 
 .detalle-producto-inline-action--add {
-  color: var(--primary);
+  color: var(--product-theme-primary, var(--primary));
 }
 
 .detalle-producto-inline-action--add:hover,
 .detalle-producto-inline-action--add:focus-visible {
-  border-color: rgba(6, 107, 112, 0.26);
-  background: #f4fbfb;
+  border-color: var(--product-theme-border, rgba(6, 107, 112, 0.26));
+  background: var(--product-theme-soft, #f4fbfb);
 }
 
 .detalle-producto-inline-action--remove {
@@ -3339,8 +3343,18 @@ p {
   border: 2px dashed rgba(249, 115, 22, 0.5);
   border-radius: 1rem;
   background: #ffffff;
-  color: var(--on-surface);
+  color: #000;
   font: inherit;
+}
+
+/* REGLA CRITICA: Forzar texto negro en inputs de tarjeta de precios */
+.detalle-producto-price-card .detalle-producto-admin-edit-field input,
+.detalle-producto-price-card-section--high input,
+.detalle-producto-booking-modal-card--high input,
+.detalle-producto-price-card-field input {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: 1 !important;
 }
 
 .detalle-producto-admin-edit-field textarea {
@@ -3640,17 +3654,36 @@ p {
 }
 
 .detalle-producto-booking-card {
+  --product-theme-primary: #f97316;
+  --product-theme-secondary: #ea580c;
+  --product-theme-accent: #9a3412;
+  --product-theme-soft: #fff7ed;
+  --product-theme-soft-alt: #ffedd5;
+  --product-theme-border: rgba(249, 115, 22, 0.18);
+  --product-theme-surface: #fffaf5;
+  --product-theme-surface-strong: #fed7aa;
+  --product-theme-chip-bg: #ffffff;
+  --product-theme-chip-text: #c2410c;
+  --product-theme-shadow: rgba(234, 88, 12, 0.16);
+  --product-theme-muted: #7c2d12;
   overflow: hidden;
   border-radius: 1.2rem;
   background: #ffffff;
-  box-shadow: 0 20px 40px rgba(25, 28, 29, 0.08);
+  border: 1px solid var(--product-theme-border);
+  box-shadow:
+    0 20px 40px rgba(25, 28, 29, 0.08),
+    0 16px 34px var(--product-theme-shadow);
 }
 
 .detalle-producto-booking-top {
   display: grid;
   gap: 0.25rem;
   padding: 1.35rem 1.4rem;
-  background: var(--primary);
+  background: linear-gradient(
+    135deg,
+    var(--product-theme-primary, var(--primary)) 0%,
+    var(--product-theme-secondary, var(--primary)) 100%
+  );
   color: #ffffff;
 }
 
@@ -3721,8 +3754,8 @@ p {
 }
 
 .detalle-producto-booking-inline-alert .detalle-producto-booking-season-alert {
-  background: rgba(0, 112, 149, 0.1);
-  border: 1px solid rgba(0, 112, 149, 0.2);
+  background: var(--product-theme-soft, rgba(0, 112, 149, 0.1));
+  border: 1px solid var(--product-theme-border, rgba(0, 112, 149, 0.2));
 }
 
 .detalle-producto-booking-inline-alert .detalle-producto-booking-season-alert p {
@@ -4202,18 +4235,18 @@ p {
   gap: 0.28rem;
   min-height: 100%;
   padding: 1rem;
-  border: 1px solid rgba(6, 107, 112, 0.14);
+  border: 1px solid var(--product-theme-border, rgba(6, 107, 112, 0.14));
   border-radius: 1rem;
-  background: #f8fbfb;
+  background: var(--product-theme-soft, #f8fbfb);
 }
 
 .detalle-producto-booking-modal-card--group {
-  background: #fff7ef;
-  border-color: rgba(209, 13, 59, 0.12);
+  background: var(--product-theme-soft-alt, #fff7ef);
+  border-color: var(--product-theme-border, rgba(209, 13, 59, 0.12));
 }
 
 .detalle-producto-booking-modal-card--high {
-  border-color: rgba(209, 13, 59, 0.22);
+  border-color: var(--product-theme-primary, rgba(209, 13, 59, 0.22));
 }
 
 .detalle-producto-booking-modal-card span {

@@ -1,8 +1,6 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import {
-  ProductCouponModal,
-  ProductCouponSuccessAlert,
-} from "../panel-control/DashboardProductsSection";
+import ProductCouponModal from "../panel-control/ProductCouponModal";
+import ProductCouponSuccessAlert from "../panel-control/ProductCouponSuccessAlert";
 import ProductCouponsModal from "./ProductCouponsModal";
 import {
   createProductCouponDraft,
@@ -86,17 +84,39 @@ const ProductCouponManager = forwardRef(
       setIsCouponsModalOpen(false);
     }
 
-    function handleCouponFieldChange(field, nextValue, conditionId) {
+    function handleCouponFieldChange(fieldOrEvent, nextFieldValue, conditionId) {
       setCouponForm((current) => {
         if (!current) {
           return current;
         }
 
+        const isEventPayload =
+          typeof fieldOrEvent === "object" && fieldOrEvent?.target;
+        const field = isEventPayload ? fieldOrEvent.target.name : fieldOrEvent;
+        let nextValue = isEventPayload ? fieldOrEvent.target.value : nextFieldValue;
+
+        if (!conditionId && field === "discountValue") {
+          const digitsOnlyValue = String(nextValue).replace(/\D/g, "").slice(0, 3);
+          nextValue = digitsOnlyValue
+            ? String(Math.min(Number(digitsOnlyValue), 100))
+            : "";
+        }
+
         if (!conditionId) {
-          return {
+          const nextForm = {
             ...current,
-            [field]: nextValue,
+            [field]: field === "couponName" ? String(nextValue).toUpperCase() : nextValue,
           };
+
+          if (field === "startsAt") {
+            nextForm.endsAt = nextValue;
+          }
+
+          return nextForm;
+        }
+
+        if (field === "value") {
+          nextValue = String(nextValue).replace(/\D/g, "").slice(0, 3);
         }
 
         return {
@@ -248,7 +268,7 @@ const ProductCouponManager = forwardRef(
         productName: couponForm.subjectName,
       });
       closeCouponModal();
-      
+
       if (onCouponCreated) {
         onCouponCreated();
       }

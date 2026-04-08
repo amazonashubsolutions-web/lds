@@ -9,6 +9,8 @@ import { toProductCouponItem } from "../data/couponsData";
 import ProductBookingCard from "../components/detalle-producto/ProductBookingCard";
 import ProductTransportBookingCard from "../components/detalle-producto/ProductTransportBookingCard";
 import ProductRestaurantBookingCard from "../components/detalle-producto/ProductRestaurantBookingCard";
+import ProductPlanBookingCard from "../components/detalle-producto/ProductPlanBookingCard";
+import ProductExcursionBookingCard from "../components/detalle-producto/ProductExcursionBookingCard";
 import ProductExcludes from "../components/detalle-producto/ProductExcludes";
 import ProductGallery from "../components/detalle-producto/ProductGallery";
 import ProductHeroInfo from "../components/detalle-producto/ProductHeroInfo";
@@ -35,13 +37,41 @@ import {
 
 export default function DetalleProductoPage() {
   const { productId } = useParams();
+  const detail = getDetalleProducto(productId);
+
+  if (!detail) {
+    return (
+      <div className="detalle-producto-page">
+        <DetalleProductoHeader couponCount={0} />
+        <main className="detalle-producto-main">
+          <section className="detalle-producto-unavailable">
+            <div className="detalle-producto-unavailable-card">
+              <p>Producto no encontrado</p>
+              <h1>No pudimos abrir esta ficha</h1>
+              <span>
+                El producto que intentas consultar no existe o ya no esta disponible
+                en el catalogo.
+              </span>
+              <Link className="detalle-producto-unavailable-button" to="/resultados">
+                Volver a resultados
+              </Link>
+            </div>
+          </section>
+        </main>
+        <Footer data={footerData} />
+      </div>
+    );
+  }
+
+  return <DetalleProductoResolvedPage detail={detail} />;
+}
+
+function DetalleProductoResolvedPage({ detail }) {
   const [searchParams] = useSearchParams();
   const [statusRefreshVersion, setStatusRefreshVersion] = useState(0);
   const [couponRefreshKey, setCouponRefreshKey] = useState(0);
   const [isSeasonDatesModalOpen, setIsSeasonDatesModalOpen] = useState(false);
   const couponManagerRef = useRef(null);
-
-  const detail = getDetalleProducto(productId);
   const relatedItems = getRelatedProducts(detail.id);
   const searchedDate = searchParams.get("fecha") ?? "";
   
@@ -121,6 +151,21 @@ export default function DetalleProductoPage() {
                       />
                     ) : detail.categoryId === "restaurantes" ? (
                       <ProductRestaurantBookingCard
+                        booking={detail.booking}
+                        initialTravelDate={searchedDate}
+                      />
+                    ) : detail.categoryId === "excursiones" ? (
+                      <ProductExcursionBookingCard
+                        booking={detail.booking}
+                        initialTravelDate={searchedDate}
+                        comfortLevel={
+                          detail.subcategoryIds?.includes("excursion-confort") ? "confort" :
+                          detail.subcategoryIds?.includes("excursion-fuera-de-confort") ? "aventura" :
+                          detail.subcategoryIds?.includes("excursion-basico") ? "basico" : "confort"
+                        }
+                      />
+                    ) : detail.categoryId === "planes" ? (
+                      <ProductPlanBookingCard
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
                       />

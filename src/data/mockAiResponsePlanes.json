@@ -1,0 +1,76 @@
+{
+  "titulo": "Aventura Amazónica en Leticia – 4 días",
+  "descripcion_breve": "Explora el corazón de la selva amazónica, navega por el río más grande del mundo y convive con comunidades indígenas en una experiencia única e inolvidable.",
+  "descripcion_general": [
+    "Adéntrate en los misterios del Amazonas, un destino donde la biodiversidad y la cultura se entrelazan en cada rincón. Durante estos 4 días, vivirás una travesía épica recorriendo desde la vibrante Leticia hasta las tranquilas aguas de Puerto Nariño.",
+    "Sentirás la fuerza de la naturaleza al observar delfines rosados, participar en caminatas nocturnas por la selva y aprender de la sabiduría milenaria de las comunidades Ticuna y Yagua. Un viaje diseñado para quienes buscan desconexión total y una conexión profunda con la vida silvestre."
+  ],
+  "itinerario": [
+    {
+      "titulo": "Día 1: Bienvenida y Selva Mágica",
+      "descripcion": "Llegada al aeropuerto Alfredo Vásquez Cobo en Leticia. Traslado al hotel y charla de bienvenida. Por la tarde, visitaremos el Parque Santander para presenciar el asombroso espectáculo de la llegada de miles de loros al atardecer. Cerraremos el día con una cena típica de la región."
+    },
+    {
+      "titulo": "Día 2: Puerto Nariño y Delfines Rosados",
+      "descripcion": "Navegación por el Río Amazonas hacia el municipio de Puerto Nariño, conocido como el pesebre natural de Colombia. En el trayecto, visitaremos la isla de los micos y la comunidad de Macedonia. Por la tarde, buscaremos los majestuosos delfines rosados en el Lago Tarapoto antes de disfrutar de un atardecer amazónico."
+    },
+    {
+      "titulo": "Día 3: Reserva Natural Tanimboca",
+      "descripcion": "Mañana dedicada a la aventura en la reserva Tanimboca. Realizaremos canopy por el dosel de la selva y caminatas guiadas para identificar flora y fauna local. Al caer la noche, realizaremos una exploración nocturna para descubrir los sonidos y criaturas que cobran vida en la oscuridad de la selva."
+    },
+    {
+      "titulo": "Día 4: Cultura Yagua y Despedida",
+      "descripcion": "Visita a la comunidad indígena Yagua para aprender sobre sus tradiciones de caza y artesanías. Tiempo libre para compras en Leticia y traslado final al aeropuerto de acuerdo al horario de vuelo."
+    }
+  ],
+  "que_incluye": [
+    {
+      "title": "Transporte Fluvial y Terrestre",
+      "description": "Traslados aeropuerto-hotel-aeropuerto y desplazamientos en lanchas rápidas compartidas durante los tours."
+    },
+    {
+      "title": "Alimentación Completa",
+      "description": "Desayunos, almuerzos y cenas (menú del día) durante toda la estadía."
+    },
+    {
+      "title": "Alojamiento",
+      "description": "3 noches de hospedaje en hotel seleccionado (acomodación doble o múltiple)."
+    },
+    {
+      "title": "Guía Profesional",
+      "description": "Acompañamiento de guía local bilingüe experto en el destino."
+    }
+  ],
+  "que_no_incluye": [
+    {
+      "title": "Tiquetes Aéreos",
+      "description": "Vuelos nacionales desde y hacia el aeropuerto de Leticia."
+    },
+    {
+      "title": "Impuesto de Turismo",
+      "description": "Pago obligatorio al ingresar a Leticia ($35.000 COP aprox)."
+    },
+    {
+      "title": "Gastos no especificados",
+      "description": "Bebidas alcohólicas, propinas y compras personales."
+    }
+  ],
+  "recomendaciones": [
+    "Llevar ropa ligera, de secado rápido y colores claros.",
+    "Indispensable repelente de insectos y bloqueador solar biodegradable.",
+    "Vacunarse contra la fiebre amarilla al menos 10 días antes del viaje.",
+    "Portar efectivo en denominaciones bajas, ya que hay pocos cajeros."
+  ],
+  "consideraciones": [
+    "El clima en el Amazonas es húmedo y tropical con lluvias frecuentes.",
+    "Requiere un nivel físico moderado para las caminatas por selva.",
+    "Los itinerarios pueden variar según condiciones climáticas o del río.",
+    "La señal de internet y celular es limitada en varias áreas."
+  ],
+  "politicas": [
+    "Cancelaciones con más de 15 días: reembolso del 80%.",
+    "Cancelaciones entre 15 y 7 días: reembolso del 50%.",
+    "Menos de 7 días: no aplica reembolso (No Show).",
+    "En caso de fuerza mayor certificada, se permite reprogramación sin costo."
+  ]
+}

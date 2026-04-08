@@ -10,6 +10,10 @@ import {
   findProductCouponByCode,
   getDateAvailableProductCoupons,
 } from "../../utils/bookingCouponEngine";
+import {
+  getProductCategoryCssVars,
+  getProductCategoryTheme,
+} from "../../utils/productCategoryThemes";
 
 function formatBookingPrice(value) {
   if (!value) return null;
@@ -111,6 +115,8 @@ export default function ProductTransportBookingCard({
   initialTravelDate = "",
   meta = [],
 }) {
+  const theme = getProductCategoryTheme("transporte");
+  const categoryThemeStyle = getProductCategoryCssVars("transporte");
   const capacityMeta = meta.find(m => m.label === "Capacidad");
   const capacityText = capacityMeta ? capacityMeta.value.replace(/hasta/i, "").trim().toLowerCase() : "la capacidad contratada";
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
@@ -247,10 +253,10 @@ export default function ProductTransportBookingCard({
 
   return (
     <>
-      <aside className="detalle-producto-booking-card" style={{ background: "#ffffff", border: "none", overflow: "hidden", borderRadius: "12px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "0" }}>
+      <aside className="detalle-producto-booking-card" style={{ ...categoryThemeStyle, background: "#ffffff", overflow: "hidden", borderRadius: "12px", boxShadow: `0 10px 25px ${theme.shadow}`, padding: "0" }}>
         
         {/* HEADER VERDE PRIMARY */}
-        <div style={{ background: "#10b981", padding: "1.5rem 1.5rem 1.25rem 1.5rem", textAlign: "center" }}>
+        <div style={{ background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.secondary} 100%)`, padding: "1.5rem 1.5rem 1.25rem 1.5rem", textAlign: "center" }}>
           <h3 style={{ margin: "0", color: "#ffffff", fontSize: "1.3rem", fontWeight: "800", letterSpacing: "0.5px" }}>Transporte Exclusivo</h3>
           <div style={{ margin: "0.75rem auto 1rem", background: "rgba(255, 255, 255, 0.2)", color: "#ffffff", padding: "0.6rem 1.2rem", borderRadius: "30px", display: "inline-block", fontSize: "1.1rem", fontWeight: "700", backdropFilter: "blur(4px)", boxShadow: "0 4px 6px rgba(0,0,0,0.05)" }}>
             Cubre desde 1 hasta {capacityText}
@@ -283,7 +289,7 @@ export default function ProductTransportBookingCard({
                 min={minTravelDateValue}
                 max={maxTravelDateValue}
                 onChange={handleTravelDateChange}
-                style={{ width: "100%", padding: "0.85rem", borderRadius: "8px", border: "1px solid #d1d5db", color: "#1f2937", background: "#f9fafb" }}
+            style={{ width: "100%", padding: "0.85rem", borderRadius: "8px", border: `1px solid ${theme.surfaceStrong}`, color: "#1f2937", background: theme.surface }}
               />
             </label>
           </div>
@@ -313,7 +319,7 @@ export default function ProductTransportBookingCard({
 
           {isHighSeasonActive ? (
             <div className="detalle-producto-booking-inline-alert" style={{ marginTop: "1rem" }}>
-              <div className="detalle-producto-booking-season-alert" style={{ background: "#fff5f5", color: "#c53030", borderColor: "#feb2b2" }}>
+              <div className="detalle-producto-booking-season-alert" style={{ background: theme.softAlt, color: theme.accent, borderColor: theme.surfaceStrong }}>
                 <div className="detalle-producto-booking-alert-copy">
                   <p style={{ fontWeight: "600", margin: "0" }}>Tarifa alta activa</p>
                   <small>{highSeasonPeriodsLabel}</small>
@@ -336,7 +342,7 @@ export default function ProductTransportBookingCard({
               </div>
             ))}
 
-            <div className="detalle-producto-booking-row detalle-producto-booking-row--total" style={{ display: "flex", justifyContent: "space-between", fontSize: "1.1rem", marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid #e5e7eb", color: "#10b981" }}>
+            <div className="detalle-producto-booking-row detalle-producto-booking-row--total" style={{ display: "flex", justifyContent: "space-between", fontSize: "1.1rem", marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid #e5e7eb", color: theme.primary }}>
               <span>Total estimado</span>
               <strong>{formatBookingAmount(estimatedTotal)}</strong>
             </div>
@@ -381,7 +387,7 @@ export default function ProductTransportBookingCard({
           </div>
 
           <div className="detalle-producto-booking-action" style={{ marginTop: "1.5rem" }}>
-            <button type="button" style={{ width: "100%", padding: "1rem", background: "#1f2937", color: "#ffffff", borderRadius: "8px", border: "none", fontSize: "1rem", fontWeight: "700", cursor: "pointer", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)", transition: "background 0.2s" }} onMouseOver={e=>e.currentTarget.style.background="#111827"} onMouseOut={e=>e.currentTarget.style.background="#1f2937"}>
+          <button type="button" style={{ width: "100%", padding: "1rem", background: theme.accent, color: "#ffffff", borderRadius: "8px", border: "none", fontSize: "1rem", fontWeight: "700", cursor: "pointer", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)", transition: "background 0.2s" }} onMouseOver={e=>e.currentTarget.style.background=theme.secondary} onMouseOut={e=>e.currentTarget.style.background=theme.accent}>
               {booking.buttonLabel ?? "Reservar Vehículo"}
             </button>
           </div>

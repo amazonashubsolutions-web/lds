@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import PrimaryHeader from "../components/layout/PrimaryHeader";
@@ -12,6 +12,8 @@ import {
 } from "../data/panelControlData";
 import { resultCategories } from "../data/resultadosData";
 import { getPanelProductItems } from "../utils/panelControlProducts";
+import { subscribeToCreatedProductChanges } from "../utils/createdProductsRepository";
+import { subscribeToProductStatusChanges } from "../utils/productStatusStorage";
 
 const ALL_CATEGORY_FILTER = "all";
 const ALL_STATUS_FILTER = "all";
@@ -32,8 +34,12 @@ export default function PanelControlProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORY_FILTER);
   const [selectedStatus, setSelectedStatus] = useState(ALL_STATUS_FILTER);
+  const [dataRefreshVersion, setDataRefreshVersion] = useState(0);
 
-  const productItems = getPanelProductItems();
+  const productItems = useMemo(
+    () => getPanelProductItems(),
+    [dataRefreshVersion],
+  );
   const normalizedSearchTerm = normalizeValue(searchTerm);
   const filteredProductItems = useMemo(
     () =>
@@ -80,6 +86,20 @@ export default function PanelControlProductsPage() {
     normalizedSearchTerm.length > 0 ||
     selectedCategory !== ALL_CATEGORY_FILTER ||
     selectedStatus !== ALL_STATUS_FILTER;
+
+  useEffect(() => {
+    const triggerRefresh = () => {
+      setDataRefreshVersion((current) => current + 1);
+    };
+
+    const unsubscribeCreatedProducts = subscribeToCreatedProductChanges(triggerRefresh);
+    const unsubscribeProductStatus = subscribeToProductStatusChanges(triggerRefresh);
+
+    return () => {
+      unsubscribeCreatedProducts();
+      unsubscribeProductStatus();
+    };
+  }, []);
 
   function resetFilters() {
     setSearchTerm("");

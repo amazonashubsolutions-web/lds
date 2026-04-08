@@ -648,10 +648,12 @@ function getResolvedDetailRecord(productIdOrSlug) {
 }
 
 function buildDetailResponse(productIdOrSlug) {
-  const allProducts = getAllProductRecords();
-  const fallbackProduct = getProductRecordById(1) ?? allProducts[0];
-  const resolvedProduct =
-    getProductRecordFromRoute(productIdOrSlug) ?? fallbackProduct;
+  const resolvedProduct = getProductRecordFromRoute(productIdOrSlug);
+
+  if (!resolvedProduct) {
+    return null;
+  }
+
   const resolvedRecord =
     getResolvedDetailRecord(productIdOrSlug) ??
     getStoredCreatedProductRecordById(resolvedProduct.id)?.detail ??
@@ -677,6 +679,14 @@ export function getDetalleProducto(productIdOrSlug) {
 export function getRelatedProducts(currentProductId) {
   const currentProduct = getProductRecordById(currentProductId);
   const allProducts = getAllProductRecords();
+
+  if (!currentProduct) {
+    return allProducts
+      .filter((product) => product.id !== Number(currentProductId))
+      .slice(0, 3)
+      .map(toRelatedProductItem);
+  }
+
   const sameCategoryProducts = allProducts.filter(
     (product) =>
       product.id !== Number(currentProductId) &&

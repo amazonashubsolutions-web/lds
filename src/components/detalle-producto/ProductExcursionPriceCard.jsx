@@ -25,9 +25,14 @@ function formatSeasonPeriodLabel(period = {}) {
   const startLabel = formatMonthDayLabel(period.startMonthDay);
   const endLabel = formatMonthDayLabel(period.endMonthDay);
   const rangeLabel = startLabel && endLabel ? `${startLabel} a ${endLabel}` : "";
+
   if (!label) return rangeLabel || "Periodo por definir";
-  const normalizedLabel = label.toLowerCase();
-  if (!rangeLabel || normalizedLabel.includes("del ") || normalizedLabel.includes(startLabel.toLowerCase()) || normalizedLabel.includes(endLabel.toLowerCase())) return rangeLabel;
+  if (!rangeLabel) return label;
+  
+  const lowerLabel = label.toLowerCase();
+  if (lowerLabel.includes(startLabel.toLowerCase()) || lowerLabel.includes(endLabel.toLowerCase())) {
+    return label;
+  }
   return `${label}: ${rangeLabel}`;
 }
 
@@ -43,7 +48,7 @@ function PriceEditAction({ isActive = false, onClick }) {
   return (
     <button type="button" className={`detalle-producto-edit-action${isActive ? " detalle-producto-edit-action--active" : ""}`} onClick={onClick}>
       <span className="material-icons-outlined" aria-hidden="true">edit</span>
-      <span>{isActive ? "Editando" : "Editar"}</span>
+      <span>{isActive ? "Gestionar Tarifas" : "Editar"}</span>
     </button>
   );
 }
@@ -70,13 +75,13 @@ function PriceGrid({ items = [], tone = "default", isEditing = false, onPriceCha
   return (
     <div className="detalle-producto-booking-modal-grid">
       {items.map((item, index) => (
-        <article className={`detalle-producto-booking-modal-card${tone === "group" ? " detalle-producto-booking-modal-card--group" : ""}${tone === "high" ? " detalle-producto-booking-modal-card--high" : ""}${tone === "high-group" ? " detalle-producto-booking-modal-card--group detalle-producto-booking-modal-card--high" : ""}`} key={`${tone}-${item.id}`}>
+        <article className={`detalle-producto-booking-modal-card${tone.includes("group") ? " detalle-producto-booking-modal-card--group" : ""}${tone.includes("high") ? " detalle-producto-booking-modal-card--high" : ""}`} key={`${tone}-${item.id}`}>
           <span>{item.label}</span>
           {item.ageHint ? <small>{item.ageHint}</small> : null}
           {isEditing ? (
             <PriceInputField label="Precio" value={item.price} onChange={(nextValue) => onPriceChange(index, nextValue)} />
           ) : (
-            <strong>{formatBookingPrice(item.price)}</strong>
+            <strong style={{ color: tone.includes("high") ? "#ffffff" : "inherit" }}>{formatBookingPrice(item.price)}</strong>
           )}
         </article>
       ))}
@@ -100,16 +105,16 @@ function HighSeasonPeriodsEditor({ periods = [], isEditing = false, onPeriodChan
             isEditing ? (
               <article className="detalle-producto-price-card-period" key={period.id}>
                 <label className="detalle-producto-admin-edit-field detalle-producto-price-card-field">
-                  <span>Periodo</span>
+                  <span>Nombre Temporada</span>
                   <input type="text" value={period.label ?? ""} onChange={(event) => onPeriodChange(index, "label", event.target.value)} placeholder="Ej. Semana Santa" />
                 </label>
                 <div className="detalle-producto-price-card-period-dates">
                   <label className="detalle-producto-admin-edit-field detalle-producto-price-card-field">
-                    <span>Fecha inicio</span>
+                    <span>Inicio</span>
                     <input type="date" value={getDateInputValue(period.startMonthDay)} onChange={(event) => onPeriodChange(index, "startMonthDay", getMonthDayFromInputValue(event.target.value))} />
                   </label>
                   <label className="detalle-producto-admin-edit-field detalle-producto-price-card-field">
-                    <span>Fecha fin</span>
+                    <span>Fin</span>
                     <input type="date" value={getDateInputValue(period.endMonthDay)} onChange={(event) => onPeriodChange(index, "endMonthDay", getMonthDayFromInputValue(event.target.value))} />
                   </label>
                 </div>
@@ -129,9 +134,8 @@ function HighSeasonPeriodsEditor({ periods = [], isEditing = false, onPeriodChan
   );
 }
 
-export default function ProductRestaurantPriceCard({
+export default function ProductExcursionPriceCard({
   draft,
-  status = "active",
   isEditingEnabled = false,
   activeBlock = null,
   onActivateBlock = () => {},
@@ -141,35 +145,46 @@ export default function ProductRestaurantPriceCard({
   onAddPeriod = () => {},
   onRemovePeriod = () => {},
 }) {
-  const categoryThemeStyle = getProductCategoryCssVars("restaurantes");
+  const categoryThemeStyle = getProductCategoryCssVars("excursiones");
   const booking = draft?.booking || {};
   const pricingDetails = booking.pricingDetails || {};
   const seasonalPricing = pricingDetails.seasons || {};
   const isPricingActive = isEditingEnabled && activeBlock === "pricing";
 
+  // Comfort Level Logic (Specific for Excursions)
+  const COMFORT_LEVELS = {
+    "excursion-confort": { label: "Confort", icon: "hotel" },
+    "excursion-fuera-de-confort": { label: "Aventura", icon: "hiking" },
+    "excursion-basico": { label: "Básico", icon: "cottage" },
+  };
+  const subcategoryId = draft?.subcategoryIds?.[0] || "";
+  const comfort = COMFORT_LEVELS[subcategoryId] || { label: "Definir Nivel", icon: "explore" };
+
   return (
-    <aside className={`detalle-producto-booking-card detalle-producto-price-card${isPricingActive ? " detalle-producto-price-card--editing" : ""}`} style={categoryThemeStyle}>
-      <div className="detalle-producto-booking-top" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1.1rem" }}>
+    <aside className={`detalle-producto-booking-card detalle-producto-booking-card--planes detalle-producto-price-card${isPricingActive ? " detalle-producto-price-card--editing" : ""}`} style={categoryThemeStyle}>
+      <div className="detalle-producto-booking-top" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "1.1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "0.72rem", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "rgba(255, 255, 255, 0.85)" }}>Precio Menú</span>
-          <div style={{ display: "grid", gap: "0.1rem" }}>
-            <strong style={{ fontSize: "2.15rem", color: "#ffffff", lineHeight: "1" }}>{formatBookingPrice(booking.price)}</strong>
-            <small style={{ fontSize: "0.68rem", color: "rgba(255, 255, 255, 0.85)", fontWeight: "600", paddingTop: "0.15rem" }}>Temporada baja</small>
+          <div style={{ opacity: 0.9, color: "#fff" }}>
+            <span style={{ fontSize: "0.72rem", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em" }}>Valor Excursion</span>
+          </div>
+          <div style={{ display: "grid", gap: "0.1rem", marginTop: "0.4rem" }}>
+            <strong style={{ fontSize: "1.8rem", color: "#ffffff", lineHeight: "1", display: "block" }}>{formatBookingPrice(booking.price)}</strong>
+            <small style={{ fontSize: "0.68rem", color: "rgba(255, 255, 255, 0.9)", fontWeight: "700", paddingTop: "0.2rem", display: "block" }}>Adulto - Temporada baja</small>
           </div>
         </div>
 
-        <div style={{ display: "grid", gap: "0.4rem" }}>
-          <span style={{ fontSize: "0.72rem", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "rgba(255, 255, 255, 0.85)" }}>FECHAS ESPECIALES</span>
+        <div style={{ display: "grid", gap: "0.5rem" }}>
+          <span style={{ fontSize: "0.72rem", fontWeight: "800", textTransform: "uppercase", letterSpacing: "0.05em", color: "rgba(255, 255, 255, 0.85)" }}>FECHAS DE ALTA</span>
           {seasonalPricing?.high?.periods?.length > 0 ? (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.28rem" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
               {seasonalPricing.high.periods.map((period) => (
-                <span key={period.id} style={{ backgroundColor: "var(--product-theme-chip-bg)", color: "var(--product-theme-chip-text)", padding: "3px 6px", fontSize: "0.66rem", borderRadius: "12px", fontWeight: "800", display: "inline-block", textAlign: "center", boxShadow: "0 2px 4px rgba(0,0,0,0.15)" }}>
+                <span key={period.id} style={{ backgroundColor: "var(--product-theme-chip-bg)", color: "var(--product-theme-chip-text)", padding: "3.5px 7px", fontSize: "0.68rem", borderRadius: "12px", fontWeight: "800", display: "inline-block", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
                   {formatSeasonPeriodLabel(period)}
                 </span>
               ))}
             </div>
           ) : (
-            <span style={{ fontSize: "0.68rem", color: "rgba(255, 255, 255, 0.85)" }}>Sin fechas asignadas</span>
+            <span style={{ fontSize: "0.68rem", color: "rgba(255, 255, 255, 0.7)" }}>No hay fechas especiales</span>
           )}
         </div>
       </div>
@@ -177,15 +192,15 @@ export default function ProductRestaurantPriceCard({
       <div className="detalle-producto-price-card-body">
         {isEditingEnabled ? (
           <div className="detalle-producto-price-card-edit-head">
-            <span>Gestión de tarifas</span>
+            <span style={{ fontWeight: "800", fontSize: "0.95rem" }}>Configuración Excursión</span>
             <PriceEditAction isActive={isPricingActive} onClick={() => onActivateBlock("pricing")} />
           </div>
         ) : null}
 
         {isPricingActive ? (
           <div className="detalle-producto-price-card-summary">
-            <p>Tarifa base del menú en el catálogo</p>
-            <PriceInputField label="Precio base" value={booking.price} onChange={onBasePriceChange} />
+            <p>Precio base por persona para esta expedición de nivel {comfort.label}.</p>
+            <PriceInputField label="Precio Adulto (Baja)" value={booking.price} onChange={onBasePriceChange} />
           </div>
         ) : null}
 
@@ -204,24 +219,40 @@ export default function ProductRestaurantPriceCard({
           if (!season) return null;
 
           return (
-            <section className="detalle-producto-price-card-section" key={seasonKey}>
+            <section className="detalle-producto-price-card-section" key={seasonKey} style={{ borderBottom: seasonKey === "low" ? "1px dashed #eee" : "none", paddingBottom: seasonKey === "low" ? "1.5rem" : "0.5rem" }}>
               <div className="detalle-producto-price-card-section-head">
-                <h4>{season.title}</h4>
+                <h4 style={{ color: "#111", fontSize: "0.85rem", fontWeight: "800" }}>{season.title.toUpperCase()}</h4>
+                {season.note ? (
+                  <p className="detalle-producto-booking-modal-rule" style={{ marginTop: "0.4rem" }}>
+                    {season.note}
+                  </p>
+                ) : null}
+                {seasonKey === "high" && season.periods?.length > 0 ? (
+                  <div className="detalle-producto-booking-modal-rule" style={{ marginTop: "0.6rem" }}>
+                    <p style={{ fontWeight: "700", color: "#666", marginBottom: "0.25rem" }}>Fechas aplicables:</p>
+                    <ul className="detalle-producto-booking-modal-periods" style={{ listStyle: "disc", paddingLeft: "1.2rem" }}>
+                      {season.periods.map((period) => (
+                        <li key={period.id} style={{ color: "#444", marginBottom: "0.2rem" }}>
+                          {formatSeasonPeriodLabel(period)}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
               </div>
 
+              <p style={{ fontSize: "0.65rem", fontWeight: "800", color: "#888", marginTop: "1rem", marginBottom: "0.5rem", textTransform: "uppercase" }}>TARIFA POR PERSONA</p>
               <PriceGrid
                 items={season.individual ?? []}
-                tone={seasonKey === "high" ? "high" : "default"}
+                tone="default"
                 isEditing={isPricingActive}
                 onPriceChange={(idx, val) => onGridPriceChange(seasonKey, "individual", idx, val)}
               />
 
-              <h4 className="detalle-producto-booking-modal-subhead">Tarifa para grupos</h4>
-              <p className="detalle-producto-booking-modal-rule">{pricingDetails.groupRule}</p>
-
+              <h4 className="detalle-producto-booking-modal-subhead" style={{ marginTop: "1.2rem", fontSize: "0.65rem", fontWeight: "800", color: "#888", textTransform: "uppercase" }}>TARIFA GRUPAL</h4>
               <PriceGrid
                 items={season.group ?? []}
-                tone={seasonKey === "high" ? "high-group" : "group"}
+                tone="group"
                 isEditing={isPricingActive}
                 onPriceChange={(idx, val) => onGridPriceChange(seasonKey, "group", idx, val)}
               />

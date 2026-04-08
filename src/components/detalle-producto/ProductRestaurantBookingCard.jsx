@@ -10,6 +10,10 @@ import {
   findProductCouponByCode,
   getDateAvailableProductCoupons,
 } from "../../utils/bookingCouponEngine";
+import {
+  getProductCategoryCssVars,
+  getProductCategoryTheme,
+} from "../../utils/productCategoryThemes";
 
 function formatBookingPrice(value) {
   if (!value) return null;
@@ -26,6 +30,8 @@ function parseBookingPrice(value) {
 }
 
 export default function ProductRestaurantBookingCard({ booking, initialTravelDate = "" }) {
+  const theme = getProductCategoryTheme("restaurantes");
+  const categoryThemeStyle = getProductCategoryCssVars("restaurantes");
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCouponCode, setAppliedCouponCode] = useState("");
@@ -70,10 +76,10 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
   };
 
   return (
-    <aside className="detalle-producto-booking-card restaurant-theme">
+    <aside className="detalle-producto-booking-card restaurant-theme" style={categoryThemeStyle}>
       {/* Premium Foodie Header */}
       <div style={{ 
-        background: "linear-gradient(135deg, #F78A00 0%, #FFB347 100%)", 
+        background: `linear-gradient(135deg, ${theme.primary} 0%, ${theme.secondary} 100%)`, 
         padding: "1.5rem", 
         borderRadius: "16px 16px 0 0", 
         color: "#fff",
@@ -107,11 +113,11 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
             fontSize: "0.85rem", 
             marginBottom: "1rem",
             padding: "0.5rem",
-            background: "#fff9f0",
+            background: theme.soft,
             borderRadius: "8px",
-            border: "1px dashed #FFB347"
+            border: `1px dashed ${theme.surfaceStrong}`
           }}>
-            <span className="material-icons-outlined" style={{ fontSize: "1.2rem", color: "#F78A00" }}>schedule</span>
+            <span className="material-icons-outlined" style={{ fontSize: "1.2rem", color: theme.primary }}>schedule</span>
             <span>Horario: <strong>{openingTime} - {closingTime}</strong></span>
             {serviceFormat && <span style={{ marginLeft: "auto", fontWeight: "600" }}>{serviceFormat}</span>}
           </div>
@@ -151,7 +157,7 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
           ))}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem", padding: "1rem", background: "#f8f9fa", borderRadius: "12px" }}>
             <span style={{ fontWeight: "700", color: "#111" }}>Total Estimado</span>
-            <strong style={{ fontSize: "1.2rem", color: "#F78A00" }}>{formatBookingAmount(estimatedTotal)}</strong>
+            <strong style={{ fontSize: "1.2rem", color: theme.primary }}>{formatBookingAmount(estimatedTotal)}</strong>
           </div>
         </div>
 
@@ -159,7 +165,7 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
           width: "100%", 
           marginTop: "1.5rem", 
           padding: "1rem", 
-          background: "#1f2937", 
+          background: theme.accent, 
           color: "#fff", 
           border: "none", 
           borderRadius: "12px", 
@@ -173,8 +179,8 @@ export default function ProductRestaurantBookingCard({ booking, initialTravelDat
 
       <style>{`
         .restaurant-theme {
-          box-shadow: 0 10px 30px rgba(247, 138, 0, 0.15) !important;
-          border: 1px solid #FFB347 !important;
+          box-shadow: 0 10px 30px ${theme.shadow} !important;
+          border: 1px solid ${theme.surfaceStrong} !important;
         }
       `}</style>
     </aside>
