@@ -71,6 +71,14 @@ function matchesRelativeDateFilter(value, filterValue) {
     return diffInDays === 0;
   }
 
+  if (filterValue === "yesterday") {
+    return diffInDays === -1;
+  }
+
+  if (filterValue === "tomorrow") {
+    return diffInDays === 1;
+  }
+
   if (filterValue === "last_7_days") {
     return diffInDays <= 0 && diffInDays >= -7;
   }
@@ -735,6 +743,7 @@ export default function PanelControlReservationsPage() {
                   >
                     <option value={ALL_EMISSION_DATE_FILTER}>Todas</option>
                     <option value="today">Hoy</option>
+                    <option value="yesterday">Ayer</option>
                     <option value="last_7_days">Ultimos 7 dias</option>
                     <option value="last_15_days">Ultimos 15 dias</option>
                     <option value="last_30_days">Ultimos 30 dias</option>
@@ -751,7 +760,9 @@ export default function PanelControlReservationsPage() {
                     <option value="last_30_days">Ultimos 30 dias</option>
                     <option value="last_15_days">Ultimos 15 dias</option>
                     <option value="last_7_days">Ultimos 7 dias</option>
+                    <option value="yesterday">Ayer</option>
                     <option value="today">Hoy</option>
+                    <option value="tomorrow">Mañana</option>
                     <option value="next_7_days">Proximos 7 dias</option>
                     <option value="next_15_days">Proximos 15 dias</option>
                     <option value="next_30_days">Proximos 30 dias</option>

@@ -338,7 +338,7 @@ async function fetchProductsByIds(productIds = []) {
 
   const { data, error } = await supabase
     .from("products")
-    .select("id, nombre, ciudad, provider_agency_id, hora_salida, status")
+    .select("id, nombre, ciudad, provider_agency_id, hora_salida, punto_encuentro, category_key, status")
     .in("id", uniqueProductIds);
 
   if (error) {
@@ -1047,6 +1047,7 @@ function normalizePassengerDrafts(passengers = []) {
       birth_date: normalizeText(passenger?.birthDate) || null,
       phone: normalizeText(passenger?.phone) || null,
       passenger_status: "active",
+      charged_rate: passenger?.chargedRate !== undefined ? Number(passenger.chargedRate) : null,
     }))
     .filter((passenger) => passenger.first_name && passenger.last_name);
 }
@@ -1216,14 +1217,14 @@ export async function fetchReservationDetailFromSupabase(reservationId) {
     supabase
       .from("reservations")
       .select(
-        "id, locator, product_id, seller_agency_id, product_owner_agency_id, created_by_user_id, parent_reservation_id, origin_type, status, reservation_type, booking_date, issue_date, travel_date, embark_time, payment_type, payment_status, total_amount, currency, season_type, notes_summary, created_at, updated_at",
+        "id, locator, product_id, seller_agency_id, product_owner_agency_id, created_by_user_id, parent_reservation_id, origin_type, status, reservation_type, booking_date, issue_date, travel_date, embark_time, payment_type, payment_status, total_amount, currency, season_type, notes_summary, created_at, updated_at, coupon_code, discount_percentage",
       )
       .eq("id", normalizedReservationId)
       .maybeSingle(),
     supabase
       .from("reservation_passengers")
       .select(
-        "id, first_name, last_name, passenger_type, document_type, document_number, country, sex, birth_date, phone, passenger_status, created_at",
+        "id, first_name, last_name, passenger_type, document_type, document_number, country, sex, birth_date, phone, passenger_status, charged_rate, created_at",
       )
       .eq("reservation_id", normalizedReservationId)
       .order("created_at", { ascending: true }),
@@ -1270,7 +1271,7 @@ export async function fetchReservationDetailFromSupabase(reservationId) {
     return null;
   }
 
-  const [productsById, agenciesById, usersById, productDetailResponse] = await Promise.all([
+  const [productsById, agenciesById, usersById, productDetailResponse, galleryResponse, subcategoryLinkResponse] = await Promise.all([
     fetchProductsByIds([reservation.product_id]),
     fetchAgenciesByIds([
       reservation.seller_agency_id,
@@ -1287,7 +1288,30 @@ export async function fetchReservationDetailFromSupabase(reservationId) {
       .select("summary")
       .eq("product_id", reservation.product_id)
       .maybeSingle(),
+    supabase
+      .from("product_gallery_images")
+      .select("image_url")
+      .eq("product_id", reservation.product_id)
+      .order("position", { ascending: true })
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from("product_subcategory_links")
+      .select("product_subcategory_id")
+      .eq("product_id", reservation.product_id)
+      .limit(1)
+      .maybeSingle(),
   ]);
+
+  let subcategoryName = "";
+  if (subcategoryLinkResponse?.data?.product_subcategory_id) {
+    const { data: subcatData } = await supabase
+      .from("product_subcategories")
+      .select("nombre")
+      .eq("id", subcategoryLinkResponse.data.product_subcategory_id)
+      .maybeSingle();
+    subcategoryName = normalizeText(subcatData?.nombre);
+  }
 
   if (productDetailResponse.error) {
     throw productDetailResponse.error;
@@ -1354,12 +1378,18 @@ export async function fetchReservationDetailFromSupabase(reservationId) {
     ),
     parentReservationId: reservation.parent_reservation_id,
     canViewInternalPaymentHistory,
+    couponCode: normalizeText(reservation.coupon_code) || null,
+    discountPercentage: Number(reservation.discount_percentage ?? 0) || null,
     product: {
       id: reservation.product_id,
       name: product?.nombre || "Producto sin nombre",
       city: normalizeText(product?.ciudad),
       departureTime: normalizeText(product?.hora_salida).slice(0, 5),
+      meetingPoint: normalizeText(product?.punto_encuentro),
+      category: normalizeText(product?.category_key),
+      subcategory: subcategoryName,
       summary: normalizeText(productDetailResponse.data?.summary),
+      imageUrl: galleryResponse?.data?.image_url ? normalizeText(galleryResponse.data.image_url) : null,
     },
     sellerAgency: {
       id: reservation.seller_agency_id,
@@ -1384,6 +1414,7 @@ export async function fetchReservationDetailFromSupabase(reservationId) {
       birthDate: passenger.birth_date,
       phone: normalizeText(passenger.phone),
       passengerStatus: normalizeText(passenger.passenger_status),
+      chargedRate: passenger.charged_rate != null ? Number(passenger.charged_rate) : null,
     })),
     statusHistory,
     paymentHistory,
@@ -1406,6 +1437,8 @@ export async function createReservationInSupabase({
   status = "reserved",
   notesSummary = "",
   passengers = [],
+  couponCode = null,
+  discountPercentage = null,
 }) {
   const normalizedProductId = normalizeProductId(productId);
   const normalizedPassengers = normalizePassengerDrafts(passengers);
@@ -1497,6 +1530,8 @@ export async function createReservationInSupabase({
     season_type: seasonType,
     notes_summary: normalizeText(notesSummary) || null,
     expires_at: normalizeText(status) === "reserved" ? expiresAt?.toISOString() ?? null : null,
+    coupon_code: normalizeText(couponCode) || null,
+    discount_percentage: discountPercentage != null ? Number(discountPercentage) : null,
   };
   const { data: createdReservation, error: reservationError } = await supabase
     .from("reservations")
@@ -1546,6 +1581,8 @@ export async function createReservationCheckoutInSupabase({
   passengers = [],
   locatorPreview = "",
   checkoutSnapshot = {},
+  couponCode = null,
+  discountPercentage = null,
 }) {
   const normalizedProductId = normalizeProductId(productId);
   const normalizedPassengers = normalizePassengerDrafts(passengers);
@@ -1658,6 +1695,8 @@ export async function createReservationCheckoutInSupabase({
       p_notes_summary: normalizeText(notesSummary) || null,
       p_passengers: normalizedPassengers,
       p_checkout_snapshot: checkoutSnapshot ?? {},
+      p_coupon_code: normalizeText(couponCode) || null,
+      p_discount_percentage: discountPercentage != null ? Number(discountPercentage) : null,
     },
   );
 
@@ -1672,3 +1711,70 @@ export async function createReservationCheckoutInSupabase({
     paymentGatewayReady: false,
   };
 }
+
+export async function cancelReservationInSupabase({ reservationId, reasonNotes = "" }) {
+  const normalizedReservationId = normalizeText(reservationId);
+  const normalizedNotes = normalizeText(reasonNotes);
+
+  if (!normalizedReservationId) {
+    throw new Error("No encontramos la reserva que quieres cancelar.");
+  }
+
+  const actorContext = await getAuthenticatedReservationActorContext();
+
+  const { data: reservationRow, error: reservationError } = await supabase
+    .from("reservations")
+    .select("status")
+    .eq("id", normalizedReservationId)
+    .maybeSingle();
+
+  if (reservationError) {
+    throw reservationError;
+  }
+
+  if (!reservationRow) {
+    throw new Error("La reserva ya no existe o no tienes acceso a ella.");
+  }
+
+  const currentStatus = normalizeText(reservationRow.status);
+  
+  if (currentStatus === "cancelled_by_user" || currentStatus === "cancelled_by_expiration") {
+    throw new Error("Esta reserva ya se encuentra cancelada.");
+  }
+
+  const { error: updateError } = await supabase
+    .from("reservations")
+    .update({ 
+      status: "cancelled_by_user", 
+      expires_at: null,
+      updated_at: new Date().toISOString() 
+    })
+    .eq("id", normalizedReservationId);
+
+  if (updateError) {
+    throw updateError;
+  }
+
+  const statusHistoryRow = {
+    reservation_id: normalizedReservationId,
+    previous_status: currentStatus,
+    new_status: "cancelled_by_user",
+    reason: normalizedNotes || "Reserva cancelada manualmente por el usuario.",
+    changed_by_user_id: actorContext.userId,
+    changed_at: new Date().toISOString()
+  };
+
+  await supabase.from("reservation_status_history").insert(statusHistoryRow);
+
+  if (normalizedNotes) {
+    await supabase.from("reservation_notes").insert({
+      reservation_id: normalizedReservationId,
+      body: `Motivo de cancelacion: ${normalizedNotes}`,
+      created_by_user_id: actorContext.userId,
+      created_at: new Date().toISOString()
+    });
+  }
+
+  return fetchReservationDetailFromSupabase(normalizedReservationId);
+}
+

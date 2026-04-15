@@ -181,11 +181,28 @@ export default function PanelControlReservationCreatePage() {
 
     try {
       setIsSubmitting(true);
+
+      const discountPercentage = bookingSnapshot.appliedCouponCode && bookingSnapshot.estimatedTotal > 0
+        ? Number(((bookingSnapshot.discountAmount / bookingSnapshot.estimatedTotal) * 100).toFixed(2))
+        : null;
+
+      const enrichedPassengers = passengers.map(passenger => {
+        const breakdownItem = bookingSnapshot.passengerBreakdown?.find(
+          item => item.id === passenger.fieldId
+        );
+        return {
+          ...passenger,
+          chargedRate: breakdownItem ? breakdownItem.unitPrice : 0,
+        };
+      });
+
       const createdReservation = await createReservationCheckoutInSupabase({
         productId: bookingSnapshot.productId,
         travelDate: bookingSnapshot.travelDate,
         totalAmount: bookingSnapshot.totalAfterDiscount,
-        passengers,
+        passengers: enrichedPassengers,
+        couponCode: bookingSnapshot.appliedCouponCode || null,
+        discountPercentage,
         notesSummary: bookingSnapshot.summaryNote,
         checkoutSnapshot: {
           source: "booking_card_detail",

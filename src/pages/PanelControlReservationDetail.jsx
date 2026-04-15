@@ -11,7 +11,10 @@ import {
   panelControlMenu,
   panelControlProfile,
 } from "../data/panelControlData";
-import { fetchReservationDetailFromSupabase } from "../services/reservations/adminReservations";
+import {
+  fetchReservationDetailFromSupabase,
+  cancelReservationInSupabase,
+} from "../services/reservations/adminReservations";
 
 function formatDate(value, options = {}) {
   if (!value) {
@@ -132,6 +135,10 @@ export default function PanelControlReservationDetailPage() {
   const [reservationDetail, setReservationDetail] = useState(null);
   const [isLoadingReservation, setIsLoadingReservation] = useState(true);
   const [reservationLoadError, setReservationLoadError] = useState("");
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [cancelError, setCancelError] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -162,6 +169,33 @@ export default function PanelControlReservationDetailPage() {
       isMounted = false;
     };
   }, [reservationId]);
+
+  async function handleCancelReservation(event) {
+    event.preventDefault();
+    setCancelError("");
+
+    try {
+      setIsCancelling(true);
+      const updatedDetail = await cancelReservationInSupabase({
+        reservationId: reservationDetail.id,
+        reasonNotes: cancelReason,
+      });
+
+      setReservationDetail(updatedDetail);
+      setCancelModalOpen(false);
+      setCancelReason("");
+    } catch (error) {
+      setCancelError(error?.message || "No fue posible cancelar la reserva.");
+    } finally {
+      setIsCancelling(false);
+    }
+  }
+
+  function openCancelModal() {
+    setCancelError("");
+    setCancelReason("");
+    setCancelModalOpen(true);
+  }
 
   const sidebarProfile = useMemo(() => createSidebarProfile(profile), [profile]);
 
@@ -215,30 +249,21 @@ export default function PanelControlReservationDetailPage() {
               <>
                 <header className="panel-control-products-hero panel-control-reservation-detail-hero">
                   <div className="panel-control-products-hero-copy">
-                    <p>Detalle de reserva</p>
-                    <h1>{reservationDetail.locator}</h1>
-                    <div className="panel-control-products-hero-tags">
-                      <span
-                        className={`panel-control-products-hero-tag panel-control-reservation-status-chip ${getReservationStatusTone(
-                          reservationDetail.status,
-                        )}`}
-                      >
-                        {reservationStatusLabel}
-                      </span>
-                      <span className="panel-control-products-hero-tag">
-                        {reservationDetail.product.name}
-                      </span>
-                      <span className="panel-control-products-hero-tag">
-                        {formatDate(reservationDetail.travelDate, {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
+                    <h1 style={{ marginBottom: "8px" }}>Detalle Reserva: {reservationDetail.locator}</h1>
+                    <p style={{ fontSize: "1.35rem", color: "white", margin: 0, fontWeight: "500" }}>{reservationDetail.product.name}</p>
                   </div>
 
-                  <div className="panel-control-products-hero-action">
+                  <div className="panel-control-products-hero-action" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    {reservationDetail.status !== "cancelled_by_user" && reservationDetail.status !== "cancelled_by_expiration" ? (
+                      <button
+                        type="button"
+                        className="panel-control-products-create panel-control-calendar-back-button"
+                        style={{ backgroundColor: "#dc2626", color: "white", borderColor: "#dc2626" }}
+                        onClick={openCancelModal}
+                      >
+                        Cancelar reserva
+                      </button>
+                    ) : null}
                     <button
                       type="button"
                       className="panel-control-products-create panel-control-calendar-back-button"
@@ -252,13 +277,13 @@ export default function PanelControlReservationDetailPage() {
                 <section className="panel-control-products-overview-grid">
                   <article className="panel-control-products-overview-card">
                     <span>Estado de reserva</span>
-                    <strong>{reservationStatusLabel}</strong>
+                    <strong style={{ fontSize: "1.25rem" }}>{reservationStatusLabel}</strong>
                     <p>Estado operativo vigente de la reserva.</p>
                   </article>
 
                   <article className="panel-control-products-overview-card">
                     <span>Fecha maxima de vencimiento</span>
-                    <strong>
+                    <strong style={{ fontSize: "1.25rem" }}>
                       {reservationDetail.expiresAt
                         ? formatDate(reservationDetail.expiresAt, {
                             day: "numeric",
@@ -274,7 +299,7 @@ export default function PanelControlReservationDetailPage() {
 
                   <article className="panel-control-products-overview-card">
                     <span>Fecha actividad</span>
-                    <strong>
+                    <strong style={{ fontSize: "1.25rem" }}>
                       {formatDate(reservationDetail.travelDate, {
                         day: "numeric",
                         month: "short",
@@ -286,16 +311,21 @@ export default function PanelControlReservationDetailPage() {
 
                   <article className="panel-control-products-overview-card">
                     <span>Pasajeros</span>
-                    <strong>{passengerStats.total}</strong>
+                    <strong style={{ fontSize: "1.25rem" }}>{passengerStats.total}</strong>
                     <p>
                       {passengerStats.adults} ADT / {passengerStats.children} CHD /{" "}
                       {passengerStats.infants} INF
                     </p>
                   </article>
+
+                  <article className="panel-control-products-overview-card">
+                    <span>Valor total</span>
+                    <strong style={{ fontSize: "1.25rem" }}>{formatCurrency(reservationDetail.totalAmount)}</strong>
+                    <p>Monto consolidado en {reservationDetail.currency || "COP"}.</p>
+                  </article>
                 </section>
 
-                <section className="panel-control-reservation-detail-layout">
-                  <div className="panel-control-card panel-control-reservation-detail-main">
+                <section className="panel-control-card panel-control-reservation-detail-history-block">
                     <div className="panel-control-reservation-detail-section">
                       <div className="panel-control-reservation-detail-section-head">
                         <div>
@@ -304,88 +334,75 @@ export default function PanelControlReservationDetailPage() {
                         </div>
                       </div>
 
-                      <div className="panel-control-reservation-detail-grid">
-                        <div>
-                          <span>Producto</span>
-                          <strong>{reservationDetail.product.name}</strong>
+                      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: "24px", alignItems: "stretch" }}>
+                        <div className="panel-control-reservation-detail-feature-card" style={{ display: "flex", flexDirection: "column", backgroundColor: "#fff", border: "1px solid #e5e7eb", borderRadius: "12px", overflow: "hidden" }}>
+                          <div style={{ position: "relative" }}>
+                            <img 
+                              src={reservationDetail.product.imageUrl || "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=600&h=400&fit=crop"} 
+                              alt={reservationDetail.product.name} 
+                              style={{ width: "100%", height: "220px", objectFit: "cover", display: "block" }} 
+                            />
+                          </div>
+                          
+                          <div style={{ padding: "20px 16px 16px" }}>
+                            <span style={{ display: "block", fontSize: "0.8rem", color: "#0891b2", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "12px" }}>
+                              {reservationDetail.product.category ? (reservationDetail.product.category.toUpperCase().replace(/_/g, " ")) : "CATEGORIA"} {reservationDetail.product.subcategory ? `- ${reservationDetail.product.subcategory.toUpperCase().replace(/_/g, " ")}` : ""}
+                            </span>
+                            <h3 style={{ fontSize: "1.25rem", color: "#111827", fontWeight: "700", margin: "0 0 20px" }}>
+                              {reservationDetail.product.name}
+                            </h3>
+                            
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                              <div>
+                                <span style={{ display: "block", fontSize: "0.7rem", color: "#6b7280", fontWeight: "600", textTransform: "uppercase", marginBottom: "6px" }}>Horario de salida</span>
+                                <strong style={{ fontSize: "0.95rem", color: "#111827", fontWeight: "700" }}>{reservationDetail.product.departureTime || "Por definir"}</strong>
+                              </div>
+                              <div>
+                                <span style={{ display: "block", fontSize: "0.7rem", color: "#6b7280", fontWeight: "600", textTransform: "uppercase", marginBottom: "6px" }}>Punto de encuentro</span>
+                                <strong style={{ fontSize: "0.95rem", color: "#111827", fontWeight: "700" }}>{reservationDetail.product.meetingPoint || "Por confirmar"}</strong>
+                              </div>
+                            </div>
+
+                          </div>
                         </div>
-                        <div>
-                          <span>Ciudad</span>
-                          <strong>{reservationDetail.product.city || "Sin ciudad"}</strong>
-                        </div>
-                        <div>
-                          <span>Fecha actividad</span>
-                          <strong>
-                            {formatDate(reservationDetail.travelDate, {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })}
-                          </strong>
-                        </div>
-                        <div>
-                          <span>Hora de embarque</span>
-                          <strong>{reservationDetail.embarkTime || "Por definir"}</strong>
-                        </div>
-                        <div>
-                          <span>Localizador</span>
-                          <strong>{reservationDetail.locator}</strong>
-                        </div>
-                        <div>
-                          <span>Agencia vendedora</span>
-                          <strong>{reservationDetail.sellerAgency.name}</strong>
-                        </div>
-                        <div>
-                          <span>Agencia proveedora</span>
-                          <strong>{reservationDetail.ownerAgency.name}</strong>
-                        </div>
-                        <div>
-                          <span>Creada por</span>
-                          <strong>{reservationDetail.createdBy.name}</strong>
-                        </div>
-                        <div>
-                          <span>Fecha creacion</span>
-                          <strong>
-                            {formatDate(reservationDetail.createdAt, {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                              hour: "numeric",
-                              minute: "2-digit",
-                            })}
-                          </strong>
-                        </div>
-                        <div>
-                          <span>Fecha maxima de vencimiento</span>
-                          <strong>
-                            {reservationDetail.expiresAt
-                              ? formatDate(reservationDetail.expiresAt, {
-                                  day: "numeric",
-                                  month: "short",
-                                  year: "numeric",
-                                  hour: "numeric",
-                                  minute: "2-digit",
-                                })
-                              : "No aplica"}
-                          </strong>
+
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", overflowX: "auto" }}>
+                          {reservationDetail.product.summary ? (
+                            <div className="panel-control-reservation-detail-note" style={{ margin: "0 0 16px 0" }}>
+                              <span style={{ fontWeight: "bold", color: "#111827" }}>Resumen del producto</span>
+                              <p>{reservationDetail.product.summary}</p>
+                            </div>
+                          ) : null}
+                          <table style={{ width: "100%", height: "100%", whiteSpace: "nowrap", borderCollapse: "collapse", textAlign: "left" }}>
+                            <thead>
+                              <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                                <th style={{ padding: "12px 16px", color: "#111827", fontWeight: "bold", fontSize: "0.875rem" }}>Campo</th>
+                                <th style={{ padding: "12px 16px", color: "#111827", fontWeight: "bold", fontSize: "0.875rem" }}>Valor</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {[
+                                { label: "Fecha actividad", value: formatDate(reservationDetail.travelDate, { day: "numeric", month: "long", year: "numeric" }) },
+                                { label: "Localizador", value: reservationDetail.locator },
+                                { label: "Agencia vendedora", value: reservationDetail.sellerAgency.name },
+                                { label: "Agencia proveedora", value: reservationDetail.ownerAgency.name },
+                                { label: "Creada por", value: reservationDetail.createdBy.name },
+                                { label: "Fecha creacion", value: formatDate(reservationDetail.createdAt, { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) },
+                              ].map((item, index) => (
+                                <tr key={index} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#6b7280", fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.05em" }}>{item.label}</td>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#111827", fontWeight: "600" }}>{item.value}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       </div>
 
-                      {reservationDetail.product.summary ? (
-                        <div className="panel-control-reservation-detail-note">
-                          <span>Resumen del producto</span>
-                          <p>{reservationDetail.product.summary}</p>
-                        </div>
-                      ) : null}
-
-                      {reservationDetail.notesSummary ? (
-                        <div className="panel-control-reservation-detail-note">
-                          <span>Resumen operativo</span>
-                          <p>{reservationDetail.notesSummary}</p>
-                        </div>
-                      ) : null}
                     </div>
+                </section>
 
+                <section className="panel-control-card panel-control-reservation-detail-history-block">
                     <div className="panel-control-reservation-detail-section">
                       <div className="panel-control-reservation-detail-section-head">
                         <div>
@@ -394,90 +411,120 @@ export default function PanelControlReservationDetailPage() {
                         </div>
                       </div>
 
-                      <div className="panel-control-reservation-detail-list">
-                        {reservationDetail.passengers.map((passenger) => (
-                          <article
-                            className="panel-control-reservation-detail-list-card"
-                            key={passenger.id}
-                          >
-                            <strong>{passenger.fullName}</strong>
-                            <small>{passenger.passengerType}</small>
-                            <small>{passenger.passengerStatus}</small>
-                            {passenger.birthDate ? (
-                              <small>
-                                Nacimiento:{" "}
-                                {formatDate(passenger.birthDate, {
-                                  day: "numeric",
-                                  month: "short",
-                                  year: "numeric",
-                                })}
-                              </small>
-                            ) : null}
-                            {passenger.sex ? <small>Sexo: {passenger.sex}</small> : null}
-                            <small>
-                              {passenger.documentType && passenger.documentNumber
-                                ? `${passenger.documentType} ${passenger.documentNumber}`
-                                : "Sin documento registrado"}
-                            </small>
-                          </article>
-                        ))}
+                      <div style={{ overflowX: "auto" }}>
+                        <table style={{ width: "100%", whiteSpace: "nowrap", borderCollapse: "collapse", textAlign: "left" }}>
+                          <thead>
+                            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Nombre Completo</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Tipo</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Estado</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Nacimiento</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Sexo</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Documento</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {reservationDetail.passengers.map((passenger) => (
+                              <tr key={passenger.id} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#111827", fontWeight: "600" }}>{passenger.fullName}</td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{passenger.passengerType}</td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{passenger.passengerStatus}</td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{passenger.birthDate ? formatDate(passenger.birthDate, { day: "numeric", month: "short", year: "numeric" }) : "-"}</td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{passenger.sex || "-"}</td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{passenger.documentType && passenger.documentNumber ? `${passenger.documentType} ${passenger.documentNumber}` : "Sin documento"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
-                  </div>
+                </section>
 
-                  <aside className="panel-control-reservation-detail-sidebar">
-                    <section className="panel-control-card panel-control-reservation-detail-sidebar-card">
-                      <div className="panel-control-reservation-detail-status-block">
-                        <span>Estado de reserva</span>
-                        <strong
-                          className={`panel-control-reservation-status-chip ${getReservationStatusTone(
-                            reservationDetail.status,
-                          )}`}
-                        >
-                          {reservationStatusLabel}
-                        </strong>
-                        <p>
-                          Los movimientos de pago no cambian este estado. Solo quedan
-                          registrados dentro del historial de la reserva.
-                        </p>
+                <section className="panel-control-card panel-control-reservation-detail-history-block">
+                    <div className="panel-control-reservation-detail-section">
+                      <div className="panel-control-reservation-detail-section-head">
+                        <div>
+                          <p>Liquidacion</p>
+                          <h2>Informacion de Valores</h2>
+                        </div>
                       </div>
 
-                      <div className="panel-control-reservation-detail-side-list">
-                        <div>
-                          <span>Valor total</span>
-                          <strong>{formatCurrency(reservationDetail.totalAmount)}</strong>
-                        </div>
-                        <div>
-                          <span>Tipo de pago</span>
-                          <strong>{reservationDetail.paymentType || "Sin definir"}</strong>
-                        </div>
-                        <div>
-                          <span>Temporada</span>
-                          <strong>{reservationDetail.seasonType || "low"}</strong>
-                        </div>
-                        <div>
-                          <span>Origen</span>
-                          <strong>{reservationDetail.originType || "direct"}</strong>
-                        </div>
-                      </div>
-                    </section>
+                      <div style={{ overflowX: "auto" }}>
+                        <table style={{ width: "100%", whiteSpace: "nowrap", borderCollapse: "collapse", textAlign: "left" }}>
+                          <thead>
+                            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                              <th style={{ padding: "12px 16px", color: "#111827", fontWeight: "bold", fontSize: "0.875rem" }}>Tipo de Pasajero</th>
+                              <th style={{ padding: "12px 16px", color: "#111827", fontWeight: "bold", fontSize: "0.875rem" }}>Nombre</th>
+                              <th style={{ padding: "12px 16px", color: "#111827", fontWeight: "bold", fontSize: "0.875rem", textAlign: "right" }}>Valor total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {(() => {
+                              const passengersSubtotal = reservationDetail.passengers.reduce((sum, p) => sum + (Number(p.chargedRate) || 0), 0);
+                              const hasChargedRates = passengersSubtotal > 0;
+                              
+                              const grossTotal = hasChargedRates 
+                                ? passengersSubtotal 
+                                : (reservationDetail.discountPercentage > 0 
+                                    ? reservationDetail.totalAmount / (1 - (reservationDetail.discountPercentage / 100)) 
+                                    : reservationDetail.totalAmount);
+                                    
+                              const finalTotal = reservationDetail.totalAmount;
+                              const discountValue = reservationDetail.discountPercentage > 0 ? (grossTotal - finalTotal) : 0;
 
-                    {reservationDetail.canViewInternalPaymentHistory ? (
-                      <section className="panel-control-card panel-control-reservation-detail-sidebar-card">
-                        <div className="panel-control-reservation-detail-status-block panel-control-reservation-detail-status-block--internal">
-                          <span>Historial interno de pago</span>
-                          <strong>
-                            {reservationDetail.paymentHistory.length} movimiento
-                            {reservationDetail.paymentHistory.length === 1 ? "" : "s"}
-                          </strong>
-                          <p>
-                            Visible solo para usuarios internos de la agencia proveedora
-                            y para LDS.
-                          </p>
-                        </div>
-                      </section>
-                    ) : null}
-                  </aside>
+                              return (
+                                <>
+                                  {reservationDetail.passengers.map((passenger) => {
+                                    const passengerPrice = Number(passenger.chargedRate) || (grossTotal / Math.max(1, reservationDetail.passengers.length));
+                                    const translatedType = passenger.passengerType === "adult" ? "Adulto" : passenger.passengerType === "child" ? "Niño" : passenger.passengerType === "infant" ? "Bebé" : passenger.passengerType;
+                                    
+                                    return (
+                                      <tr key={`val-${passenger.id}`} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                                        <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563", textTransform: "capitalize" }}>
+                                          {translatedType}
+                                        </td>
+                                        <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>
+                                          {passenger.fullName || "Sin nombre"}
+                                        </td>
+                                        <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#111827", fontWeight: "500", textAlign: "right" }}>
+                                          {formatCurrency(passengerPrice)}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                  
+                                  <tr style={{ backgroundColor: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
+                                    <td colSpan="2" style={{ padding: "16px", fontSize: "0.95rem", color: "#111827", fontWeight: "bold" }}>Valor Total</td>
+                                    <td style={{ padding: "16px", fontSize: "0.95rem", color: "#111827", fontWeight: "bold", textAlign: "right" }}>
+                                      {formatCurrency(grossTotal)}
+                                    </td>
+                                  </tr>
+
+                                  {reservationDetail.couponCode ? (
+                                    <>
+                                      <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                                        <td colSpan="2" style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#16a34a", fontWeight: "600" }}>
+                                          Cupón de Descuento {reservationDetail.couponCode} - {reservationDetail.discountPercentage}%
+                                        </td>
+                                        <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#16a34a", fontWeight: "600", textAlign: "right" }}>
+                                          -{formatCurrency(discountValue)}
+                                        </td>
+                                      </tr>
+                                      <tr style={{ backgroundColor: "#f0fdf4", borderBottom: "1px solid #bbf7d0" }}>
+                                        <td colSpan="2" style={{ padding: "16px", fontSize: "1rem", color: "#166534", fontWeight: "bold" }}>Valor con Descuento</td>
+                                        <td style={{ padding: "16px", fontSize: "1rem", color: "#166534", fontWeight: "bold", textAlign: "right" }}>
+                                          {formatCurrency(finalTotal)}
+                                        </td>
+                                      </tr>
+                                    </>
+                                  ) : null}
+                                </>
+                              );
+                            })()}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                 </section>
 
                 <section className="panel-control-card panel-control-reservation-detail-history-block">
@@ -495,47 +542,107 @@ export default function PanelControlReservationDetailPage() {
                       ) : null}
                     </div>
 
-                    <div className="panel-control-reservation-detail-timeline">
+                    <div className="panel-control-reservation-detail-timeline" style={{ overflowX: "auto" }}>
                       {reservationDetail.activityHistory.length > 0 ? (
-                        reservationDetail.activityHistory.map((entry) => (
-                          <article
-                            className="panel-control-reservation-detail-timeline-item"
-                            key={entry.id}
-                          >
-                            <div className="panel-control-reservation-detail-timeline-item-head">
-                              <span
-                                className={`panel-control-reservation-detail-timeline-badge ${getActivityHistoryTone(
-                                  entry,
-                                )}`}
-                              >
-                                {entry.kind === "payment_event" ? "Pago" : "Reserva"}
-                              </span>
-                              <strong>
-                                {entry.kind === "payment_event"
-                                  ? entry.title ||
-                                    formatPaymentAttemptStatusLabel(entry.newStatus)
-                                  : formatStatusLabel(entry.newStatus)}
-                              </strong>
-                            </div>
-                            <small>{entry.actorName}</small>
-                            {entry.description ? <p>{entry.description}</p> : null}
-                            <time dateTime={entry.occurredAt}>
-                              {formatDate(entry.occurredAt, {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
-                            </time>
-                          </article>
-                        ))
+                        <table style={{ width: "100%", whiteSpace: "nowrap", borderCollapse: "collapse", textAlign: "left" }}>
+                          <thead>
+                            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Fecha y hora</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Tipo</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Estado</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Responsable</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Detalle</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {reservationDetail.activityHistory.map((entry) => (
+                              <tr key={entry.id} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>
+                                  <time dateTime={entry.occurredAt}>
+                                    {formatDate(entry.occurredAt, {
+                                      day: "numeric",
+                                      month: "short",
+                                      year: "numeric",
+                                      hour: "numeric",
+                                      minute: "2-digit",
+                                    })}
+                                  </time>
+                                </td>
+                                <td style={{ padding: "12px 16px" }}>
+                                  <span
+                                    className={`panel-control-reservation-detail-timeline-badge ${getActivityHistoryTone(
+                                      entry,
+                                    )}`}
+                                  >
+                                    {entry.kind === "payment_event" ? "Pago" : "Reserva"}
+                                  </span>
+                                </td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", fontWeight: "600", color: "#111827" }}>
+                                  {entry.kind === "payment_event"
+                                    ? entry.title ||
+                                      formatPaymentAttemptStatusLabel(entry.newStatus)
+                                    : formatStatusLabel(entry.newStatus)}
+                                </td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>
+                                  {entry.actorName}
+                                </td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>
+                                  {entry.description || "-"}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       ) : (
-                        <p>Aun no hay historial registrado para esta reserva.</p>
+                        <p style={{ padding: "16px", color: "#6b7280" }}>Aun no hay historial registrado para esta reserva.</p>
                       )}
                     </div>
                   </div>
                 </section>
+
+                {reservationDetail.canViewInternalPaymentHistory ? (
+                  <section className="panel-control-card panel-control-reservation-detail-history-block">
+                    <div className="panel-control-reservation-detail-section">
+                      <div className="panel-control-reservation-detail-section-head">
+                        <div>
+                          <p>Privado</p>
+                          <h2>Historial interno de pago</h2>
+                        </div>
+                      </div>
+
+                      <div style={{ overflowX: "auto" }}>
+                        {reservationDetail.paymentHistory && reservationDetail.paymentHistory.length > 0 ? (
+                          <table style={{ width: "100%", whiteSpace: "nowrap", borderCollapse: "collapse", textAlign: "left" }}>
+                            <thead>
+                              <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                                <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Fecha y hora</th>
+                                <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Estado</th>
+                                <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Monto</th>
+                                <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Metodo</th>
+                                <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Referencia</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {reservationDetail.paymentHistory.map((payment, index) => (
+                                <tr key={payment.id || index} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>
+                                    {payment.createdAt || payment.occurredAt ? formatDate(payment.createdAt || payment.occurredAt, { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" }) : "-"}
+                                  </td>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", fontWeight: "600", color: "#111827" }}>{formatPaymentAttemptStatusLabel(payment.status) || payment.status || "-"}</td>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#111827" }}>{payment.amount ? formatCurrency(payment.amount) : "-"}</td>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{payment.paymentMethod || "-"}</td>
+                                  <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563" }}>{payment.reference || payment.transactionId || "-"}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <p style={{ padding: "16px", color: "#6b7280" }}>Aun no hay movimientos transaccionales internos registrados.</p>
+                        )}
+                      </div>
+                    </div>
+                  </section>
+                ) : null}
 
                 <section className="panel-control-card panel-control-reservation-detail-history-block">
                   <div className="panel-control-reservation-detail-section">
@@ -546,34 +653,111 @@ export default function PanelControlReservationDetailPage() {
                       </div>
                     </div>
 
-                    <div className="panel-control-reservation-detail-timeline">
+                    <div style={{ overflowX: "auto" }}>
                       {reservationDetail.notes.length > 0 ? (
-                        reservationDetail.notes.map((note) => (
-                          <article
-                            className="panel-control-reservation-detail-timeline-item"
-                            key={note.id}
-                          >
-                            <strong>{note.createdByName}</strong>
-                            <p>{note.body}</p>
-                            <time dateTime={note.createdAt}>
-                              {formatDate(note.createdAt, {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                                hour: "numeric",
-                                minute: "2-digit",
-                              })}
-                            </time>
-                          </article>
-                        ))
+                        <table style={{ width: "100%", whiteSpace: "nowrap", borderCollapse: "collapse", textAlign: "left" }}>
+                          <thead>
+                            <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Fecha y hora</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem" }}>Usuario</th>
+                              <th style={{ padding: "12px 16px", color: "#6b7280", fontWeight: "600", fontSize: "0.875rem", width: "100%" }}>Nota</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {reservationDetail.notes.map((note) => (
+                              <tr key={note.id} style={{ borderBottom: "1px solid #f3f4f6" }}>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563", verticalAlign: "top" }}>
+                                  {formatDate(note.createdAt, { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" })}
+                                </td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#111827", fontWeight: "600", verticalAlign: "top" }}>{note.createdByName}</td>
+                                <td style={{ padding: "12px 16px", fontSize: "0.875rem", color: "#4b5563", whiteSpace: "normal" }}>{note.body}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       ) : (
-                        <p>Aun no hay notas cargadas para esta reserva.</p>
+                        <p style={{ padding: "16px", color: "#6b7280" }}>Aun no hay notas cargadas para esta reserva.</p>
                       )}
                     </div>
                   </div>
                 </section>
               </>
             )}
+
+            {cancelModalOpen ? (
+              <div
+                className="detalle-producto-admin-modal-backdrop"
+                onClick={() => !isCancelling && setCancelModalOpen(false)}
+                role="presentation"
+              >
+                <div
+                  className="detalle-producto-admin-modal"
+                  onClick={(event) => event.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  style={{ width: "100%", maxWidth: "500px" }}
+                >
+                  <button
+                    type="button"
+                    className="detalle-producto-admin-modal-close"
+                    onClick={() => !isCancelling && setCancelModalOpen(false)}
+                    disabled={isCancelling}
+                    aria-label="Cerrar modal"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="material-icons-outlined">close</span>
+                  </button>
+
+                  <p>Accion irreversible</p>
+                  <h3>Cancelar reserva</h3>
+
+                  <form onSubmit={handleCancelReservation}>
+                    <span style={{ display: "block", marginBottom: "1rem", color: "#6b7280" }}>
+                      Esta accion marcara la reserva como cancelada y liberara los cupos.
+                      Puedes agregar un motivo operativo para el registro.
+                    </span>
+
+                    <label className="panel-control-form-field">
+                      <span>Motivo de cancelacion (Opcional)</span>
+                      <textarea
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                        placeholder="Ej. Solicitud directa del cliente, cambio de fecha, etc."
+                        disabled={isCancelling}
+                        rows={3}
+                        style={{ border: "1px solid #d1d5db", borderRadius: "6px", padding: "8px", width: "100%", resize: "vertical" }}
+                      />
+                    </label>
+
+                    {cancelError ? (
+                      <p className="panel-control-form-error">{cancelError}</p>
+                    ) : null}
+
+                    <div className="detalle-producto-admin-modal-actions" style={{ marginTop: "1.5rem" }}>
+                      <button
+                        type="button"
+                        className="detalle-producto-admin-modal-button detalle-producto-admin-modal-button--secondary"
+                        onClick={() => setCancelModalOpen(false)}
+                        disabled={isCancelling}
+                        style={{ cursor: "pointer" }}
+                      >
+                        Cerrar
+                      </button>
+                      <button
+                        type="submit"
+                        className="detalle-producto-admin-modal-button"
+                        style={{ backgroundColor: "#dc2626", color: "white", borderColor: "#dc2626", cursor: "pointer" }}
+                        disabled={isCancelling}
+                      >
+                        {isCancelling ? "Cancelando..." : "Confirmar cancelacion"}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            ) : null}
+            
+
           </section>
         </div>
       </main>
