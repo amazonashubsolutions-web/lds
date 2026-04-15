@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
-  getAllProductRecords,
   productCategories,
   productSubcategories,
 } from "../data/productsData";
@@ -9,11 +8,7 @@ import {
   MAX_PRODUCT_GALLERY_IMAGES,
   createProductGallerySlots,
 } from "../utils/productGalleryRepository";
-import {
-  getNextCreatedProductId,
-  persistCreatedProductRecord,
-} from "../utils/createdProductsRepository";
-import { persistProductStatus } from "../utils/productStatusStorage";
+import { createProductInSupabase } from "../services/products/adminMutations";
 import {
   buildSlugFromName,
   createEditableItemId,
@@ -72,6 +67,7 @@ export default function useProductCreateForm({
   const [formError, setFormError] = useState("");
   const [createdProductInfo, setCreatedProductInfo] = useState(null);
   const [activeBlock, setActiveBlock] = useState(null);
+  const [isSavingProduct, setIsSavingProduct] = useState(false);
 
   const availableSubcategories = useMemo(
     () =>
@@ -639,7 +635,11 @@ export default function useProductCreateForm({
     };
   }
 
-  function handleSaveProduct() {
+  async function handleSaveProduct() {
+    if (isSavingProduct) {
+      return;
+    }
+
     const validationError = validateDraft();
 
     if (validationError) {
@@ -647,19 +647,30 @@ export default function useProductCreateForm({
       return;
     }
 
-    const nextProductId = getNextCreatedProductId(
-      getAllProductRecords().map((product) => product.id),
-    );
-    const createdRecord = buildCreatedRecord(nextProductId);
+    const draftProductId = `draft-${Date.now()}`;
+    const createdRecord = buildCreatedRecord(draftProductId);
 
-    persistCreatedProductRecord(createdRecord);
-    persistProductStatus(nextProductId, "inactive");
-    setCreatedProductInfo({
-      productId: nextProductId,
-      title: createdRecord.product.name,
-      categoryLabel: currentCategoryLabel,
-    });
-    setFormError("");
+    try {
+      setIsSavingProduct(true);
+      const createdProduct = await createProductInSupabase({
+        createdRecord,
+        draft,
+      });
+
+      setCreatedProductInfo({
+        productId: createdProduct.productId,
+        title: createdRecord.product.name,
+        categoryLabel: currentCategoryLabel,
+      });
+      setFormError("");
+    } catch (error) {
+      setFormError(
+        error.message ||
+          "No fue posible guardar el producto en Supabase. Intenta de nuevo.",
+      );
+    } finally {
+      setIsSavingProduct(false);
+    }
   }
 
   function handleCancel() {
@@ -704,6 +715,7 @@ export default function useProductCreateForm({
     removeObjectListItem,
     removeStringListItem,
     requiresActivityTimes,
+    isSavingProduct,
     selectedGallerySlot,
     setActiveBlock,
     setCreatedProductInfo,

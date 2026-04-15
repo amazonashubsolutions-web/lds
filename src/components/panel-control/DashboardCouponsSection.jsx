@@ -1,4 +1,6 @@
 import { useState } from "react";
+import LoadingState from "../common/LoadingState";
+import LoadingSpinner from "../common/LoadingSpinner";
 
 function CouponStatusBadge({ status }) {
   const tone =
@@ -19,6 +21,9 @@ export default function DashboardCouponsSection({
   summarySecondaryKey,
   onEditItem,
   onToggleStatusItem,
+  isLoading = false,
+  errorMessage = "",
+  statusActionItemId = "",
   emptyMessage = "No hay cupones para mostrar en este momento.",
 }) {
   const [openId, setOpenId] = useState(null);
@@ -39,7 +44,21 @@ export default function DashboardCouponsSection({
       </div>
 
       <div className="panel-control-coupons-list">
-        {items.length === 0 ? (
+        {isLoading ? (
+          <div className="panel-control-coupons-empty">
+            <LoadingState
+              title="Cargando cupones desde Supabase"
+              description="Estamos consultando la informacion comercial mas reciente."
+            />
+          </div>
+        ) : errorMessage ? (
+          <div className="panel-control-coupons-empty panel-control-coupons-empty--error">
+            <span className="material-icons-outlined" aria-hidden="true">
+              cloud_off
+            </span>
+            <p>{errorMessage}</p>
+          </div>
+        ) : items.length === 0 ? (
           <div className="panel-control-coupons-empty">
             <span className="material-icons-outlined" aria-hidden="true">
               search_off
@@ -51,6 +70,7 @@ export default function DashboardCouponsSection({
         {items.map((item) => {
           const isOpen = openId === item.id;
           const showHeaderActions = Boolean(onEditItem || onToggleStatusItem);
+          const isStatusActionLoading = statusActionItemId === item.id;
           const toggleStatusLabel =
             item.status === "Activo" ? "Inhabilitar" : "Habilitar";
           const toggleStatusIcon =
@@ -126,6 +146,7 @@ export default function DashboardCouponsSection({
                         type="button"
                         className="panel-control-coupon-header-action"
                         onClick={() => onEditItem(item)}
+                        disabled={isStatusActionLoading}
                       >
                         <span className="material-icons-outlined" aria-hidden="true">
                           edit
@@ -139,11 +160,20 @@ export default function DashboardCouponsSection({
                         type="button"
                         className="panel-control-coupon-header-action panel-control-coupon-header-action--danger"
                         onClick={() => onToggleStatusItem(item)}
+                        disabled={isStatusActionLoading}
                       >
-                        <span className="material-icons-outlined" aria-hidden="true">
-                          {toggleStatusIcon}
+                        <span className="lds-button-content">
+                          {isStatusActionLoading ? (
+                            <LoadingSpinner label={toggleStatusLabel} size="sm" />
+                          ) : (
+                            <span className="material-icons-outlined" aria-hidden="true">
+                              {toggleStatusIcon}
+                            </span>
+                          )}
+                          <span>
+                            {isStatusActionLoading ? "Actualizando..." : toggleStatusLabel}
+                          </span>
                         </span>
-                        <span>{toggleStatusLabel}</span>
                       </button>
                     ) : null}
                   </div>

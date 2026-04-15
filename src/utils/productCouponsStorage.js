@@ -2,99 +2,11 @@ import {
   formatCouponDateInputValue,
   formatCouponDateLabel,
   normalizeCouponDiscountTarget,
-  panelControlCoupons,
-  toProductCouponItem,
 } from "../data/couponsData";
 import { getProductNameById } from "../data/productsData";
 
-const PRODUCT_COUPON_STORAGE_KEY = "lds-panel-control-product-coupons";
-const PRODUCT_COUPON_ID_PATTERN = /^CP-(\d+)$/;
-
-function canUseStorage() {
-  return (
-    typeof window !== "undefined" && typeof window.localStorage !== "undefined"
-  );
-}
-
-function readStoredProductCouponRecords() {
-  if (!canUseStorage()) {
-    return [];
-  }
-
-  try {
-    const rawValue = window.localStorage.getItem(PRODUCT_COUPON_STORAGE_KEY);
-
-    if (!rawValue) {
-      return [];
-    }
-
-    const parsedValue = JSON.parse(rawValue);
-
-    if (!Array.isArray(parsedValue)) {
-      return [];
-    }
-
-    return parsedValue
-      .filter(
-        (coupon) =>
-          coupon && coupon.scope === "product" && typeof coupon.id === "string",
-      )
-      .map((coupon) => ({
-        ...coupon,
-        discountTarget: normalizeCouponDiscountTarget(coupon.discountTarget),
-      }));
-  } catch {
-    return [];
-  }
-}
-
-function writeStoredProductCouponRecords(records) {
-  if (!canUseStorage()) {
-    return;
-  }
-
-  window.localStorage.setItem(
-    PRODUCT_COUPON_STORAGE_KEY,
-    JSON.stringify(records),
-  );
-}
-
-function getBaseProductCouponRecords() {
-  return panelControlCoupons.filter((coupon) => coupon.scope === "product");
-}
-
-export function getAllProductCouponRecords() {
-  const recordsById = new Map(
-    getBaseProductCouponRecords().map((coupon) => [coupon.id, coupon]),
-  );
-
-  readStoredProductCouponRecords().forEach((coupon) => {
-    recordsById.set(coupon.id, coupon);
-  });
-
-  return [...recordsById.values()];
-}
-
-export function getAllProductCouponItems() {
-  return getAllProductCouponRecords().map(toProductCouponItem);
-}
-
-export function getNextProductCouponId(records = getAllProductCouponRecords()) {
-  const highestNumericId = records.reduce((highestValue, coupon) => {
-    const matchedId = coupon.id.match(PRODUCT_COUPON_ID_PATTERN);
-
-    if (!matchedId) {
-      return highestValue;
-    }
-
-    return Math.max(highestValue, Number(matchedId[1]));
-  }, 0);
-
-  return `CP-${String(highestNumericId + 1).padStart(3, "0")}`;
-}
-
 function parseCouponValueInput(value) {
-  const normalizedValue = value.trim();
+  const normalizedValue = String(value ?? "").trim();
 
   if (!normalizedValue) {
     return null;
@@ -102,11 +14,7 @@ function parseCouponValueInput(value) {
 
   const numericValue = Number(normalizedValue.replace(",", "."));
 
-  if (
-    !Number.isFinite(numericValue) ||
-    numericValue < 0 ||
-    numericValue > 100
-  ) {
+  if (!Number.isFinite(numericValue) || numericValue < 0 || numericValue > 100) {
     return null;
   }
 
@@ -177,7 +85,7 @@ export function createProductCouponDraft(product) {
   const today = new Date();
 
   return {
-    id: getNextProductCouponId(),
+    id: `draft-${Date.now()}`,
     productId: product.id,
     subjectName: product.title,
     couponName: "",
@@ -249,19 +157,4 @@ export function createProductCouponRecord(formData) {
     ...parsedRule,
     status: formData.status || "active",
   };
-}
-
-export function persistProductCouponRecord(record) {
-  const storedRecords = readStoredProductCouponRecords();
-  const recordIndex = storedRecords.findIndex((coupon) => coupon.id === record.id);
-  const nextStoredRecords =
-    recordIndex >= 0
-      ? storedRecords.map((coupon, index) =>
-          index === recordIndex ? record : coupon,
-        )
-      : [...storedRecords, record];
-
-  writeStoredProductCouponRecords(nextStoredRecords);
-
-  return nextStoredRecords;
 }

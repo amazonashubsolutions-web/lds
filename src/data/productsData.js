@@ -1,5 +1,4 @@
-import { getStoredCreatedProductRecords } from "../utils/createdProductsRepository";
-import { getResolvedProductGalleryUrls } from "../utils/productGalleryRepository";
+import { isSameProductId } from "../utils/productIds.js";
 export const productCategories = [
   { id: "actividades", label: "Actividades", icon: "local_activity" },
   { id: "transporte", label: "Transporte", icon: "directions_car" },
@@ -343,33 +342,14 @@ export const productSubcategoryLinks = [
   { productId: 24, subcategoryId: "excursion-fuera-de-confort" },
 ];
 
-function getResolvedProductsCatalog() {
-  return [
-    ...productsCatalog,
-    ...getStoredCreatedProductRecords().map((record) => record.product),
-  ];
-}
-
-function getResolvedProductSubcategoryLinks() {
-  return [
-    ...productSubcategoryLinks,
-    ...getStoredCreatedProductRecords().flatMap((record) =>
-      record.subcategoryIds.map((subcategoryId) => ({
-        productId: record.product.id,
-        subcategoryId,
-      })),
-    ),
-  ];
-}
-
 export function getAllProductRecords() {
-  return getResolvedProductsCatalog();
+  return productsCatalog;
 }
 
 export function getProductRecordById(productId) {
   return (
-    getResolvedProductsCatalog().find(
-      (product) => Number(product.id) === Number(productId),
+    productsCatalog.find(
+      (product) => isSameProductId(product.id, productId),
     ) ?? null
   );
 }
@@ -379,8 +359,8 @@ export function getProductNameById(productId) {
 }
 
 export function getProductSubcategoryIds(productId) {
-  return getResolvedProductSubcategoryLinks()
-    .filter((relation) => Number(relation.productId) === Number(productId))
+  return productSubcategoryLinks
+    .filter((relation) => isSameProductId(relation.productId, productId))
     .map((relation) => relation.subcategoryId);
 }
 
@@ -398,12 +378,6 @@ export function getResultCategoryTree() {
 }
 
 export function toResultCardItem(product) {
-  const resolvedGallery = getResolvedProductGalleryUrls({
-    productId: product.id,
-    fallbackCoverImageUrl: product.coverImageUrl,
-  });
-  const mainImage = resolvedGallery[0] || product.coverImageUrl;
-
   return {
     id: product.id,
     title: product.name,
@@ -411,7 +385,7 @@ export function toResultCardItem(product) {
     price: product.basePriceAmount,
     status: product.status,
     featured: product.isFeatured,
-    image: mainImage,
+    image: product.coverImageUrl,
     badgeLabel: product.isFeatured ? "Destacado" : undefined,
     priceLabel: product.pricingLabel,
     priceSuffix: `/ ${product.pricingUnitLabel}`,
@@ -423,7 +397,7 @@ export function toResultCardItem(product) {
 export const resultCategoriesFromCatalog = getResultCategoryTree();
 
 export function getResultsCardsFromCatalog() {
-  return getResolvedProductsCatalog().map(toResultCardItem);
+  return productsCatalog.map(toResultCardItem);
 }
 
 export const resultsCardsFromCatalog = getResultsCardsFromCatalog();

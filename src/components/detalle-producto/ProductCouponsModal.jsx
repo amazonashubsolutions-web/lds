@@ -1,10 +1,12 @@
 import { createPortal } from "react-dom";
+import LoadingState from "../common/LoadingState";
 
 export default function ProductCouponsModal({
   isOpen,
   productName,
   productImage,
   items,
+  isLoading = false,
   onClose,
 }) {
   if (!isOpen) {
@@ -42,7 +44,16 @@ export default function ProductCouponsModal({
         </div>
 
         <div className="product-coupons-modal-content">
-          {items.length === 0 ? (
+          {isLoading ? (
+            <div className="product-coupons-modal-empty">
+              <LoadingState
+                className="product-coupons-loading-state"
+                title="Cargando cupones del producto"
+                description="Estamos consultando los cupones mas recientes en Supabase."
+                size="lg"
+              />
+            </div>
+          ) : items.length === 0 ? (
             <div className="product-coupons-modal-empty">
               <span className="material-icons-outlined" aria-hidden="true">
                 confirmation_number

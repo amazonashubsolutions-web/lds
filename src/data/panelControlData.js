@@ -27,6 +27,26 @@ export const panelControlMenu = [
     path: "/panel-de-control/cupones",
   },
   {
+    id: "reservas",
+    label: "Reservas",
+    icon: "card",
+    path: "/panel-de-control/reservas",
+  },
+  {
+    id: "usuarios",
+    label: "Usuarios",
+    icon: "user",
+    path: "/panel-de-control/usuarios",
+    allowedRoles: ["super_user", "agency_admin"],
+  },
+  {
+    id: "agencias",
+    label: "Agencias",
+    icon: "building",
+    path: "/panel-de-control/agencias",
+    allowedRoles: ["super_user"],
+  },
+  {
     id: "productos",
     label: "Productos",
     icon: "package",

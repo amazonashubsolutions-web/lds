@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useLocation } from "react-router-dom";
 
 import {
   formatProductCouponRuleLabel,
   getCouponDiscountTargetLabel,
 } from "../../data/couponsData";
+import { usePanelSession } from "../../contexts/PanelSessionContext";
+import ProductReservationFlowModal from "./ProductReservationFlowModal";
 import {
   evaluateProductCouponForBooking,
   findProductCouponByCode,
@@ -248,13 +251,19 @@ function getPassengerPricingState(
 export default function ProductBookingCard({
   booking,
   initialTravelDate = "",
+  productCoupons = [],
+  productSummary = null,
 }) {
   const categoryThemeStyle = getProductCategoryCssVars("actividades");
+  const location = useLocation();
+  const { isAuthenticated } = usePanelSession();
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
+  const [isReservationModalOpen, setIsReservationModalOpen] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCouponCode, setAppliedCouponCode] = useState("");
   const [couponFeedback, setCouponFeedback] = useState(null);
   const [couponErrorAnimationVersion, setCouponErrorAnimationVersion] = useState(0);
+  const [reservationFeedback, setReservationFeedback] = useState("");
   const passengerFields = booking.passengerFields ?? [
     { id: "adults", label: "Adultos", min: 1, defaultValue: 2 },
     { id: "children", label: "Ninos", min: 0, defaultValue: 0 },
@@ -305,9 +314,10 @@ export default function ProductBookingCard({
   const availableCoupons = getDateAvailableProductCoupons({
     productId: booking.productId,
     travelDate,
+    coupons: productCoupons,
   });
   const appliedCoupon = appliedCouponCode
-    ? findProductCouponByCode(appliedCouponCode, booking.productId)
+    ? findProductCouponByCode(appliedCouponCode, booking.productId, productCoupons)
     : null;
   const appliedCouponEvaluation = appliedCoupon
     ? evaluateProductCouponForBooking({
@@ -371,6 +381,7 @@ export default function ProductBookingCard({
 
       return nextPassengerCounts;
     });
+    setReservationFeedback("");
 
     if (!appliedCouponCode) {
       return;
@@ -379,6 +390,7 @@ export default function ProductBookingCard({
     const selectedCoupon = findProductCouponByCode(
       appliedCouponCode,
       booking.productId,
+      productCoupons,
     );
 
     if (!selectedCoupon) {
@@ -418,6 +430,7 @@ export default function ProductBookingCard({
     setCouponCode("");
     setAppliedCouponCode("");
     setCouponFeedback(null);
+    setReservationFeedback("");
   }
 
   function handleCouponCodeChange(event) {
@@ -461,6 +474,7 @@ export default function ProductBookingCard({
     const selectedCoupon = findProductCouponByCode(
       normalizedCode,
       booking.productId,
+      productCoupons,
     );
 
     if (!selectedCoupon) {
@@ -494,6 +508,66 @@ export default function ProductBookingCard({
       message: `${selectedCoupon.code} aplicado correctamente a esta reserva.`,
     });
   }
+
+  function handleOpenReservationFlow() {
+    const totalPassengers = passengerBreakdown.reduce(
+      (sum, item) => sum + Number(item.count ?? 0),
+      0,
+    );
+
+    if (!travelDate) {
+      setReservationFeedback(
+        "Selecciona primero la fecha de viaje para continuar con la reserva.",
+      );
+      return;
+    }
+
+    if (totalPassengers <= 0) {
+      setReservationFeedback(
+        "Debes indicar al menos un pasajero antes de reservar.",
+      );
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setReservationFeedback(
+        "Inicia sesión con un usuario operativo de LDS para continuar con la reserva.",
+      );
+      return;
+    }
+
+    setReservationFeedback("");
+    setIsReservationModalOpen(true);
+  }
+
+  const bookingSnapshot = {
+    productId: booking.productId,
+    productName: productSummary?.title ?? "Producto LDS",
+    productCity: productSummary?.city ?? "",
+    productDetailPath: location.pathname,
+    travelDate,
+    departureTime: productSummary?.departureTime ?? "",
+    passengerCounts,
+    passengerFields,
+    passengerBreakdown: passengerBreakdown.map((item) => ({
+      ...item,
+      unitPrice:
+        item.count > 0 ? Math.round(item.subtotal / item.count) : 0,
+    })),
+    additionalCharges: additionalCharges.map((item) => ({
+      ...item,
+      displayValue:
+        item.type === "fixed"
+          ? formatBookingAmount(parseBookingPrice(item.value))
+          : item.value,
+    })),
+    estimatedTotal,
+    discountAmount: activeAppliedCoupon?.discountAmount ?? 0,
+    totalAfterDiscount,
+    appliedCouponCode: activeAppliedCoupon?.coupon.code ?? "",
+    appliedCouponLabel: activeAppliedCoupon?.discountTargetLabel ?? "",
+    summaryNote: booking.note ?? "",
+  };
 
   return (
     <>
@@ -531,8 +605,8 @@ export default function ProductBookingCard({
             <span>Pasajeros</span>
 
             <div className="detalle-producto-booking-passenger-grid">
-              {passengerFields.map((field) => (
-                <label key={field.id}>
+              {passengerFields.map((field, index) => (
+                <label key={field.id || `passenger-field-${index}`}>
                   <span>{field.label}</span>
                   {field.ageHint ? (
                     <small className="detalle-producto-booking-passenger-hint">
@@ -572,10 +646,10 @@ export default function ProductBookingCard({
             </p>
           ) : availableCoupons.length ? (
             <div className="detalle-producto-booking-coupon-list">
-              {availableCoupons.map((coupon) => (
+              {availableCoupons.map((coupon, index) => (
                 <article
                   className="detalle-producto-booking-coupon-card"
-                  key={coupon.id}
+                  key={coupon.id || `available-coupon-${index}`}
                 >
                   <strong>{coupon.code}</strong>
                   <p>{buildAvailableCouponDescription(coupon)}</p>
@@ -646,15 +720,21 @@ export default function ProductBookingCard({
         ) : null}
 
         <div className="detalle-producto-booking-breakdown">
-          {passengerBreakdown.map((item) => (
-            <div className="detalle-producto-booking-row" key={item.id}>
+          {passengerBreakdown.map((item, index) => (
+            <div
+              className="detalle-producto-booking-row"
+              key={item.id || `passenger-breakdown-${index}`}
+            >
               <span>{`${item.label} x${item.count}`}</span>
               <strong>{formatBookingAmount(item.subtotal)}</strong>
             </div>
           ))}
 
-          {additionalCharges.map((item) => (
-            <div className="detalle-producto-booking-row" key={item.label}>
+          {additionalCharges.map((item, index) => (
+            <div
+              className="detalle-producto-booking-row"
+              key={item.label || `charge-${index}`}
+            >
               <span>{item.label}</span>
               <strong>
                 {item.type === "fixed"
@@ -725,8 +805,16 @@ export default function ProductBookingCard({
         <p className="detalle-producto-booking-note">{booking.note}</p>
 
         <div className="detalle-producto-booking-action">
-          <button type="button">{booking.buttonLabel ?? "Reservar ahora"}</button>
+          <button type="button" onClick={handleOpenReservationFlow}>
+            {booking.buttonLabel ?? "Reservar ahora"}
+          </button>
         </div>
+
+        {reservationFeedback ? (
+          <p className="detalle-producto-booking-coupon-feedback detalle-producto-booking-coupon-feedback--error">
+            {reservationFeedback}
+          </p>
+        ) : null}
       </aside>
 
       {isPricingModalOpen && pricingDetails
@@ -781,8 +869,8 @@ export default function ProductBookingCard({
                           <div className="detalle-producto-booking-modal-rule">
                             <p>Fechas:</p>
                             <ul className="detalle-producto-booking-modal-periods">
-                              {season.periods.map((period) => (
-                                <li key={period.id}>
+                              {season.periods.map((period, index) => (
+                                <li key={period.id || `season-period-${index}`}>
                                   {formatSeasonPeriodLabel(period)}
                                 </li>
                               ))}
@@ -790,14 +878,14 @@ export default function ProductBookingCard({
                           </div>
                         ) : null}
                         <div className="detalle-producto-booking-modal-grid">
-                          {season.individual?.map((item) => (
+                          {season.individual?.map((item, index) => (
                             <article
                               className={`detalle-producto-booking-modal-card${
                                 seasonKey === "high"
                                   ? " detalle-producto-booking-modal-card--high"
                                   : ""
                               }`}
-                              key={`${seasonKey}-individual-${item.id}`}
+                              key={`${seasonKey}-individual-${item.id || index}`}
                             >
                               <span>{item.label}</span>
                               {item.ageHint ? <small>{item.ageHint}</small> : null}
@@ -813,14 +901,14 @@ export default function ProductBookingCard({
                           {pricingDetails.groupRule}
                         </p>
                         <div className="detalle-producto-booking-modal-grid">
-                          {season.group?.map((item) => (
+                          {season.group?.map((item, index) => (
                             <article
                               className={`detalle-producto-booking-modal-card detalle-producto-booking-modal-card--group${
                                 seasonKey === "high"
                                   ? " detalle-producto-booking-modal-card--high"
                                   : ""
                               }`}
-                              key={`${seasonKey}-group-${item.id}`}
+                              key={`${seasonKey}-group-${item.id || index}`}
                             >
                               <span>{item.label}</span>
                               {item.ageHint ? <small>{item.ageHint}</small> : null}
@@ -835,10 +923,10 @@ export default function ProductBookingCard({
                   <div className="detalle-producto-booking-modal-section">
                     <h4>Tarifa regular</h4>
                     <div className="detalle-producto-booking-modal-grid">
-                      {pricingDetails.individual?.map((item) => (
+                      {pricingDetails.individual?.map((item, index) => (
                         <article
                           className="detalle-producto-booking-modal-card"
-                          key={`individual-${item.id}`}
+                          key={`individual-${item.id || index}`}
                         >
                           <span>{item.label}</span>
                           {item.ageHint ? <small>{item.ageHint}</small> : null}
@@ -854,10 +942,10 @@ export default function ProductBookingCard({
                       {pricingDetails.groupRule}
                     </p>
                     <div className="detalle-producto-booking-modal-grid">
-                      {activeGroupPricing.map((item) => (
+                      {activeGroupPricing.map((item, index) => (
                         <article
                           className="detalle-producto-booking-modal-card detalle-producto-booking-modal-card--group"
-                          key={`group-${item.id}`}
+                          key={`group-${item.id || index}`}
                         >
                           <span>{item.label}</span>
                           {item.ageHint ? <small>{item.ageHint}</small> : null}
@@ -872,6 +960,12 @@ export default function ProductBookingCard({
             document.body,
           )
         : null}
+
+      <ProductReservationFlowModal
+        open={isReservationModalOpen}
+        onClose={() => setIsReservationModalOpen(false)}
+        bookingSnapshot={bookingSnapshot}
+      />
     </>
   );
 }

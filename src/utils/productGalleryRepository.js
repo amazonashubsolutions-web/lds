@@ -1,11 +1,8 @@
-const PRODUCT_GALLERY_STORAGE_KEY = "lds-panel-control-product-galleries";
-const MAX_PRODUCT_GALLERY_IMAGES = 5;
+import {
+  normalizeProductId,
+} from "./productIds";
 
-function canUseStorage() {
-  return (
-    typeof window !== "undefined" && typeof window.localStorage !== "undefined"
-  );
-}
+const MAX_PRODUCT_GALLERY_IMAGES = 5;
 
 function createGalleryImageId(productId, position) {
   return `product-${productId}-gallery-${position + 1}`;
@@ -80,85 +77,6 @@ function normalizeGalleryImages(images = [], productId) {
   return normalizedImages;
 }
 
-function readStoredProductGalleries() {
-  if (!canUseStorage()) {
-    return [];
-  }
-
-  try {
-    const rawValue = window.localStorage.getItem(PRODUCT_GALLERY_STORAGE_KEY);
-
-    if (!rawValue) {
-      return [];
-    }
-
-    const parsedValue = JSON.parse(rawValue);
-
-    if (!Array.isArray(parsedValue)) {
-      return [];
-    }
-
-    return parsedValue
-      .filter((record) => Number.isFinite(Number(record?.productId)))
-      .map((record) => ({
-        productId: Number(record.productId),
-        images: normalizeGalleryImages(record.images, Number(record.productId)),
-      }));
-  } catch {
-    return [];
-  }
-}
-
-function writeStoredProductGalleries(records) {
-  if (!canUseStorage()) {
-    return;
-  }
-
-  window.localStorage.setItem(
-    PRODUCT_GALLERY_STORAGE_KEY,
-    JSON.stringify(records),
-  );
-}
-
-function buildFallbackGallery(productId, baseImages = [], fallbackCoverImageUrl = "") {
-  const normalizedBaseImages = normalizeGalleryImages(baseImages, productId);
-
-  if (normalizedBaseImages.length > 0) {
-    return normalizedBaseImages;
-  }
-
-  return normalizeGalleryImages(
-    fallbackCoverImageUrl ? [fallbackCoverImageUrl] : [],
-    productId,
-  );
-}
-
-export function getStoredProductGallery(productId) {
-  return (
-    readStoredProductGalleries().find(
-      (record) => record.productId === Number(productId),
-    ) ?? null
-  );
-}
-
-export function getResolvedProductGallery({
-  productId,
-  baseImages = [],
-  fallbackCoverImageUrl = "",
-}) {
-  const storedGallery = getStoredProductGallery(productId);
-
-  if (storedGallery?.images?.length) {
-    return storedGallery.images;
-  }
-
-  return buildFallbackGallery(productId, baseImages, fallbackCoverImageUrl);
-}
-
-export function getResolvedProductGalleryUrls(options) {
-  return getResolvedProductGallery(options).map((image) => image.url);
-}
-
 export function createProductGallerySlots(images = [], totalSlots = MAX_PRODUCT_GALLERY_IMAGES) {
   const normalizedImages = normalizeGalleryImages(images, "draft");
 
@@ -166,29 +84,6 @@ export function createProductGallerySlots(images = [], totalSlots = MAX_PRODUCT_
     slot: index,
     image: normalizedImages[index] ?? null,
   }));
-}
-
-export function persistProductGallery(productId, images = []) {
-  const normalizedProductId = Number(productId);
-  const normalizedImages = normalizeGalleryImages(images, normalizedProductId);
-  const storedGalleries = readStoredProductGalleries();
-  const existingGalleryIndex = storedGalleries.findIndex(
-    (record) => record.productId === normalizedProductId,
-  );
-  const nextRecord = {
-    productId: normalizedProductId,
-    images: normalizedImages,
-  };
-  const nextRecords =
-    existingGalleryIndex >= 0
-      ? storedGalleries.map((record, index) =>
-          index === existingGalleryIndex ? nextRecord : record,
-        )
-      : [...storedGalleries, nextRecord];
-
-  writeStoredProductGalleries(nextRecords);
-
-  return nextRecord;
 }
 
 export { MAX_PRODUCT_GALLERY_IMAGES };

@@ -2,12 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 
 import { formatCouponDateLabel, toProductCouponItem } from "../data/couponsData";
 import { getProductNameById } from "../data/productsData";
+import useProductCouponRecords from "./useProductCouponRecords";
+import { isSameProductId, normalizeProductId } from "../utils/productIds";
 import {
   createProductCouponEditDraft,
   createProductCouponRecord,
-  getAllProductCouponRecords,
-  persistProductCouponRecord,
 } from "../utils/productCouponsStorage";
+import {
+  upsertProductCouponInSupabase,
+  updateProductCouponStatusInSupabase,
+} from "../services/coupons/productCoupons";
 
 function normalizeSearchValue(value) {
   return String(value ?? "").toLowerCase().trim();
@@ -34,17 +38,24 @@ export default function usePanelCoupons({
   const [couponStatusNotice, setCouponStatusNotice] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [, setRefreshToken] = useState(0);
-
-  const productCouponRecords = getAllProductCouponRecords();
-  const selectedProductId = Number(searchParams.get("producto"));
-  const hasProductFilter = Number.isFinite(selectedProductId) && selectedProductId > 0;
+  const [isSubmittingCoupon, setIsSubmittingCoupon] = useState(false);
+  const [statusActionCouponId, setStatusActionCouponId] = useState("");
+  const selectedProductId = normalizeProductId(searchParams.get("producto"));
+  const hasProductFilter = Boolean(selectedProductId);
+  const {
+    couponLoadError,
+    couponRecords: productCouponRecords,
+    isLoadingCoupons,
+    refreshCoupons,
+  } = useProductCouponRecords();
   const activeTab = hasProductFilter ? "products" : activeTabState;
 
   const filteredProductCouponRecords = useMemo(
     () =>
       hasProductFilter
-        ? productCouponRecords.filter((coupon) => coupon.productId === selectedProductId)
+        ? productCouponRecords.filter((coupon) =>
+            isSameProductId(coupon.productId, selectedProductId),
+          )
         : productCouponRecords,
     [hasProductFilter, productCouponRecords, selectedProductId],
   );
@@ -93,7 +104,9 @@ export default function usePanelCoupons({
   );
 
   const filteredProductName = hasProductFilter
-    ? getProductNameById(selectedProductId)
+    ? getProductNameById(selectedProductId) ??
+      filteredProductCouponRecords[0]?.productSnapshotName ??
+      null
     : null;
 
   const showProductFilterNotice =
@@ -302,7 +315,7 @@ export default function usePanelCoupons({
     });
   }
 
-  function handleCouponSubmit(event) {
+  async function handleCouponSubmit(event) {
     event.preventDefault();
 
     if (!couponForm) {
@@ -356,12 +369,22 @@ export default function usePanelCoupons({
       return;
     }
 
-    persistProductCouponRecord(nextCoupon);
-    setRefreshToken((current) => current + 1);
-    closeCouponModal();
+    try {
+      setIsSubmittingCoupon(true);
+      await upsertProductCouponInSupabase(nextCoupon);
+      await refreshCoupons();
+      closeCouponModal();
+    } catch (error) {
+      setCouponError(
+        error.message ||
+          "No fue posible guardar el cupon en Supabase. Intenta de nuevo.",
+      );
+    } finally {
+      setIsSubmittingCoupon(false);
+    }
   }
 
-  function handleToggleProductCouponStatus(item) {
+  async function handleToggleProductCouponStatus(item) {
     const couponRecord = productCouponRecords.find((coupon) => coupon.id === item.id);
 
     if (!couponRecord) {
@@ -370,10 +393,19 @@ export default function usePanelCoupons({
 
     const nextStatus = couponRecord.status === "active" ? "inactive" : "active";
 
-    persistProductCouponRecord({
-      ...couponRecord,
-      status: nextStatus,
-    });
+    try {
+      setStatusActionCouponId(couponRecord.id);
+      await updateProductCouponStatusInSupabase(couponRecord.id, nextStatus);
+      await refreshCoupons();
+    } catch (error) {
+      setCouponError(
+        error.message ||
+          "No fue posible actualizar el estado del cupon en Supabase.",
+      );
+      return;
+    } finally {
+      setStatusActionCouponId("");
+    }
 
     setCouponStatusNotice({
       action: nextStatus === "active" ? "activated" : "disabled",
@@ -383,15 +415,13 @@ export default function usePanelCoupons({
       statusLabel: nextStatus === "active" ? "Activo" : "Inactivo",
       changedAtLabel: formatCouponDateLabel(new Date()),
     });
-
-    setRefreshToken((current) => current + 1);
   }
 
   return {
     activeTab,
     closeCouponModal,
     closeCouponStatusNotice,
-    couponError,
+    couponError: couponError || couponLoadError,
     couponForm,
     couponStatusNotice,
     couponTabs,
@@ -409,12 +439,15 @@ export default function usePanelCoupons({
     handleStartsAtBlur,
     handleToggleProductCouponStatus,
     isDiscountValueFocused,
+    isLoadingCoupons,
+    isSubmittingCoupon,
     openEditCouponModal,
     searchTerm,
     setActiveTab,
     setSearchTerm,
     setStatusFilter,
     showProductFilterNotice,
+    statusActionCouponId,
     statusFilter,
   };
 }

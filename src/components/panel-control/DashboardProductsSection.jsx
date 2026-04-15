@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
+import LoadingState from "../common/LoadingState";
 
 function formatProductPrice(value) {
   return `$${new Intl.NumberFormat("es-CO").format(value)}`;
 }
 
-export default function DashboardProductsSection({ items, totalItems = items.length }) {
+export default function DashboardProductsSection({
+  items,
+  totalItems = items.length,
+  isLoading = false,
+  errorMessage = "",
+}) {
   return (
     <section className="panel-control-card panel-control-products-section">
       <div className="panel-control-products-head">
@@ -25,7 +31,20 @@ export default function DashboardProductsSection({ items, totalItems = items.len
         </div>
       </div>
 
-      {items.length > 0 ? (
+      {isLoading ? (
+        <div className="panel-control-products-empty-state">
+          <LoadingState
+            className="panel-products-loading-state"
+            title="Cargando productos desde Supabase"
+            description="Estamos consultando el catalogo mas reciente para mostrarlo en el panel."
+          />
+        </div>
+      ) : errorMessage ? (
+        <div className="panel-control-products-empty-state">
+          <strong>No pudimos cargar los productos.</strong>
+          <p>{errorMessage}</p>
+        </div>
+      ) : items.length > 0 ? (
         <div className="panel-control-products-list">
           {items.map((item) => {
             const isInactive = item.status === "inactive";
@@ -81,10 +100,15 @@ export default function DashboardProductsSection({ items, totalItems = items.len
         </div>
       ) : (
         <div className="panel-control-products-empty-state">
-          <strong>No encontramos productos con esos filtros.</strong>
+          <strong>
+            {totalItems === 0
+              ? "No hay productos cargados en Supabase."
+              : "No encontramos productos con esos filtros."}
+          </strong>
           <p>
-            Prueba con otra categoria, cambia el estado o limpia la busqueda para
-            volver a ver el inventario completo.
+            {totalItems === 0
+              ? "Cuando existan productos disponibles en la base, apareceran aqui automaticamente."
+              : "Prueba con otra categoria, cambia el estado o limpia la busqueda para volver a ver el inventario completo."}
           </p>
         </div>
       )}

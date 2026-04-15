@@ -1,0 +1,247 @@
+{
+  "generatedAt": "2026-04-11T00:27:20.365Z",
+  "products": [
+    {
+      "legacyId": 1,
+      "uuid": "0e42c64f-b8db-53d6-81c8-411996810811",
+      "name": "Taller de cacao y caminata en Minca",
+      "slug": "taller-cacao-caminata-minca"
+    },
+    {
+      "legacyId": 2,
+      "uuid": "12395d14-3725-5036-be02-3bb1dc30c821",
+      "name": "Pasa dia termales y paisaje cultural cafetero",
+      "slug": "pasa-dia-termales-y-paisaje-cultural-cafetero"
+    },
+    {
+      "legacyId": 3,
+      "uuid": "090cee9e-1e80-53e9-85b1-558684eb21d1",
+      "name": "Pasa noche de glamping y fogata en Guatavita",
+      "slug": "pasa-noche-de-glamping-y-fogata-en-guatavita"
+    },
+    {
+      "legacyId": 4,
+      "uuid": "a134dab2-1208-53f7-aaed-c0547160d256",
+      "name": "Ruta de kayak media jornada en Guatape",
+      "slug": "ruta-de-kayak-media-jornada-en-guatape"
+    },
+    {
+      "legacyId": 9,
+      "uuid": "8eb64a30-5655-51bc-b7de-7a2e4c6bf078",
+      "name": "Alquiler de carro para ruta cafetera",
+      "slug": "alquiler-de-carro-para-ruta-cafetera"
+    },
+    {
+      "legacyId": 10,
+      "uuid": "50c56d60-c6a2-53ae-a96c-f7d42cfce881",
+      "name": "Servicio privado Medellin - Guatape",
+      "slug": "servicio-privado-medellin-guatape"
+    },
+    {
+      "legacyId": 11,
+      "uuid": "ce4c59b0-9c88-5128-b604-04b8da1b9895",
+      "name": "Alquiler de van para grupo familiar",
+      "slug": "alquiler-de-van-para-grupo-familiar"
+    },
+    {
+      "legacyId": 12,
+      "uuid": "5d5ce41a-3546-5734-a0f7-9a865b07a7e1",
+      "name": "Alquiler de bus para salida corporativa",
+      "slug": "alquiler-de-bus-para-salida-corporativa"
+    },
+    {
+      "legacyId": 13,
+      "uuid": "709bd8dd-f044-5896-abd1-192f3ba30578",
+      "name": "Lancha rapida para islas y playas",
+      "slug": "lancha-rapida-para-islas-y-playas"
+    },
+    {
+      "legacyId": 14,
+      "uuid": "65118ffd-3218-5cea-9778-73eb909821bd",
+      "name": "Desayuno santandereano con vista al canion",
+      "slug": "desayuno-santandereano-con-vista-al-canion"
+    },
+    {
+      "legacyId": 15,
+      "uuid": "4a60e403-4503-5954-ac80-e3e30fc42a44",
+      "name": "Almuerzo tipico frente al rio",
+      "slug": "almuerzo-tipico-frente-al-rio"
+    },
+    {
+      "legacyId": 16,
+      "uuid": "9bf2529b-ea50-556d-b1e5-04572bd731d0",
+      "name": "Cena y refrigerios por Getsemani",
+      "slug": "cena-y-refrigerios-por-getsemani"
+    },
+    {
+      "legacyId": 17,
+      "uuid": "caab141a-12bd-5ec7-bdf3-7733da1f0bb4",
+      "name": "Ruta de cafes y postres artesanales",
+      "slug": "ruta-de-cafes-y-postres-artesanales"
+    },
+    {
+      "legacyId": 18,
+      "uuid": "129f24ae-b9f7-5977-8c9b-48a961aca106",
+      "name": "Plan romantico en Barichara 2 noches",
+      "slug": "plan-romantico-en-barichara-2-noches"
+    },
+    {
+      "legacyId": 19,
+      "uuid": "29e6ceb5-fb59-50ff-b807-5bea40d9cbc3",
+      "name": "Plan Islas del Rosario 3 noches",
+      "slug": "plan-islas-del-rosario-3-noches"
+    },
+    {
+      "legacyId": 20,
+      "uuid": "718171c4-2cb5-5726-9791-be058b1f45de",
+      "name": "Escapada cafetera premium 4 noches",
+      "slug": "escapada-cafetera-premium-4-noches"
+    },
+    {
+      "legacyId": 21,
+      "uuid": "49e5428a-60b7-5b46-ac93-1a6f7cf4c63d",
+      "name": "Plan Amazonas inmersivo 5 noches",
+      "slug": "plan-amazonas-inmersivo-5-noches"
+    },
+    {
+      "legacyId": 22,
+      "uuid": "f48cbb4d-225a-577e-b2c4-c8a526d2a24f",
+      "name": "Expedicion Rio Amazonas confort",
+      "slug": "expedicion-rio-amazonas-confort"
+    },
+    {
+      "legacyId": 23,
+      "uuid": "b69ad36e-45be-50b4-992c-46e37191c5e2",
+      "name": "Excursion basica al Valle del Cocora",
+      "slug": "excursion-basica-al-valle-del-cocora"
+    },
+    {
+      "legacyId": 24,
+      "uuid": "91ff80dc-9012-578a-85f6-bf26d4fa25af",
+      "name": "Excursion fuera de confort a Cano Cristales",
+      "slug": "excursion-fuera-de-confort-a-cano-cristales"
+    }
+  ],
+  "subcategories": [
+    {
+      "key": "actividad-full-day",
+      "uuid": "9190ef14-2ab8-592d-87d9-f572fd9051b2",
+      "categoryId": "actividades",
+      "label": "Full Day"
+    },
+    {
+      "key": "actividad-media-jornada",
+      "uuid": "e06d6bed-11e7-5760-b0ab-152e9713535f",
+      "categoryId": "actividades",
+      "label": "Media Jornada"
+    },
+    {
+      "key": "actividad-pasa-noche",
+      "uuid": "af110def-862c-5ce0-b628-d9a3d0205761",
+      "categoryId": "actividades",
+      "label": "Pasa Noche"
+    },
+    {
+      "key": "actividad-pasa-dia",
+      "uuid": "3f37026e-a897-5899-bcf2-72432ab46408",
+      "categoryId": "actividades",
+      "label": "Pasa Dia"
+    },
+    {
+      "key": "transporte-alquilar-carro",
+      "uuid": "e53dece8-db37-5724-8bcf-bf3d33cbbf18",
+      "categoryId": "transporte",
+      "label": "Alquilar Carro"
+    },
+    {
+      "key": "transporte-servicio-privado",
+      "uuid": "997aa98d-7608-503d-8b52-393a4ddabaac",
+      "categoryId": "transporte",
+      "label": "Servicio Privado"
+    },
+    {
+      "key": "transporte-alquilar-van",
+      "uuid": "7e68b8f7-1266-5881-a371-b25edb6192df",
+      "categoryId": "transporte",
+      "label": "Alquilar Van"
+    },
+    {
+      "key": "transporte-alquilar-bus",
+      "uuid": "84fa109b-2ddb-5ea7-94eb-e2f9aabf97fa",
+      "categoryId": "transporte",
+      "label": "Alquilar Bus"
+    },
+    {
+      "key": "transporte-alquilar-rapido",
+      "uuid": "c85a19db-d5ae-5ba5-bd4b-d7298b9a32fe",
+      "categoryId": "transporte",
+      "label": "Alquilar Rapido"
+    },
+    {
+      "key": "restaurante-desayuno",
+      "uuid": "7dc601bd-396c-5b7c-b11d-bfe9979a414d",
+      "categoryId": "restaurantes",
+      "label": "Desayuno"
+    },
+    {
+      "key": "restaurante-almuerzo",
+      "uuid": "c8706a4b-7ec7-5cb7-95cd-e2da0759d78e",
+      "categoryId": "restaurantes",
+      "label": "Almuerzo"
+    },
+    {
+      "key": "restaurante-cena",
+      "uuid": "007da74c-558e-5b50-96b3-a34a1cc8401e",
+      "categoryId": "restaurantes",
+      "label": "Cena"
+    },
+    {
+      "key": "restaurante-refrigerios",
+      "uuid": "a106d2f6-1b9d-5137-9da3-2f0c091498ee",
+      "categoryId": "restaurantes",
+      "label": "Refrigerios"
+    },
+    {
+      "key": "plan-2-noches",
+      "uuid": "0f442c8f-883d-5a1e-951c-67fcf93c4080",
+      "categoryId": "planes",
+      "label": "2 Noches"
+    },
+    {
+      "key": "plan-3-noches",
+      "uuid": "0e659ca9-a37f-5ee4-8cf3-41b5944be639",
+      "categoryId": "planes",
+      "label": "3 Noches"
+    },
+    {
+      "key": "plan-4-noches",
+      "uuid": "1ced2186-8491-5795-9a16-701235eeba23",
+      "categoryId": "planes",
+      "label": "4 Noches"
+    },
+    {
+      "key": "plan-5-noches",
+      "uuid": "53b54a82-ce23-5dc7-8491-32f8deb0607e",
+      "categoryId": "planes",
+      "label": "5 Noches"
+    },
+    {
+      "key": "excursion-confort",
+      "uuid": "150c336e-9684-5358-8292-f4f0d34b61c2",
+      "categoryId": "excursiones",
+      "label": "Confort"
+    },
+    {
+      "key": "excursion-basico",
+      "uuid": "352ecbc4-fc17-57ef-8db2-84dee4711d0b",
+      "categoryId": "excursiones",
+      "label": "Basico"
+    },
+    {
+      "key": "excursion-fuera-de-confort",
+      "uuid": "9b3402ce-b297-5fa3-8a1a-2ad6ea083afe",
+      "categoryId": "excursiones",
+      "label": "Fuera de Confort"
+    }
+  ]
+}

@@ -102,7 +102,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 1.1rem;
+  gap: 0.9rem;
   padding: 1.2rem 1.25rem;
   border-radius: 0 0 1.15rem 1.15rem;
   background: var(--lds-logo-orange);
@@ -155,26 +155,34 @@
 }
 
 .detalle-producto-admin-actions-grid {
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  gap: 0.7rem;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.52rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.15rem;
+  scrollbar-width: thin;
 }
 
 .detalle-producto-admin-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.42rem;
-  min-height: 2.7rem;
-  padding: 0 0.95rem;
+  gap: 0.36rem;
+  min-height: 2.5rem;
+  padding: 0 0.72rem;
   border: 1px solid rgba(6, 107, 112, 0.1);
   border-radius: 999px;
   background: #ffffff;
   color: var(--on-surface);
   text-decoration: none;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.74rem;
   font-weight: 800;
+  white-space: nowrap;
+  flex: 0 0 auto;
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -205,7 +213,7 @@
 }
 
 .detalle-producto-admin-action .material-icons-outlined {
-  font-size: 1rem;
+  font-size: 0.92rem;
 }
 
 .detalle-producto-admin-action-badge {
@@ -793,6 +801,11 @@
   box-shadow: 0 28px 60px rgba(15, 23, 42, 0.22);
 }
 
+.detalle-producto-admin-modal--history {
+  width: min(100%, 68rem);
+  max-height: min(88vh, 48rem);
+}
+
 .detalle-producto-admin-modal p {
   margin: 0;
   color: var(--primary);
@@ -847,11 +860,25 @@
   font-weight: 800;
 }
 
+.detalle-producto-admin-modal-button span,
+.detalle-producto-admin-modal-button .lds-button-content,
+.detalle-producto-admin-modal-button .lds-button-content span {
+  color: inherit;
+}
+
 .detalle-producto-admin-modal-actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   margin-top: 0.35rem;
+}
+
+.detalle-producto-history-modal-body {
+  display: grid;
+  gap: 0.8rem;
+  max-height: min(58vh, 32rem);
+  overflow: auto;
+  padding-right: 0.15rem;
 }
 
 .detalle-producto-admin-modal-button--secondary {
@@ -861,6 +888,1625 @@
 
 .detalle-producto-admin-modal-button--danger {
   background: linear-gradient(135deg, #b42318, #d92d20);
+  color: #ffffff;
+}
+
+.detalle-producto-disable-field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.detalle-producto-disable-field span {
+  color: var(--tertiary);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.detalle-producto-disable-field select,
+.detalle-producto-disable-field textarea {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background: #fff;
+  padding: 0.95rem 1rem;
+  font: inherit;
+  color: var(--on-surface);
+}
+
+.detalle-producto-disable-field textarea {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.detalle-producto-disable-impact-box {
+  display: grid;
+  gap: 0.45rem;
+  padding: 1rem 1.05rem;
+  border-radius: 1rem;
+  background: rgba(254, 243, 199, 0.4);
+  border: 1px solid rgba(245, 158, 11, 0.22);
+}
+
+.detalle-producto-disable-impact-box strong {
+  color: #92400e;
+  font-size: 0.95rem;
+}
+
+.detalle-producto-disable-impact-box p {
+  margin: 0;
+  color: #92400e;
+  font-size: 0.92rem;
+  letter-spacing: normal;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.detalle-producto-disable-impact-box--soft {
+  background: rgba(15, 118, 110, 0.07);
+  border-color: rgba(15, 118, 110, 0.16);
+}
+
+.detalle-producto-disable-impact-box--soft strong,
+.detalle-producto-disable-impact-box--soft p {
+  color: #0f766e;
+}
+
+.panel-control-calendar-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.panel-control-calendar-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+.panel-control-calendar-hero-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.panel-control-calendar-hero-copy p {
+  margin: 0;
+  color: #b45309;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+  font-size: 0.76rem;
+}
+
+.panel-control-calendar-hero-copy h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 0.98;
+  color: var(--on-surface);
+}
+
+.panel-control-calendar-secondary {
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--lds-logo-green-dark);
+}
+
+.panel-control-calendar-back-button {
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  color: #3730a3;
+}
+
+.panel-control-calendar-hero-actions {
+  display: grid;
+  gap: 0.75rem;
+  align-self: center;
+  justify-items: end;
+}
+
+.panel-control-calendar-hero-actions .panel-control-products-create {
+  width: 14.5rem;
+  justify-content: center;
+}
+
+.panel-control-calendar-danger {
+  background: linear-gradient(135deg, #b91c1c, #dc2626);
+  color: #fff;
+}
+
+.panel-control-calendar-summary-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.panel-control-calendar-activation-banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  background: linear-gradient(180deg, #fffaf0 0%, #fff7ed 100%);
+}
+
+.panel-control-calendar-activation-banner--success {
+  border-color: rgba(16, 185, 129, 0.18);
+  background: linear-gradient(180deg, #f4fffb 0%, #ecfdf5 100%);
+}
+
+.panel-control-calendar-activation-banner--info {
+  border-color: rgba(14, 116, 144, 0.18);
+  background: linear-gradient(180deg, #f0f9ff 0%, #ecfeff 100%);
+}
+
+.panel-control-calendar-activation-banner-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.panel-control-calendar-activation-banner-copy > span {
+  color: #b45309;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.panel-control-calendar-activation-banner-copy strong {
+  color: var(--on-surface);
+  font-size: 1.15rem;
+}
+
+.panel-control-calendar-activation-banner-copy p,
+.panel-control-calendar-activation-banner-actions small {
+  margin: 0;
+  color: var(--tertiary);
+  line-height: 1.55;
+}
+
+.panel-control-calendar-activation-banner-actions {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: end;
+}
+
+.panel-control-calendar-hero-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.3rem;
+}
+
+.panel-control-calendar-hero-meta div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.panel-control-calendar-hero-meta span {
+  color: var(--tertiary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.panel-control-calendar-hero-meta strong {
+  color: var(--on-surface);
+  font-size: 0.98rem;
+}
+
+.panel-control-calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(18rem, 0.8fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.panel-control-calendar-board,
+.panel-control-calendar-sidebar {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.panel-control-calendar-board-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.panel-control-calendar-board-head p,
+.panel-control-calendar-sidebar-head p {
+  margin: 0;
+  color: #b45309;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.panel-control-calendar-board-head h2,
+.panel-control-calendar-sidebar-head h3 {
+  margin: 0.25rem 0 0;
+  color: var(--on-surface);
+}
+
+.panel-control-calendar-nav {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.panel-control-calendar-nav button {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid rgba(15, 118, 110, 0.16);
+  border-radius: 0.9rem;
+  background: #fff;
+  color: var(--lds-logo-green-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-control-calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1rem;
+}
+
+.panel-control-calendar-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--tertiary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.panel-control-calendar-legend-dot {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.panel-control-calendar-legend-dot--available {
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+}
+
+.panel-control-calendar-legend-dot--reserved {
+  background: #0f766e;
+}
+
+.panel-control-calendar-legend-dot--blocked {
+  background: #dc2626;
+}
+
+.panel-control-calendar-legend-dot--season {
+  background: #0f172a;
+}
+
+.panel-control-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.panel-control-calendar-weekdays span {
+  text-align: center;
+  color: var(--tertiary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.panel-control-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.panel-control-calendar-empty-cell {
+  min-height: 6rem;
+}
+
+.panel-control-calendar-day {
+  --lds-calendar-occupancy-strength: 0;
+  min-height: 6rem;
+  border-radius: 1.05rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: #fff;
+  padding: 0.8rem 0.7rem;
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+  text-align: left;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.panel-control-calendar-day:hover,
+.panel-control-calendar-day:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.32);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.panel-control-calendar-day--selected {
+  border-color: rgba(15, 118, 110, 0.55);
+  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.16);
+}
+
+.panel-control-calendar-day--available {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+.panel-control-calendar-day--reserved {
+  background: linear-gradient(
+    180deg,
+    rgba(236, 253, 245, calc(0.35 + (var(--lds-calendar-occupancy-strength) * 0.45))) 0%,
+    rgba(22, 163, 74, calc(0.2 + (var(--lds-calendar-occupancy-strength) * 0.78))) 100%
+  );
+  border-color: rgba(
+    22,
+    163,
+    74,
+    calc(0.2 + (var(--lds-calendar-occupancy-strength) * 0.55))
+  );
+  color: #14532d;
+}
+
+.panel-control-calendar-day--blocked {
+  background: linear-gradient(180deg, #fee2e2 0%, #fca5a5 100%);
+  border-color: rgba(220, 38, 38, 0.42);
+  color: #7f1d1d;
+}
+
+.panel-control-calendar-day--out-of-range {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  opacity: 0.72;
+}
+
+.panel-control-calendar-day--high-season .panel-control-calendar-day-number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-control-calendar-day-number {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--on-surface);
+}
+
+.panel-control-calendar-day-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.panel-control-calendar-day-group-badge {
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.panel-control-calendar-day-meta {
+  color: var(--tertiary);
+  font-size: 0.74rem;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.panel-control-calendar-sidebar-head {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.panel-control-calendar-sidebar-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.panel-control-calendar-status-chip {
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--lds-logo-green-dark);
+  padding: 0.5rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.panel-control-calendar-status-chip--season {
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+
+.panel-control-calendar-status-chip--groups {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+.panel-control-calendar-sidebar-copy,
+.panel-control-calendar-ranges {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.panel-control-calendar-sidebar-copy strong,
+.panel-control-calendar-ranges strong {
+  color: var(--on-surface);
+  font-size: 0.95rem;
+}
+
+.panel-control-calendar-sidebar-copy p,
+.panel-control-calendar-ranges p {
+  margin: 0;
+  color: var(--tertiary);
+  line-height: 1.5;
+}
+
+.panel-control-calendar-sidebar-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.panel-control-calendar-action-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(180deg, #fff7f7 0%, #fff1f2 100%);
+  border: 1px solid rgba(220, 38, 38, 0.14);
+}
+
+.panel-control-calendar-action-card--reactivate {
+  background: linear-gradient(180deg, #f4fffb 0%, #ecfdf5 100%);
+  border-color: rgba(16, 185, 129, 0.18);
+}
+
+.panel-control-calendar-action-card-head {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.panel-control-calendar-action-card-head strong {
+  color: #991b1b;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.panel-control-calendar-action-card--reactivate .panel-control-calendar-action-card-head strong {
+  color: #065f46;
+}
+
+.panel-control-calendar-action-card-copy {
+  color: var(--tertiary);
+  line-height: 1.45;
+  font-size: 0.9rem;
+}
+
+.panel-control-calendar-sidebar-form label,
+.panel-control-calendar-modal-form label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.panel-control-calendar-sidebar-form label span,
+.panel-control-calendar-modal-form label span {
+  color: var(--tertiary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.panel-control-calendar-sidebar-form textarea,
+.panel-control-calendar-modal-form input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background: #fff;
+  color: var(--on-surface);
+  padding: 0.9rem 1rem;
+  font: inherit;
+}
+
+.panel-control-calendar-sidebar-form textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+}
+
+.panel-control-calendar-sidebar-alert {
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fff5f5;
+  border: 1px solid rgba(220, 38, 38, 0.14);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.panel-control-calendar-sidebar-alert strong {
+  color: #b91c1c;
+}
+
+.panel-control-calendar-sidebar-alert p {
+  margin: 0;
+  color: #7f1d1d;
+}
+
+.panel-control-calendar-ranges-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.panel-control-calendar-history-list {
+  display: grid;
+  gap: 0;
+}
+
+.panel-control-calendar-history-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-calendar-history-section-head {
+  display: grid;
+  gap: 0.2rem;
+  justify-items: start;
+  text-align: left;
+}
+
+.panel-control-calendar-history-section-head p {
+  margin: 0;
+  color: #b45309;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.panel-control-calendar-history-section-head h3 {
+  margin: 0;
+  color: var(--on-surface);
+  font-size: 1.15rem;
+}
+
+.panel-control-calendar-history-list--horizontal {
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
+.panel-control-calendar-history-table-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(9rem, 0.9fr) minmax(0, 2fr) minmax(12rem, 1fr);
+  gap: 0.9rem 1rem;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 0.85rem;
+  background: rgba(248, 250, 252, 0.9);
+  align-items: center;
+}
+
+.panel-control-calendar-history-table-head span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  text-align: left;
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.panel-control-calendar-history-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(9rem, 0.9fr) minmax(0, 2fr) minmax(12rem, 1fr);
+  gap: 0.9rem 1rem;
+  padding: 0.5rem 0;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+  background: transparent;
+}
+
+.panel-control-calendar-history-card-head {
+  display: grid;
+  gap: 0.2rem;
+  align-content: start;
+}
+
+.panel-control-calendar-history-card-head strong {
+  color: var(--on-surface);
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.panel-control-calendar-history-card-head small,
+.panel-control-calendar-history-card-meta span,
+.panel-control-calendar-history-card-meta time,
+.panel-control-calendar-history-card-meta p {
+  color: var(--tertiary);
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.panel-control-calendar-history-card-head small {
+  font-size: 0.72rem;
+}
+
+.panel-control-calendar-history-card-meta {
+  display: contents;
+  align-items: start;
+}
+
+.panel-control-calendar-history-card-meta span {
+  font-weight: 600;
+}
+
+.panel-control-calendar-history-card-meta p {
+  margin: 0;
+}
+
+.panel-control-product-ranges-history {
+  display: grid;
+}
+
+.panel-control-product-ranges-history-head,
+.panel-control-product-ranges-history-row {
+  grid-template-columns: minmax(0, 1.05fr) minmax(12rem, 1.3fr) minmax(10rem, 0.95fr) minmax(11rem, 1fr);
+}
+
+.panel-control-product-ranges-history-detail {
+  display: grid;
+  gap: 0.18rem;
+  align-content: start;
+}
+
+.panel-control-product-ranges-history-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.panel-control-product-ranges-history-dot {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+.panel-control-product-ranges-history-dot--active {
+  background: #16a34a;
+}
+
+.panel-control-product-ranges-history-dot--inactive {
+  background: #dc2626;
+}
+
+.panel-control-product-operational-state-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #111827;
+  font-size: 2rem;
+  line-height: 1.08;
+  font-weight: 800;
+}
+
+.panel-control-product-operational-state-title > span:last-child {
+  color: inherit;
+}
+
+.panel-control-product-ranges-history-detail strong {
+  color: var(--on-surface);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.panel-control-product-ranges-history-detail small {
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.panel-control-product-ranges-history-user {
+  color: var(--tertiary);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.panel-control-calendar-history-card-meta time {
+  white-space: nowrap;
+  justify-self: center;
+  text-align: center;
+}
+
+.panel-control-calendar-ranges-list--modal {
+  margin-top: 1.25rem;
+}
+
+.panel-control-calendar-range-card {
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: #f8fbfc;
+  border: 1px solid rgba(15, 118, 110, 0.12);
+  color: var(--on-surface);
+  font-weight: 600;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.panel-control-calendar-range-card small {
+  color: var(--tertiary);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.panel-control-calendar-range-card--season {
+  background: linear-gradient(180deg, #fffaf0 0%, #fffbeb 100%);
+  border-color: rgba(245, 158, 11, 0.22);
+}
+
+.panel-control-calendar-range-card--season span {
+  color: #b45309;
+}
+
+.panel-control-calendar-loading,
+.panel-control-calendar-empty {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.panel-control-calendar-modal {
+  max-width: 34rem;
+}
+
+.panel-control-calendar-modal-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.panel-control-calendar-modal-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.panel-control-reservations-hero h1,
+.panel-control-reservation-detail-hero h1 {
+  margin: 0.2rem 0 0;
+  color: #ffffff;
+  font-size: clamp(1.55rem, 2.2vw, 2.2rem);
+}
+
+.panel-control-reservations-empty {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.panel-control-reservations-empty p {
+  margin: 0;
+  color: var(--tertiary);
+}
+
+.panel-control-reservations-table-shell {
+  display: grid;
+  gap: 0;
+}
+
+.panel-control-reservations-table-head,
+.panel-control-reservations-table-row {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.82fr) minmax(11.5rem, 1.24fr) minmax(8rem, 0.78fr) minmax(8rem, 0.82fr) minmax(8rem, 0.82fr) minmax(7.25rem, 0.72fr) minmax(6.75rem, 0.72fr);
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.panel-control-reservations-table-head {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.panel-control-reservations-table-head span {
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-reservations-table-body {
+  display: grid;
+}
+
+.panel-control-reservations-table-row {
+  text-decoration: none;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  color: inherit;
+  transition: background 180ms ease;
+}
+
+.panel-control-reservations-table-row:hover {
+  background: rgba(15, 118, 110, 0.03);
+}
+
+.panel-control-reservations-table-row div {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.panel-control-reservations-table-row strong {
+  color: var(--on-surface);
+  font-size: 0.9rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-control-reservations-table-row small {
+  color: var(--tertiary);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-control-reservations-modal {
+  max-width: 48rem;
+}
+
+.panel-control-reservations-form {
+  margin-top: 1rem;
+}
+
+.panel-control-calendar-modal-form select,
+.panel-control-reservations-form textarea {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background: #fff;
+  padding: 0.95rem 1rem;
+  font: inherit;
+  color: var(--on-surface);
+}
+
+.panel-control-reservations-form textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.panel-control-reservations-form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel-control-reservations-passengers {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.panel-control-reservations-passengers-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.panel-control-reservations-passengers-head strong {
+  color: var(--on-surface);
+}
+
+.panel-control-reservations-passengers-head button,
+.panel-control-reservations-passenger-remove {
+  border: none;
+  background: transparent;
+  color: #0f766e;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.panel-control-reservations-passenger-row {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(8rem, 0.7fr) auto;
+  align-items: end;
+  padding: 0.85rem 0.95rem;
+  border-radius: 1rem;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.panel-control-reservations-capacity-request,
+.panel-control-reservations-capacity-request-notice {
+  margin: 0;
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+}
+
+.panel-control-reservations-capacity-request {
+  display: grid;
+  gap: 0.65rem;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+}
+
+.panel-control-reservations-capacity-request strong {
+  color: #92400e;
+}
+
+.panel-control-reservations-capacity-request p {
+  margin: 0;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.panel-control-reservations-capacity-request-notice {
+  background: rgba(15, 118, 110, 0.1);
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.panel-control-capacity-requests-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-capacity-requests-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.panel-control-capacity-requests-header p {
+  margin: 0;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.panel-control-capacity-requests-header h2 {
+  margin: 0.35rem 0 0;
+  color: var(--on-surface);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+}
+
+.panel-control-capacity-requests-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.12);
+  color: #0f766e;
+  font-weight: 800;
+}
+
+.panel-control-capacity-requests-list {
+  display: grid;
+}
+
+.panel-control-capacity-requests-table-head,
+.panel-control-capacity-requests-row {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1.2fr) minmax(10rem, 1fr) minmax(10rem, 1fr) minmax(8rem, 0.8fr) minmax(12rem, 1fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.panel-control-capacity-requests-table-head {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.panel-control-capacity-requests-table-head span {
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-capacity-requests-table-body {
+  display: grid;
+}
+
+.panel-control-capacity-requests-row {
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.panel-control-capacity-requests-row > div {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.panel-control-capacity-requests-row strong {
+  color: var(--on-surface);
+  font-size: 0.92rem;
+}
+
+.panel-control-capacity-requests-row small {
+  color: var(--tertiary);
+  line-height: 1.45;
+}
+
+.panel-control-capacity-requests-actions {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: flex-start;
+}
+
+.panel-control-capacity-requests-action {
+  border: none;
+  border-radius: 999px;
+  padding: 0.72rem 1rem;
+  background: #0f766e;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.panel-control-capacity-requests-action--secondary {
+  background: rgba(239, 68, 68, 0.12);
+  color: #b91c1c;
+}
+
+.panel-control-capacity-requests-status-note {
+  color: var(--tertiary);
+  font-weight: 600;
+}
+
+.panel-control-capacity-decision-summary {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.1rem;
+  background: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.panel-control-capacity-decision-summary div {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.panel-control-capacity-decision-summary span {
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-capacity-decision-summary strong {
+  color: var(--on-surface);
+  font-size: 1rem;
+}
+
+.panel-control-capacity-decision-reason {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: rgba(15, 118, 110, 0.06);
+  border: 1px solid rgba(15, 118, 110, 0.14);
+}
+
+.panel-control-capacity-decision-reason strong {
+  color: #0f766e;
+}
+
+.panel-control-capacity-decision-reason p {
+  margin: 0;
+  color: var(--on-surface);
+  line-height: 1.55;
+}
+
+.panel-control-reservation-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(20rem, 0.9fr);
+  gap: 1rem;
+}
+
+.panel-control-reservation-detail-main,
+.panel-control-reservation-detail-sidebar {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-reservation-detail-history-block {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-reservation-detail-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.panel-control-reservation-detail-section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.panel-control-reservation-detail-section-head p {
+  margin: 0 0 0.25rem;
+  color: #c2410c;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.panel-control-reservation-detail-section-head small {
+  color: var(--tertiary);
+  max-width: 24rem;
+  line-height: 1.5;
+}
+
+.panel-control-reservation-detail-section h2 {
+  margin: 0;
+  color: var(--on-surface);
+  font-size: 1.08rem;
+}
+
+.panel-control-reservation-detail-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel-control-reservation-detail-grid div,
+.panel-control-reservation-detail-note,
+.panel-control-reservation-detail-list-card,
+.panel-control-reservation-detail-timeline-item {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.panel-control-reservation-detail-grid span,
+.panel-control-reservation-detail-note span {
+  color: var(--tertiary);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-reservation-detail-grid strong,
+.panel-control-reservation-detail-list-card strong,
+.panel-control-reservation-detail-timeline-item strong {
+  color: var(--on-surface);
+}
+
+.panel-control-reservation-detail-note p,
+.panel-control-reservation-detail-timeline-item p {
+  margin: 0;
+  color: var(--tertiary);
+  line-height: 1.5;
+}
+
+.panel-control-reservation-detail-list,
+.panel-control-reservation-detail-timeline {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.panel-control-reservation-detail-list-card,
+.panel-control-reservation-detail-timeline-item {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.panel-control-reservation-detail-list-card small,
+.panel-control-reservation-detail-timeline-item small,
+.panel-control-reservation-detail-timeline-item time {
+  color: var(--tertiary);
+}
+
+.panel-control-reservation-detail-sidebar-card {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-reservation-detail-status-block {
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 118, 110, 0.14);
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+.panel-control-reservation-detail-status-block--internal {
+  border-color: rgba(245, 158, 11, 0.2);
+  background: linear-gradient(180deg, rgba(255, 251, 235, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+.panel-control-reservation-detail-status-block span {
+  color: #c2410c;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+}
+
+.panel-control-reservation-detail-status-block strong {
+  color: var(--on-surface);
+  font-size: 1.3rem;
+}
+
+.panel-control-reservation-detail-status-block p {
+  margin: 0;
+  color: var(--tertiary);
+  line-height: 1.55;
+}
+
+.panel-control-reservation-detail-side-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.panel-control-reservation-detail-side-list div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.panel-control-reservation-detail-side-list span {
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-reservation-detail-side-list strong {
+  color: var(--on-surface);
+}
+
+.panel-control-reservation-status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.panel-control-reservation-status-chip.is-reserved {
+  color: #0f766e;
+  background: rgba(15, 118, 110, 0.14);
+}
+
+.panel-control-reservation-status-chip.is-issued {
+  color: #166534;
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.panel-control-reservation-status-chip.is-refund {
+  color: #9a3412;
+  background: rgba(249, 115, 22, 0.18);
+}
+
+.panel-control-reservation-status-chip.is-cancelled {
+  color: #991b1b;
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.panel-control-reservation-detail-timeline-item-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.panel-control-reservation-detail-timeline-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.panel-control-reservation-detail-timeline-badge.is-reserved,
+.panel-control-reservation-detail-timeline-badge.is-payment {
+  color: #0f766e;
+  background: rgba(15, 118, 110, 0.14);
+}
+
+.panel-control-reservation-detail-timeline-badge.is-issued {
+  color: #166534;
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.panel-control-reservation-detail-timeline-badge.is-refund {
+  color: #9a3412;
+  background: rgba(249, 115, 22, 0.18);
+}
+
+.panel-control-reservation-detail-timeline-badge.is-cancelled {
+  color: #991b1b;
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.panel-control-reservation-create-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(21rem, 0.95fr);
+  gap: 1rem;
+}
+
+.panel-control-reservation-create-passenger-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-reservation-create-passenger-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.panel-control-inline-notice {
+  margin-bottom: 1rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(248, 250, 252, 0.92);
+  color: var(--tertiary);
+}
+
+.panel-control-inline-notice--error {
+  border-color: rgba(220, 38, 38, 0.18);
+  background: rgba(254, 242, 242, 0.92);
+  color: #991b1b;
+}
+
+.panel-control-inline-notice--warning {
+  border-color: rgba(217, 119, 6, 0.22);
+  background: rgba(255, 247, 237, 0.96);
+  color: #9a3412;
+}
+
+.panel-control-group-capacity-modal {
+  max-width: 42rem;
+  width: min(42rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+.panel-control-group-capacity-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.7rem;
+}
+
+.panel-control-group-capacity-modal-grid--detail {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel-control-group-capacity-modal-card,
+.panel-control-group-capacity-modal-note {
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.75rem 0.8rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.panel-control-group-capacity-modal-card span {
+  color: var(--tertiary);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-group-capacity-modal-card strong,
+.panel-control-group-capacity-modal-note strong {
+  color: var(--on-surface);
+  font-size: 0.86rem;
+  line-height: 1.3;
+}
+
+.panel-control-group-capacity-modal-card small,
+.panel-control-group-capacity-modal-note p {
+  color: var(--tertiary);
+  line-height: 1.55;
+}
+
+.panel-control-group-capacity-modal-note p {
+  margin: 0;
+}
+
+.panel-control-group-capacity-modal-note--warning {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.18);
+}
+
+.panel-control-group-capacity-modal-filter {
+  margin-top: 1rem;
+}
+
+.panel-control-group-capacity-modal-filter label {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.panel-control-group-capacity-modal-filter span {
+  color: var(--tertiary);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.panel-control-group-capacity-modal-filter input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  background: #fff;
+  padding: 0.95rem 1rem;
+  font: inherit;
+  color: var(--on-surface);
+}
+
+@media (max-width: 1180px) {
+  .panel-control-calendar-summary-grid,
+  .panel-control-calendar-hero-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+.panel-control-group-capacity-modal-grid--detail {
+  grid-template-columns: 1fr;
+}
+
+  .panel-control-calendar-activation-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .panel-control-calendar-activation-banner-actions {
+    width: 100%;
+    justify-items: stretch;
+  }
+
+  .panel-control-calendar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-control-reservation-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .panel-control-calendar-hero {
+    flex-direction: column;
+  }
+
+  .panel-control-calendar-hero-actions {
+    width: 100%;
+    justify-items: stretch;
+  }
+
+  .panel-control-calendar-summary-grid,
+  .panel-control-calendar-hero-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-control-calendar-history-table-head {
+    display: none;
+  }
+
+  .panel-control-calendar-history-card {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
+
+  .panel-control-calendar-history-card-meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .panel-control-calendar-grid,
+  .panel-control-calendar-weekdays {
+    gap: 0.4rem;
+  }
+
+  .panel-control-calendar-day {
+    min-height: 5.4rem;
+    padding: 0.7rem 0.55rem;
+  }
+
+  .panel-control-calendar-day-meta {
+    font-size: 0.68rem;
+  }
+
+  .panel-control-reservations-table-head {
+    display: none;
+  }
+
+  .panel-control-capacity-requests-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .panel-control-capacity-requests-table-head {
+    display: none;
+  }
+
+  .panel-control-reservations-table-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .panel-control-capacity-requests-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .panel-control-reservations-form-grid,
+  .panel-control-reservation-detail-grid,
+  .panel-control-reservation-create-layout,
+  .panel-control-capacity-decision-summary,
+  .panel-control-reservations-passenger-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 980px) {
@@ -869,7 +2515,7 @@
   }
 
   .detalle-producto-admin-actions-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: flex-start;
   }
 
   .detalle-producto-admin-modal-actions {
@@ -915,7 +2561,7 @@
   }
 
   .detalle-producto-admin-actions-grid {
-    grid-template-columns: 1fr;
+    width: 100%;
   }
 
   .detalle-producto-hero-edit-head,
@@ -1320,6 +2966,21 @@ p {
   text-align: left;
   cursor: pointer;
   text-decoration: none;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+.header-notifications-item:hover {
+  transform: translateY(-1px);
+}
+
+.header-notifications-item--unread {
+  background: #f8fbff;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+}
+
+.header-notifications-item--read {
+  background: #f8fafc;
+  opacity: 0.78;
 }
 
 .header-notifications-item strong {
@@ -1354,6 +3015,27 @@ p {
 .header-notifications-event {
   background: #eef2f7;
   color: #4b5563;
+}
+
+.header-notifications-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.header-notifications-status--read {
+  background: #eef2f7;
+  color: #64748b;
+}
+
+.header-notifications-status--unread {
+  background: #dcfce7;
+  color: #15803d;
 }
 
 .header-notifications-event--high {
@@ -4143,7 +5825,7 @@ p {
 .detalle-producto-booking-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 2600;
   display: grid;
   place-items: center;
   padding: 1.5rem;
@@ -4490,6 +6172,39 @@ p {
   border: 3px solid #ffffff;
 }
 
+.panel-control-profile-avatar-action {
+  position: absolute;
+  right: -0.2rem;
+  bottom: -0.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.22);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.panel-control-profile-avatar-action:hover,
+.panel-control-profile-avatar-action:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  background: #0b5f64;
+  box-shadow: 0 14px 26px rgba(15, 118, 110, 0.28);
+}
+
+.panel-control-profile-avatar-action .material-icons-outlined {
+  font-size: 1.05rem;
+}
+
 .panel-control-profile-card h2 {
   font-size: 1.15rem;
   color: var(--on-surface);
@@ -4501,19 +6216,19 @@ p {
 }
 
 .panel-control-points-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
   margin-top: 1.2rem;
-  padding: 0.95rem 1rem;
+  padding: 0.85rem 1rem;
   border-radius: 0.85rem;
   background: #f4f6f9;
+  text-align: center;
 }
 
 .panel-control-points-card span {
   color: #6b7280;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -4521,7 +6236,13 @@ p {
 
 .panel-control-points-card strong {
   color: var(--primary);
-  font-size: 1.3rem;
+  display: block;
+  max-width: 100%;
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .panel-control-nav-card h3 {
@@ -4730,6 +6451,450 @@ p {
 
 .panel-control-products-page {
   gap: 1.4rem;
+}
+
+.panel-control-users-page {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.panel-control-users-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+  padding: 1.45rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.08), rgba(15, 118, 110, 0.1));
+  border: 1px solid rgba(14, 116, 144, 0.12);
+}
+
+.panel-control-users-hero-copy p,
+.panel-control-users-section-head p,
+.panel-control-users-guard p {
+  margin: 0;
+  color: #9a3412;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.panel-control-users-hero-copy h1,
+.panel-control-users-guard h1 {
+  margin: 0.3rem 0 0;
+  color: var(--on-surface);
+  font-size: clamp(1.7rem, 2.2vw, 2.15rem);
+  line-height: 1.12;
+}
+
+.panel-control-users-hero-copy span,
+.panel-control-users-guard span {
+  display: block;
+  max-width: 64ch;
+  margin-top: 0.55rem;
+  color: #667180;
+  line-height: 1.7;
+}
+
+.panel-control-users-hero-badge {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  min-width: 10rem;
+  padding: 1rem 1.2rem;
+  border-radius: 1.2rem;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.panel-control-users-hero-badge strong {
+  color: var(--on-surface);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.panel-control-users-hero-badge span {
+  color: #667180;
+  font-size: 0.82rem;
+}
+
+.panel-control-users-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.panel-control-users-overview-card {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1.15rem;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.panel-control-users-overview-card span {
+  color: #667180;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.panel-control-users-overview-card strong {
+  color: var(--on-surface);
+  font-size: 1.65rem;
+  line-height: 1.05;
+}
+
+.panel-control-users-overview-card p {
+  margin: 0;
+  color: #667180;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.panel-control-users-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.panel-control-users-form-card,
+.panel-control-users-table-card,
+.panel-control-users-guard {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-users-table-card {
+  min-width: 0;
+}
+
+.panel-control-users-section-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.panel-control-users-section-head h2 {
+  margin: 0.3rem 0 0;
+  color: var(--on-surface);
+  font-size: 1.35rem;
+}
+
+.panel-control-users-section-head small {
+  color: #667180;
+  font-size: 0.8rem;
+}
+
+.panel-control-users-section-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.panel-control-users-form,
+.panel-control-users-table-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-control-users-modal {
+  width: min(100%, 44rem);
+  max-height: min(92vh, 48rem);
+  overflow-y: auto;
+}
+
+.panel-control-users-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.panel-control-users-field {
+  display: grid;
+  gap: 0.42rem;
+  min-width: 0;
+}
+
+.panel-control-users-field--full,
+.panel-control-users-field--search {
+  grid-column: 1 / -1;
+}
+
+.panel-control-users-field > span {
+  color: #6f7783;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.panel-control-users-field input,
+.panel-control-users-field select {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 0.95rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: #ffffff;
+  color: var(--on-surface);
+  font: inherit;
+}
+
+.panel-control-users-field input[type="file"] {
+  min-height: auto;
+  padding: 0.7rem 0.95rem;
+}
+
+.panel-control-users-field input:focus,
+.panel-control-users-field select:focus {
+  outline: none;
+  border-color: rgba(15, 118, 110, 0.42);
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
+}
+
+.panel-control-users-feedback {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.panel-control-users-feedback--error {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.15);
+  color: #b42318;
+}
+
+.panel-control-users-feedback--success {
+  background: rgba(15, 118, 110, 0.08);
+  border: 1px solid rgba(15, 118, 110, 0.16);
+  color: #0f766e;
+}
+
+.panel-control-users-form-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.panel-control-users-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) repeat(2, minmax(10rem, 0.8fr));
+  gap: 0.9rem;
+}
+
+.panel-control-users-table-head,
+.panel-control-users-table-row {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(0, 0.9fr)
+    minmax(0, 1fr)
+    minmax(0, 1.05fr)
+    minmax(0, 0.85fr)
+    minmax(6.5rem, 0.7fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.panel-control-users-table-head {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.panel-control-users-table-head span {
+  color: var(--tertiary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  min-width: 0;
+}
+
+.panel-control-users-table-body {
+  display: grid;
+}
+
+.panel-control-users-table-shell {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.panel-control-users-table-head,
+.panel-control-users-table-body {
+  min-width: 100%;
+}
+
+.panel-control-users-table-row {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.panel-control-users-table-row:last-child {
+  border-bottom: none;
+}
+
+.panel-control-users-table-row > div {
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
+}
+
+.panel-control-users-table-row strong {
+  color: var(--on-surface);
+  font-size: 0.94rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.panel-control-users-table-row small {
+  color: #667180;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.panel-control-users-table-row time {
+  color: var(--on-surface);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.panel-control-users-row-actions {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: stretch;
+  align-self: center;
+}
+
+.panel-control-users-row-action {
+  width: 100%;
+  min-height: 2.2rem;
+  padding: 0 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: #ffffff;
+  color: var(--on-surface);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.panel-control-users-row-action:hover,
+.panel-control-users-row-action:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.3);
+  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.08);
+}
+
+.panel-control-users-row-action--primary {
+  background: rgba(15, 118, 110, 0.1);
+  border-color: rgba(15, 118, 110, 0.18);
+  color: #0f766e;
+}
+
+.panel-control-users-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.panel-control-users-detail-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(248, 250, 252, 0.8);
+}
+
+.panel-control-users-detail-card span {
+  color: #667180;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.panel-control-users-detail-card strong {
+  color: var(--on-surface);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.panel-control-users-photo-card {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: rgba(248, 250, 252, 0.8);
+}
+
+.panel-control-users-photo-card > span {
+  color: #6f7783;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.panel-control-users-photo-card img,
+.panel-control-users-detail-photo,
+.panel-control-profile-photo-preview {
+  width: 100%;
+  max-width: 8rem;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: #ffffff;
+}
+
+.panel-control-users-photo-card small {
+  color: #667180;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.panel-control-users-detail-card--photo {
+  justify-items: start;
+}
+
+.panel-control-profile-photo-modal {
+  width: min(100%, 32rem);
+}
+
+.panel-control-profile-photo-picker {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.panel-control-profile-photo-note {
+  margin: 0;
+  color: #667180;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.panel-control-users-guard {
+  padding: 1.4rem;
 }
 
 .panel-control-products-hero {
@@ -4950,6 +7115,11 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 2.35fr) repeat(2, minmax(10.5rem, 1fr));
   gap: 0.85rem;
+}
+
+.panel-control-reservations-filters-grid {
+  grid-template-columns: minmax(0, 2fr) repeat(3, minmax(11rem, 1fr));
+  align-items: end;
 }
 
 .panel-control-products-filter-field {
@@ -6407,6 +8577,89 @@ p {
   font-size: 0.8rem;
 }
 
+.panel-control-reservations-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.panel-control-reservations-hero-action-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.7rem;
+  padding: 0 1.35rem 0 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.panel-control-reservations-hero-action-button .material-icons-outlined {
+  font-size: 1rem;
+}
+
+.panel-control-reservations-hero-action-count {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  min-height: 1.55rem;
+  padding: 0 0.32rem;
+  border-radius: 999px;
+  background: #f97316;
+  border: 2px solid #f97316;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(249, 115, 22, 0.24);
+}
+
+.panel-control-capacity-requests-modal {
+  width: min(100%, 56rem);
+}
+
+.panel-control-capacity-requests-modal-list {
+  display: grid;
+  gap: 0.75rem;
+  max-height: min(26rem, 60vh);
+  overflow: auto;
+}
+
+.panel-control-capacity-requests-modal-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.panel-control-capacity-requests-modal-item > div {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.panel-control-capacity-requests-modal-item strong {
+  color: var(--on-surface);
+  font-size: 0.94rem;
+}
+
+.panel-control-capacity-requests-modal-item small {
+  color: var(--tertiary);
+  line-height: 1.45;
+}
+
+.panel-control-capacity-requests-modal-actions {
+  grid-column: 1 / -1;
+  padding-top: 0.2rem;
+}
+
 .panel-control-booking-arrow {
   color: #94a3b8;
   font-size: 1.25rem;
@@ -6685,6 +8938,43 @@ p {
     grid-template-columns: 1fr;
   }
 
+  .panel-control-users-hero,
+  .panel-control-users-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-control-users-overview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel-control-users-filters,
+  .panel-control-users-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-control-users-table-head {
+    display: none;
+  }
+
+  .panel-control-users-table-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    padding: 1rem 0;
+  }
+
+  .panel-control-users-row-actions {
+    justify-content: flex-start;
+  }
+
+  .panel-control-users-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-control-users-section-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .panel-control-products-overview-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -6775,6 +9065,16 @@ p {
   }
 
   .panel-control-products-hero {
+    padding: 1rem;
+  }
+
+  .panel-control-users-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-control-users-hero,
+  .panel-control-users-table-card,
+  .panel-control-users-guard {
     padding: 1rem;
   }
 
@@ -9142,5 +11442,628 @@ p {
 
   .destino-budget-card {
     padding: 1.6rem 1.2rem;
+  }
+}
+.panel-auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    radial-gradient(circle at top, rgba(0, 99, 91, 0.16), transparent 36%),
+    linear-gradient(180deg, #f7f2e8 0%, #f1eee7 100%);
+}
+
+.panel-auth-card {
+  width: min(100%, 520px);
+  padding: 32px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 80px rgba(32, 51, 56, 0.14);
+  border: 1px solid rgba(26, 73, 68, 0.1);
+}
+
+.panel-auth-card--state {
+  max-width: 560px;
+}
+
+.panel-auth-copy {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.panel-auth-copy p {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #0f6a63;
+  font-weight: 700;
+}
+
+.panel-auth-copy h1 {
+  margin: 0;
+  color: #12343a;
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.panel-auth-copy span {
+  color: #536a70;
+  line-height: 1.6;
+}
+
+.panel-auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.panel-auth-field {
+  display: grid;
+  gap: 8px;
+}
+
+.panel-auth-field span {
+  color: #23444a;
+  font-weight: 600;
+}
+
+.panel-auth-field input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(18, 52, 58, 0.14);
+  background: #fff;
+  color: #12343a;
+}
+
+.panel-auth-field input:focus {
+  outline: none;
+  border-color: #0f6a63;
+  box-shadow: 0 0 0 4px rgba(15, 106, 99, 0.14);
+}
+
+.panel-auth-error {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(174, 54, 40, 0.08);
+  color: #9a2c22;
+  font-size: 0.95rem;
+}
+
+.panel-auth-submit,
+.panel-control-signout-button {
+  border: none;
+  border-radius: 999px;
+  background: #12343a;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+}
+
+.panel-auth-submit {
+  padding: 14px 18px;
+}
+
+.panel-auth-submit:hover,
+.panel-control-signout-button:hover {
+  transform: translateY(-1px);
+  background: #0f6a63;
+}
+
+.panel-auth-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+}
+
+.panel-control-signout-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 11px 14px;
+  font-size: 0.92rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.lds-spinner {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: currentColor;
+}
+
+.lds-spinner-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  border: 3px solid currentColor;
+  border-right-color: transparent;
+  animation: lds-spin 0.78s linear infinite;
+  opacity: 0.92;
+}
+
+.lds-spinner--sm {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.lds-spinner--md {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.lds-spinner--lg {
+  width: 2.35rem;
+  height: 2.35rem;
+}
+
+.lds-loading-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  text-align: center;
+  color: #4d5a68;
+}
+
+.lds-loading-state-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.lds-loading-state-copy h2 {
+  margin: 0;
+  color: var(--on-surface);
+  font-size: 1.15rem;
+}
+
+.lds-loading-state-copy p {
+  margin: 0;
+  max-width: 42ch;
+  line-height: 1.6;
+}
+
+.lds-button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.lds-button-content .material-icons-outlined {
+  font-size: inherit;
+}
+
+.detalle-producto-admin-action:disabled,
+.panel-control-coupon-header-action:disabled,
+.panel-control-product-coupon-form-secondary:disabled,
+.panel-control-product-coupon-form-primary:disabled,
+.panel-auth-submit:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
+}
+
+.detail-loading-state,
+.results-loading-state,
+.panel-products-loading-state,
+.panel-auth-loading-state,
+.product-coupons-loading-state {
+  justify-items: center;
+}
+
+.panel-control-coupons-empty--error .material-icons-outlined,
+.results-grid-empty--error .material-icons-outlined {
+  color: #b42318;
+}
+
+@keyframes lds-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.detalle-producto-reservation-flow-modal {
+  width: min(100%, 56rem);
+  max-height: min(86vh, 56rem);
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  padding: 1.3rem 1.1rem 1.1rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: #ffffff;
+  box-shadow: 0 28px 64px rgba(15, 23, 42, 0.22);
+}
+
+.detalle-producto-reservation-flow-modal-scroll {
+  overflow-y: auto;
+  max-height: min(80vh, 51rem);
+  padding: 0.9rem 0.45rem 0 0.15rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(82, 97, 115, 0.35) transparent;
+}
+
+.detalle-producto-reservation-flow-modal-scroll::-webkit-scrollbar {
+  width: 0.55rem;
+}
+
+.detalle-producto-reservation-flow-modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.detalle-producto-reservation-flow-modal-scroll::-webkit-scrollbar-thumb {
+  background: rgba(82, 97, 115, 0.28);
+  border-radius: 999px;
+}
+
+.detalle-producto-reservation-flow-backdrop {
+  align-items: start;
+  padding-top: 4.5rem;
+  padding-bottom: 1.5rem;
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(5px);
+}
+
+.detalle-producto-reservation-flow-head {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.detalle-producto-reservation-flow-head p {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0f6a63;
+}
+
+.detalle-producto-reservation-flow-head h3 {
+  margin: 0;
+  color: #102a43;
+  font-size: clamp(1.55rem, 2.6vw, 2rem);
+  line-height: 1.08;
+  padding-right: 3rem;
+}
+
+.detalle-producto-reservation-flow-head span {
+  color: #526173;
+  line-height: 1.6;
+}
+
+.detalle-producto-reservation-flow-progress {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.4rem, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.4rem;
+}
+
+.detalle-producto-reservation-flow-progress-item {
+  display: grid;
+  gap: 0.15rem;
+  justify-items: center;
+  padding: 0.75rem 0.6rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(16, 42, 67, 0.12);
+  background: #f8fbfb;
+  color: #526173;
+}
+
+.detalle-producto-reservation-flow-progress-item strong,
+.detalle-producto-reservation-flow-progress-item small {
+  margin: 0;
+}
+
+.detalle-producto-reservation-flow-progress-item--active {
+  border-color: rgba(15, 106, 99, 0.36);
+  background: rgba(15, 106, 99, 0.08);
+  color: #0f6a63;
+}
+
+.detalle-producto-reservation-flow-progress-item--done {
+  border-color: rgba(35, 124, 73, 0.25);
+  background: rgba(35, 124, 73, 0.1);
+  color: #237c49;
+}
+
+.detalle-producto-reservation-flow-passenger-shell,
+.detalle-producto-reservation-summary-section,
+.detalle-producto-reservation-important-box,
+.detalle-producto-reservation-summary-locator,
+.detalle-producto-reservation-flow-state,
+.detalle-producto-reservation-capacity-request {
+  margin-top: 1.4rem;
+  padding: 1.15rem 1.2rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(16, 42, 67, 0.1);
+  background: #f9fbfd;
+}
+
+.detalle-producto-reservation-flow-loading-shell {
+  min-height: 18rem;
+  display: grid;
+  align-items: center;
+}
+
+.detalle-producto-reservation-flow-passenger-header,
+.detalle-producto-reservation-summary-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.detalle-producto-reservation-flow-passenger-header strong,
+.detalle-producto-reservation-summary-section-head strong,
+.detalle-producto-reservation-summary-locator strong,
+.detalle-producto-reservation-flow-state h3 {
+  color: #102a43;
+}
+
+.detalle-producto-reservation-flow-passenger-header small,
+.detalle-producto-reservation-summary-section-head small,
+.detalle-producto-reservation-summary-locator span,
+.detalle-producto-reservation-flow-state span,
+.detalle-producto-reservation-capacity-request small {
+  color: #526173;
+}
+
+.detalle-producto-reservation-flow-grid,
+.detalle-producto-reservation-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.detalle-producto-reservation-flow-grid label,
+.detalle-producto-reservation-summary-grid article {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.detalle-producto-reservation-flow-grid span,
+.detalle-producto-reservation-summary-grid span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #526173;
+}
+
+.detalle-producto-reservation-flow-grid input,
+.detalle-producto-reservation-flow-grid select {
+  width: 100%;
+  padding: 0.82rem 0.9rem;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(16, 42, 67, 0.14);
+  background: #fff;
+  color: #102a43;
+}
+
+.detalle-producto-reservation-summary-grid strong,
+.detalle-producto-reservation-summary-passengers strong,
+.detalle-producto-reservation-financial-list strong {
+  color: #102a43;
+}
+
+.detalle-producto-reservation-summary-grid small,
+.detalle-producto-reservation-summary-passengers small,
+.detalle-producto-reservation-financial-list span,
+.detalle-producto-reservation-capacity-request p,
+.detalle-producto-reservation-flow-state p {
+  color: #526173;
+}
+
+.detalle-producto-reservation-summary-locator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #102a43;
+  border-color: #102a43;
+}
+
+.detalle-producto-reservation-summary-locator span,
+.detalle-producto-reservation-summary-locator strong {
+  color: #fff;
+}
+
+.panel-control-reservation-expiration-modal-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+.panel-control-reservation-expiration-modal-summary div {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.panel-control-reservation-expiration-modal-summary span {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #526173;
+}
+
+.panel-control-reservation-expiration-modal-summary strong {
+  color: #102a43;
+}
+
+.detalle-producto-reservation-summary-passengers,
+.detalle-producto-reservation-financial-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.detalle-producto-reservation-summary-passengers article,
+.detalle-producto-reservation-financial-list div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(16, 42, 67, 0.08);
+}
+
+.detalle-producto-reservation-summary-passengers article:last-child,
+.detalle-producto-reservation-financial-list div:last-child {
+  border-bottom: none;
+}
+
+.detalle-producto-reservation-summary-passengers article > div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.detalle-producto-reservation-summary-passengers article button {
+  border: none;
+  background: transparent;
+  color: #0f6a63;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detalle-producto-reservation-financial-list {
+  font-size: 0.96rem;
+}
+
+.detalle-producto-reservation-financial-list-row--discount strong {
+  color: #0f8a5f;
+}
+
+.detalle-producto-reservation-financial-list-row--final {
+  font-size: 1.05rem;
+}
+
+.detalle-producto-reservation-financial-list-row--final strong {
+  color: #0f6a63;
+}
+
+.detalle-producto-reservation-important-box {
+  background: #fffaf1;
+  border-color: rgba(219, 128, 19, 0.22);
+}
+
+.detalle-producto-reservation-important-box--soft {
+  background: #f4fbf9;
+  border-color: rgba(15, 106, 99, 0.14);
+}
+
+.detalle-producto-reservation-important-box strong,
+.detalle-producto-reservation-capacity-request strong,
+.detalle-producto-reservation-flow-state h3 {
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.detalle-producto-reservation-important-box ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.55rem;
+  color: #29394a;
+  line-height: 1.6;
+}
+
+.detalle-producto-reservation-flow-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.detalle-producto-reservation-flow-state {
+  text-align: left;
+}
+
+.detalle-producto-reservation-flow-state p {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0f6a63;
+}
+
+.detalle-producto-reservation-flow-state h3 {
+  margin: 0 0 0.55rem;
+  font-size: 1.5rem;
+}
+
+.detalle-producto-reservation-flow-state span {
+  display: block;
+  line-height: 1.6;
+}
+
+.detalle-producto-reservation-capacity-request {
+  background: #fff7ed;
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+.detalle-producto-reservation-capacity-request p {
+  margin: 0 0 0.9rem;
+  line-height: 1.6;
+}
+
+.detalle-producto-reservation-capacity-request small {
+  display: block;
+  margin-top: 0.85rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .detalle-producto-reservation-flow-modal {
+    width: min(100%, calc(100vw - 1.2rem));
+    max-height: calc(100vh - 1.2rem);
+    padding: 1.4rem;
+  }
+
+  .detalle-producto-reservation-flow-grid,
+  .detalle-producto-reservation-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-producto-reservation-summary-locator,
+  .detalle-producto-reservation-flow-passenger-header,
+  .detalle-producto-reservation-summary-section-head,
+  .detalle-producto-reservation-summary-passengers article,
+  .detalle-producto-reservation-financial-list div,
+  .detalle-producto-reservation-flow-actions {
+    display: grid;
+  }
+
+  .panel-control-reservation-expiration-modal-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-producto-reservation-flow-actions {
+    grid-template-columns: 1fr;
   }
 }

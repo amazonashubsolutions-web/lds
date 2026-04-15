@@ -1,31 +1,29 @@
 import { Link } from "react-router-dom";
 
-import { getPanelProductCardItem } from "../../utils/panelControlProducts";
-
 function formatProductPrice(value) {
   return `$${new Intl.NumberFormat("es-CO").format(value)}`;
 }
 
 export default function ResultCard({ item, searchedDate = "" }) {
-  const cardItem = getPanelProductCardItem(item);
-  const isInactive = cardItem.status === "inactive";
-  const summaryLabel = `${formatProductPrice(cardItem.price)} ${cardItem.priceSuffix}`;
+  const isInactive = item.status === "inactive";
+  const summaryLabel = `${formatProductPrice(item.price)} ${item.priceSuffix}`;
   const statusLabel = isInactive ? "Inactivo" : "Activo";
   const statusBadgeClass = isInactive
     ? "panel-control-product-media-badge panel-control-product-media-badge--inactive"
     : "panel-control-product-media-badge panel-control-product-media-badge--active";
-  const categorySummary = cardItem.subcategoryLabels[0]
-    ? `${cardItem.categoryLabel} - ${cardItem.subcategoryLabels[0]}`
-    : cardItem.categoryLabel;
+  const categorySummary = item.subcategoryLabels?.[0]
+    ? `${item.categoryLabel} - ${item.subcategoryLabels[0]}`
+    : item.categoryLabel;
+  const detailRouteSegment = item.routeKey ?? item.id;
   const detailPath = searchedDate
-    ? `/detalle-producto/${cardItem.id}?fecha=${encodeURIComponent(searchedDate)}`
-    : `/detalle-producto/${cardItem.id}`;
+    ? `/detalle-producto/${detailRouteSegment}?fecha=${encodeURIComponent(searchedDate)}`
+    : `/detalle-producto/${detailRouteSegment}`;
 
   return (
     <article className="result-card panel-control-product-card">
       <div className="result-card-media panel-control-product-result-media">
-        <img src={cardItem.image} alt={cardItem.title} />
-        <span className="panel-control-product-media-id">#{cardItem.id}</span>
+        <img src={item.image} alt={item.title} />
+        <span className="panel-control-product-media-id">#{item.id}</span>
         <span className={statusBadgeClass}>{statusLabel}</span>
       </div>
 
@@ -33,17 +31,17 @@ export default function ResultCard({ item, searchedDate = "" }) {
         <p className="result-card-category">{categorySummary}</p>
 
         <div className="result-card-head panel-control-product-result-head">
-          <h3>{cardItem.title}</h3>
+          <h3>{item.title}</h3>
         </div>
 
         <div className="panel-control-product-result-meta">
           <div className="panel-control-product-result-meta-item">
             <span>Horario de salida</span>
-            <strong>{cardItem.departureTime}</strong>
+            <strong>{item.departureTime}</strong>
           </div>
           <div className="panel-control-product-result-meta-item">
             <span>Punto de encuentro</span>
-            <strong>{cardItem.departurePoint}</strong>
+            <strong>{item.departurePoint}</strong>
           </div>
         </div>
 

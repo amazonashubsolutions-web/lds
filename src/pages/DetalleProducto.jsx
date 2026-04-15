@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
+import LoadingState from "../components/common/LoadingState";
 import ProductCouponManager from "../components/detalle-producto/ProductCouponManager";
-import { getPanelProductItemById } from "../utils/panelControlProducts";
-import { getAllProductCouponRecords } from "../utils/productCouponsStorage";
 import { toProductCouponItem } from "../data/couponsData";
+import useProductCouponRecords from "../hooks/useProductCouponRecords";
 
 import ProductBookingCard from "../components/detalle-producto/ProductBookingCard";
 import ProductTransportBookingCard from "../components/detalle-producto/ProductTransportBookingCard";
@@ -26,18 +26,74 @@ import DetalleProductoHeader from "../components/detalle-producto/DetalleProduct
 import ProductSeasonDatesModal from "../components/detalle-producto/ProductSeasonDatesModal";
 import {
   footerData,
-  getDetalleProducto,
-  getRelatedProducts,
 } from "../data/detalleProductoData";
 import {
-  getResolvedProductStatus,
-  subscribeToProductStatusChanges,
-} from "../utils/productStatusStorage";
+  fetchPublicProductDetailFromSupabase,
+  fetchRelatedPublicProductsFromSupabase,
+} from "../services/products/publicCatalog";
 
 
 export default function DetalleProductoPage() {
   const { productId } = useParams();
-  const detail = getDetalleProducto(productId);
+  const [detail, setDetail] = useState(null);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(true);
+  const [detailLoadError, setDetailLoadError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoadingDetail(true);
+    setDetailLoadError("");
+    setDetail(null);
+
+    fetchPublicProductDetailFromSupabase(productId)
+      .then((nextDetail) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setDetail(nextDetail ?? null);
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setDetail(null);
+        setDetailLoadError(
+          error?.message ||
+            "No fue posible consultar esta ficha en Supabase. Revisa tu conexion e intenta de nuevo.",
+        );
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingDetail(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [productId]);
+
+  if (isLoadingDetail) {
+    return (
+      <div className="detalle-producto-page">
+        <DetalleProductoHeader couponCount={0} />
+        <main className="detalle-producto-main">
+          <section className="detalle-producto-unavailable">
+            <div className="detalle-producto-unavailable-card">
+              <LoadingState
+                className="detail-loading-state"
+                title="Estamos abriendo esta ficha desde Supabase"
+                description="Espera un momento mientras consultamos la informacion mas reciente del producto."
+              />
+            </div>
+          </section>
+        </main>
+        <Footer data={footerData} />
+      </div>
+    );
+  }
 
   if (!detail) {
     return (
@@ -46,11 +102,12 @@ export default function DetalleProductoPage() {
         <main className="detalle-producto-main">
           <section className="detalle-producto-unavailable">
             <div className="detalle-producto-unavailable-card">
-              <p>Producto no encontrado</p>
+              <p>{detailLoadError ? "No pudimos cargar el producto" : "Producto no encontrado"}</p>
               <h1>No pudimos abrir esta ficha</h1>
               <span>
-                El producto que intentas consultar no existe o ya no esta disponible
-                en el catalogo.
+                {detailLoadError
+                  ? detailLoadError
+                  : "El producto que intentas consultar no existe en Supabase o ya no esta disponible en el catalogo."}
               </span>
               <Link className="detalle-producto-unavailable-button" to="/resultados">
                 Volver a resultados
@@ -68,27 +125,46 @@ export default function DetalleProductoPage() {
 
 function DetalleProductoResolvedPage({ detail }) {
   const [searchParams] = useSearchParams();
-  const [, setStatusRefreshVersion] = useState(0);
   const [, setCouponRefreshKey] = useState(0);
   const [isSeasonDatesModalOpen, setIsSeasonDatesModalOpen] = useState(false);
+  const [relatedItems, setRelatedItems] = useState([]);
   const couponManagerRef = useRef(null);
-  const relatedItems = getRelatedProducts(detail.id);
   const searchedDate = searchParams.get("fecha") ?? "";
-  
-  const panelProduct = useMemo(() => getPanelProductItemById(detail.id), [detail.id]);
-  
-  const resolvedStatus = getResolvedProductStatus(detail.id, detail.status);
-  const isInactive = resolvedStatus === "inactive";
+  const {
+    couponRecords: productCouponRecords,
+    isLoadingCoupons,
+    refreshCoupons,
+  } = useProductCouponRecords({
+    productId: detail.id,
+    publicOnly: true,
+  });
 
-  const productCouponItems = getAllProductCouponRecords()
-    .filter((coupon) => coupon.productId === detail.id)
-    .map(toProductCouponItem);
+  const isInactive = detail.status === "inactive";
+
+  const productCouponItems = productCouponRecords.map(toProductCouponItem);
 
   useEffect(() => {
-    return subscribeToProductStatusChanges(() => {
-      setStatusRefreshVersion((current) => current + 1);
-    });
-  }, []);
+    let isMounted = true;
+
+    fetchRelatedPublicProductsFromSupabase({
+      currentProductId: detail.id,
+      categoryId: detail.categoryId,
+    })
+      .then((items) => {
+        if (isMounted) {
+          setRelatedItems(items);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setRelatedItems([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [detail.categoryId, detail.id]);
 
   return (
     <div className="detalle-producto-page">
@@ -142,17 +218,46 @@ function DetalleProductoResolvedPage({ detail }) {
                         key={`transport-booking-${detail.id}-${searchedDate || "sin-fecha"}`}
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
+                        productCoupons={productCouponRecords}
                         meta={detail.meta}
+                        productSummary={{
+                          id: detail.id,
+                          title: detail.title,
+                          city: detail.city,
+                          departureTime: Array.isArray(detail.meta)
+                            ? detail.meta.find(
+                                (item) => item.label === "Hora de salida",
+                              )?.value ?? ""
+                            : "",
+                        }}
                       />
                     ) : detail.categoryId === "restaurantes" ? (
                       <ProductRestaurantBookingCard
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
+                        productSummary={{
+                          id: detail.id,
+                          title: detail.title,
+                          city: detail.city,
+                          departureTime: Array.isArray(detail.meta)
+                            ? detail.meta.find(
+                                (item) => item.label === "Horario",
+                              )?.value ?? ""
+                            : "",
+                        }}
                       />
                     ) : detail.categoryId === "excursiones" ? (
                       <ProductExcursionBookingCard
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
+                        productSummary={{
+                          id: detail.id,
+                          title: detail.title,
+                          city: detail.city,
+                          departureTime:
+                            detail.meta?.find((item) => item.label === "Hora de salida")?.value ??
+                            "",
+                        }}
                         comfortLevel={
                           detail.subcategoryIds?.includes("excursion-confort") ? "confort" :
                           detail.subcategoryIds?.includes("excursion-fuera-de-confort") ? "aventura" :
@@ -163,12 +268,31 @@ function DetalleProductoResolvedPage({ detail }) {
                       <ProductPlanBookingCard
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
+                        productSummary={{
+                          id: detail.id,
+                          title: detail.title,
+                          city: detail.city,
+                          departureTime:
+                            detail.meta?.find((item) => item.label === "Hora de salida")?.value ??
+                            "",
+                        }}
                       />
                     ) : (
                       <ProductBookingCard
                         key={`activity-booking-${detail.id}-${searchedDate || "sin-fecha"}`}
                         booking={detail.booking}
                         initialTravelDate={searchedDate}
+                        productCoupons={productCouponRecords}
+                        productSummary={{
+                          id: detail.id,
+                          title: detail.title,
+                          city: detail.city,
+                          departureTime: Array.isArray(detail.meta)
+                            ? detail.meta.find(
+                                (item) => item.label === "Hora de salida",
+                              )?.value ?? ""
+                            : "",
+                        }}
                       />
                     )}
                   </div>
@@ -187,9 +311,13 @@ function DetalleProductoResolvedPage({ detail }) {
         ref={couponManagerRef}
         productName={detail.title}
         productImage={detail.galleryImages[0] ?? "/images/home/1.jpg"}
-        panelProduct={panelProduct}
+        panelProduct={null}
         productCouponItems={productCouponItems}
-        onCouponCreated={() => setCouponRefreshKey((k) => k + 1)}
+        isCouponsLoading={isLoadingCoupons}
+        onCouponCreated={() => {
+          setCouponRefreshKey((k) => k + 1);
+          refreshCoupons();
+        }}
       />
 
       {isSeasonDatesModalOpen ? (

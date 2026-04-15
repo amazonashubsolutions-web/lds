@@ -5,8 +5,8 @@ import ProductCouponsModal from "./ProductCouponsModal";
 import {
   createProductCouponDraft,
   createProductCouponRecord,
-  persistProductCouponRecord,
 } from "../../utils/productCouponsStorage";
+import { upsertProductCouponInSupabase } from "../../services/coupons/productCoupons";
 
 const ProductCouponManager = forwardRef(
   (
@@ -15,6 +15,7 @@ const ProductCouponManager = forwardRef(
       productName,
       productImage,
       productCouponItems,
+      isCouponsLoading = false,
       onCouponCreated,
     },
     ref,
@@ -24,6 +25,7 @@ const ProductCouponManager = forwardRef(
     const [couponSuccess, setCouponSuccess] = useState(null);
     const [isDiscountValueFocused, setIsDiscountValueFocused] = useState(false);
     const [isCouponsModalOpen, setIsCouponsModalOpen] = useState(false);
+    const [isSubmittingCoupon, setIsSubmittingCoupon] = useState(false);
 
     useEffect(() => {
       if (!couponForm && !couponSuccess && !isCouponsModalOpen) {
@@ -207,7 +209,7 @@ const ProductCouponManager = forwardRef(
       });
     }
 
-    function handleCouponSubmit(event) {
+    async function handleCouponSubmit(event) {
       event.preventDefault();
 
       if (!couponForm) {
@@ -261,16 +263,27 @@ const ProductCouponManager = forwardRef(
         return;
       }
 
-      persistProductCouponRecord(nextCoupon);
-      setCouponSuccess({
-        couponId: nextCoupon.id,
-        couponName: nextCoupon.code,
-        productName: couponForm.subjectName,
-      });
-      closeCouponModal();
+      try {
+        setIsSubmittingCoupon(true);
+        const savedCoupon = await upsertProductCouponInSupabase(nextCoupon);
 
-      if (onCouponCreated) {
-        onCouponCreated();
+        setCouponSuccess({
+          couponId: savedCoupon.id,
+          couponName: savedCoupon.code,
+          productName: couponForm.subjectName,
+        });
+        closeCouponModal();
+
+        if (onCouponCreated) {
+          onCouponCreated(savedCoupon);
+        }
+      } catch (error) {
+        setCouponError(
+          error.message ||
+            "No fue posible guardar el cupon en Supabase. Intenta de nuevo.",
+        );
+      } finally {
+        setIsSubmittingCoupon(false);
       }
     }
 
@@ -292,6 +305,7 @@ const ProductCouponManager = forwardRef(
             onRuleConditionBlur={handleRuleConditionBlur}
             onClose={closeCouponModal}
             onSubmit={handleCouponSubmit}
+            isSubmitting={isSubmittingCoupon}
           />
         )}
 
@@ -305,6 +319,7 @@ const ProductCouponManager = forwardRef(
           productName={productName}
           productImage={productImage}
           items={productCouponItems}
+          isLoading={isCouponsLoading}
           onClose={closeCouponsModal}
         />
       </>

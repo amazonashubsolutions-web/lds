@@ -1,19 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import PrimaryHeader from "../components/layout/PrimaryHeader";
 import DashboardProductsSection from "../components/panel-control/DashboardProductsSection";
 import DashboardSidebar from "../components/panel-control/DashboardSidebar";
 import Footer from "../components/resultados/Footer";
+import { usePanelSession } from "../contexts/PanelSessionContext";
 import {
   footerData,
   panelControlMenu,
   panelControlProfile,
 } from "../data/panelControlData";
 import { resultCategories } from "../data/resultadosData";
-import { getPanelProductItems } from "../utils/panelControlProducts";
-import { subscribeToCreatedProductChanges } from "../utils/createdProductsRepository";
-import { subscribeToProductStatusChanges } from "../utils/productStatusStorage";
+import { fetchAdminPanelProductItemsFromSupabase } from "../services/products/adminCatalog";
 
 const ALL_CATEGORY_FILTER = "all";
 const ALL_STATUS_FILTER = "all";
@@ -30,13 +28,13 @@ function normalizeValue(value) {
 }
 
 export default function PanelControlProductsPage() {
-  const navigate = useNavigate();
+  const { profile, isProfileLoading } = usePanelSession();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(ALL_CATEGORY_FILTER);
   const [selectedStatus, setSelectedStatus] = useState(ALL_STATUS_FILTER);
-  const [, setDataRefreshVersion] = useState(0);
-
-  const productItems = getPanelProductItems();
+  const [productItems, setProductItems] = useState([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const [productsLoadError, setProductsLoadError] = useState("");
   const normalizedSearchTerm = normalizeValue(searchTerm);
   const filteredProductItems = useMemo(
     () =>
@@ -83,18 +81,39 @@ export default function PanelControlProductsPage() {
     normalizedSearchTerm.length > 0 ||
     selectedCategory !== ALL_CATEGORY_FILTER ||
     selectedStatus !== ALL_STATUS_FILTER;
+  const canAccessProductsPanel =
+    profile?.role === "super_user" || profile?.agency?.agency_type === "provider";
 
   useEffect(() => {
-    const triggerRefresh = () => {
-      setDataRefreshVersion((current) => current + 1);
-    };
+    let isMounted = true;
+    setIsLoadingProducts(true);
+    setProductsLoadError("");
 
-    const unsubscribeCreatedProducts = subscribeToCreatedProductChanges(triggerRefresh);
-    const unsubscribeProductStatus = subscribeToProductStatusChanges(triggerRefresh);
+    fetchAdminPanelProductItemsFromSupabase()
+      .then((items) => {
+        if (!isMounted || !Array.isArray(items)) {
+          return;
+        }
+
+        setProductItems(items);
+      })
+      .catch((error) => {
+        if (isMounted) {
+          setProductItems([]);
+          setProductsLoadError(
+            error?.message ||
+              "No fue posible consultar los productos en Supabase. Verifica la sesion o la conexion e intenta de nuevo.",
+          );
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingProducts(false);
+        }
+      });
 
     return () => {
-      unsubscribeCreatedProducts();
-      unsubscribeProductStatus();
+      isMounted = false;
     };
   }, []);
 
@@ -102,6 +121,35 @@ export default function PanelControlProductsPage() {
     setSearchTerm("");
     setSelectedCategory(ALL_CATEGORY_FILTER);
     setSelectedStatus(ALL_STATUS_FILTER);
+  }
+
+  if (!isProfileLoading && !canAccessProductsPanel) {
+    return (
+      <div className="panel-control-page">
+        <PrimaryHeader />
+
+        <main className="panel-control-main">
+          <div className="panel-control-layout">
+            <DashboardSidebar menu={panelControlMenu} profile={panelControlProfile} />
+
+            <section className="panel-control-content panel-control-products-page">
+              <section className="detalle-producto-unavailable">
+                <div className="detalle-producto-unavailable-card">
+                  <p>Acceso restringido</p>
+                  <h1>Este modulo solo aplica para agencias proveedoras</h1>
+                  <span>
+                    Los usuarios de agencias vendedoras no gestionan productos
+                    desde este panel.
+                  </span>
+                </div>
+              </section>
+            </section>
+          </div>
+        </main>
+
+        <Footer data={footerData} />
+      </div>
+    );
   }
 
   return (
@@ -139,18 +187,6 @@ export default function PanelControlProductsPage() {
                 </div>
               </div>
 
-              <div className="panel-control-products-hero-action">
-                  <button
-                    type="button"
-                    className="panel-control-products-create panel-control-products-create--hero"
-                    onClick={() => navigate("/panel-de-control/productos/nuevo")}
-                  >
-                  <span className="material-icons-outlined" aria-hidden="true">
-                    add
-                  </span>
-                  <span>Crear producto</span>
-                </button>
-              </div>
             </header>
 
             <section className="panel-control-products-overview-grid">
@@ -243,7 +279,12 @@ export default function PanelControlProductsPage() {
               </div>
             </section>
 
-            <DashboardProductsSection items={filteredProductItems} totalItems={productItems.length} />
+            <DashboardProductsSection
+              items={filteredProductItems}
+              totalItems={productItems.length}
+              isLoading={isLoadingProducts}
+              errorMessage={productsLoadError}
+            />
           </section>
         </div>
       </main>

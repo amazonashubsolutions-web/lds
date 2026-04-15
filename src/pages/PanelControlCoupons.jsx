@@ -65,12 +65,15 @@ export default function PanelControlCouponsPage() {
     handleStartsAtBlur,
     handleToggleProductCouponStatus,
     isDiscountValueFocused,
+    isLoadingCoupons,
+    isSubmittingCoupon,
     openEditCouponModal,
     searchTerm,
     setActiveTab,
     setSearchTerm,
     setStatusFilter,
     showProductFilterNotice,
+    statusActionCouponId,
     statusFilter,
   } = usePanelCoupons({
     clientCoupons: panelControlClientCoupons,
@@ -164,10 +167,17 @@ export default function PanelControlCouponsPage() {
               <DashboardCouponsSection
                 columns={productCouponColumns}
                 description="Crea, revisa y monitorea cupones asociados a experiencias turisticas. "
-                emptyMessage="No encontramos cupones de producto con esos criterios."
+                emptyMessage={
+                  couponTabs[0]?.count === 0
+                    ? "Todavia no hay cupones de producto cargados en Supabase."
+                    : "No encontramos cupones de producto con esos criterios."
+                }
+                errorMessage={activeTab === "products" ? couponError : ""}
+                isLoading={isLoadingCoupons}
                 items={filteredProductCoupons}
                 onEditItem={openEditCouponModal}
                 onToggleStatusItem={handleToggleProductCouponStatus}
+                statusActionItemId={statusActionCouponId}
                 summaryPrimaryKey="productName"
                 summarySecondaryKey="couponName"
                 title="Cupones para Productos"
@@ -207,6 +217,7 @@ export default function PanelControlCouponsPage() {
         onRuleConditionBlur={handleRuleConditionBlur}
         onClose={closeCouponModal}
         onSubmit={handleCouponSubmit}
+        isSubmitting={isSubmittingCoupon}
       />
 
       <CouponStatusFeedbackModal

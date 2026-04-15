@@ -9,9 +9,11 @@ import ProductGalleryEditor from "../components/detalle-producto/ProductGalleryE
 import ProductMagicAiModal from "../components/detalle-producto/ProductMagicAiModal";
 import ProductPlanMagicAiModal from "../components/detalle-producto/ProductPlanMagicAiModal";
 import ProductTransportMagicAiModal from "../components/detalle-producto/ProductTransportMagicAiModal";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 import PrimaryHeader from "../components/layout/PrimaryHeader";
 import ProductRestaurantMagicAiModal from "../components/modals/ProductRestaurantMagicAiModal";
 import Footer from "../components/resultados/Footer";
+import { usePanelSession } from "../contexts/PanelSessionContext";
 import { footerData } from "../data/panelControlData";
 import { productCategories } from "../data/productsData";
 import useProductCreateForm from "../hooks/useProductCreateForm";
@@ -26,6 +28,7 @@ import { mapWizardImagesToGallerySlots } from "../utils/productCreateDraft";
 
 export default function PanelControlProductCreatePage() {
   const navigate = useNavigate();
+  const { profile, isProfileLoading } = usePanelSession();
   const [isMagicModalOpen, setIsMagicModalOpen] = useState(true);
   const [isTransportMagicModalOpen, setIsTransportMagicModalOpen] = useState(false);
   const [isRestaurantMagicModalOpen, setIsRestaurantMagicModalOpen] = useState(false);
@@ -55,6 +58,7 @@ export default function PanelControlProductCreatePage() {
     removeObjectListItem,
     removeStringListItem,
     requiresActivityTimes,
+    isSavingProduct,
     selectedGallerySlot,
     setActiveBlock,
     setDraft,
@@ -71,6 +75,54 @@ export default function PanelControlProductCreatePage() {
     onSuccessNavigate: (productId) =>
       navigate(`/panel-de-control/productos/${productId}`, { replace: true }),
   });
+  const canCreateProducts =
+    profile?.role === "super_user" || profile?.role === "agency_admin";
+
+  if (isProfileLoading) {
+    return (
+      <div className="detalle-producto-page detalle-producto-page--admin">
+        <main className="detalle-producto-main">
+          <section className="detalle-producto-unavailable">
+            <div className="detalle-producto-unavailable-card">
+              <LoadingSpinner label="Validando permisos" size="lg" />
+            </div>
+          </section>
+        </main>
+
+        <Footer data={footerData} />
+      </div>
+    );
+  }
+
+  if (!canCreateProducts) {
+    return (
+      <div className="detalle-producto-page detalle-producto-page--admin">
+        <PrimaryHeader />
+
+        <main className="detalle-producto-main">
+          <section className="detalle-producto-unavailable">
+            <div className="detalle-producto-unavailable-card">
+              <p>Accion no disponible</p>
+              <h1>No tienes permisos para crear productos</h1>
+              <span>
+                Solo un admin de agencia proveedora o un super user de LDS puede
+                crear productos en el panel de control.
+              </span>
+              <button
+                type="button"
+                className="detalle-producto-unavailable-button"
+                onClick={() => navigate("/panel-de-control/productos")}
+              >
+                Volver a productos
+              </button>
+            </div>
+          </section>
+        </main>
+
+        <Footer data={footerData} />
+      </div>
+    );
+  }
 
   function applyWizardImages(images) {
     if (!Array.isArray(images) || images.length === 0) {
@@ -310,17 +362,25 @@ export default function PanelControlProductCreatePage() {
                   type="button"
                   className="detalle-producto-admin-action"
                   onClick={handleSaveProduct}
+                  disabled={isSavingProduct}
                 >
-                  <span className="material-icons-outlined" aria-hidden="true">
-                    save
+                  <span className="lds-button-content">
+                    {isSavingProduct ? (
+                      <LoadingSpinner label="Guardando producto" size="sm" />
+                    ) : (
+                      <span className="material-icons-outlined" aria-hidden="true">
+                        save
+                      </span>
+                    )}
+                    <span>{isSavingProduct ? "Guardando..." : "Guardar producto"}</span>
                   </span>
-                  <span>Guardar producto</span>
                 </button>
 
                 <button
                   type="button"
                   className="detalle-producto-admin-action detalle-producto-admin-action--danger"
                   onClick={handleCancel}
+                  disabled={isSavingProduct}
                 >
                   <span className="material-icons-outlined" aria-hidden="true">
                     close

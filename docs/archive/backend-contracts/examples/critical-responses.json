@@ -1,0 +1,127 @@
+﻿{
+  "reservationsList": {
+    "meta": {
+      "page": 1,
+      "pageSize": 20,
+      "total": 2,
+      "groupedByProduct": [
+        {
+          "productId": "70c85f1b-cf3c-4ef7-8260-8765d8b72001",
+          "productName": "Tour Etnotur",
+          "count": 1
+        }
+      ]
+    },
+    "data": [
+      {
+        "id": "70c85f1b-cf3c-4ef7-8260-8765d8b75001",
+        "locator": "HMK54R",
+        "status": "issued",
+        "travelDate": "2026-07-20",
+        "totalAmount": 750000,
+        "currency": "COP"
+      }
+    ]
+  },
+  "reservationDetail": {
+    "data": {
+      "id": "70c85f1b-cf3c-4ef7-8260-8765d8b75001",
+      "locator": "HMK54R",
+      "status": "issued",
+      "product": {
+        "name": "Tour Etnotur",
+        "city": "Leticia",
+        "travelDate": "2026-07-20",
+        "embarkTime": "08:00"
+      },
+      "passengers": [
+        {
+          "fullName": "Andrea Rios",
+          "passengerType": "ADT",
+          "status": "active"
+        }
+      ],
+      "financial": {
+        "paymentType": "online",
+        "paymentStatus": "paid",
+        "totalAmount": 750000,
+        "currency": "COP"
+      }
+    }
+  },
+  "couponDetail": {
+    "data": {
+      "code": "CPN-2026-0001",
+      "status": "active",
+      "reservation": {
+        "locator": "HMK54R",
+        "productName": "Tour Etnotur"
+      },
+      "economic": {
+        "originalProductAmount": 200000,
+        "appliedPenaltyAmount": 50000,
+        "availableBalance": 150000,
+        "currency": "COP"
+      }
+    }
+  },
+  "refundDetail": {
+    "data": {
+      "code": "REF-2026-0001",
+      "status": "por_pagar",
+      "reservation": {
+        "locator": "HMK54R",
+        "productName": "Tour Etnotur",
+        "passengerName": "Andrea Rios"
+      },
+      "economic": {
+        "originalProductAmount": 200000,
+        "cancellationPenaltyAmount": 50000,
+        "refundFeeAmount": 50000,
+        "refundTotalAmount": 100000,
+        "currency": "COP"
+      }
+    }
+  },
+  "passengerListDetail": {
+    "data": {
+      "product": {
+        "name": "Tour Etnotur"
+      },
+      "date": "2026-07-20",
+      "status": "check_in",
+      "passengers": [
+        {
+          "reservationLocator": "HMK54R",
+          "fullName": "Andrea Rios",
+          "itemStatus": "pending",
+          "actions": {
+            "canOpenReservation": true,
+            "canCheckIn": true
+          }
+        }
+      ]
+    }
+  },
+  "allianceDetail": {
+    "data": {
+      "providerAgency": "Amazon River Tours",
+      "sellerAgency": "Viajes Selva Viva",
+      "facturadoLimit": 500000,
+      "currentBalance": 400000,
+      "status": "active",
+      "movements": [
+        {
+          "movementType": "payment",
+          "movementDate": "2026-07-21",
+          "amount": 150000,
+          "balanceAfter": 400000,
+          "viewTarget": {
+            "type": "receipt",
+            "id": "receipt-1011"
+          }
+        }
+      ]
+    }
+  }
+}

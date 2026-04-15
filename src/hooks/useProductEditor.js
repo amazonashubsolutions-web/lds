@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   createProductGallerySlots,
-  persistProductGallery,
 } from "../utils/productGalleryRepository";
-import { persistProductDetailContent } from "../utils/productDetailContentRepository";
+import { updateProductEditorialContentInSupabase } from "../services/products/adminMutations";
 
 function cloneBookingPriceItems(items = []) {
   return items.map((item) => ({ ...item }));
@@ -91,7 +90,25 @@ function sanitizePriceValue(value) {
   return String(value ?? "").replace(/\D/g, "");
 }
 
-export function useProductEditor(detail) {
+function buildSavedDetail(detail, contentDraft, nextImages) {
+  return {
+    ...detail,
+    title: contentDraft.title,
+    summary: contentDraft.summary,
+    overview: [...contentDraft.overview],
+    itinerary: contentDraft.itinerary.map((item) => ({ ...item })),
+    includes: contentDraft.includes.map((item) => ({ ...item })),
+    excludes: contentDraft.excludes.map((item) => ({ ...item })),
+    recommendations: [...contentDraft.recommendations],
+    considerations: [...contentDraft.considerations],
+    cancellationPolicies: [...contentDraft.cancellationPolicies],
+    booking: cloneBookingData(contentDraft.booking),
+    galleryEntries: nextImages.map((image) => ({ ...image })),
+    galleryImages: nextImages.map((image) => image.url),
+  };
+}
+
+export function useProductEditor(detail, { onSaveSuccess } = {}) {
   const [isEditingProduct, setIsEditingProduct] = useState(false);
   const [gallerySlots, setGallerySlots] = useState(() =>
     createProductGallerySlots(detail.galleryEntries),
@@ -103,6 +120,7 @@ export function useProductEditor(detail) {
   const [activeContentBlock, setActiveContentBlock] = useState(null);
   const [galleryEditorMessage, setGalleryEditorMessage] = useState("");
   const [galleryEditorMessageType, setGalleryEditorMessageType] = useState("");
+  const [isSavingProduct, setIsSavingProduct] = useState(false);
 
   const releaseGalleryPreviewUrls = useCallback((slots) => {
     slots.forEach((slot) => {
@@ -432,7 +450,11 @@ export function useProductEditor(detail) {
   );
 
   const handleSaveGallery = useCallback(
-    () => {
+    async () => {
+      if (isSavingProduct) {
+        return;
+      }
+
       const nextImages = gallerySlots
         .map((slot) =>
           slot.image?.url?.trim()
@@ -448,30 +470,39 @@ export function useProductEditor(detail) {
         .filter(Boolean);
 
       try {
-        persistProductGallery(detail.id, nextImages);
-        persistProductDetailContent(detail.id, contentDraft);
+        setIsSavingProduct(true);
+        await updateProductEditorialContentInSupabase({
+          detail,
+          contentDraft,
+          galleryImages: nextImages,
+        });
+
+        const nextDetail = buildSavedDetail(detail, contentDraft, nextImages);
+
         releaseGalleryPreviewUrls(gallerySlots);
         setGalleryEditorMessage("Producto actualizado correctamente.");
         setGalleryEditorMessageType("success");
         closeEditProductMode({
           nextGallerySlots: createProductGallerySlots(nextImages),
-          nextContentDraft: createEditableContentDraft({
-            ...detail,
-            ...contentDraft,
-            galleryEntries: nextImages,
-          }),
+          nextContentDraft: createEditableContentDraft(nextDetail),
         });
-      } catch {
+        onSaveSuccess?.(nextDetail);
+      } catch (error) {
         setGalleryEditorMessage(
-          "No fue posible guardar los cambios del producto. Intenta de nuevo.",
+          error.message ||
+            "No fue posible guardar los cambios del producto. Intenta de nuevo.",
         );
         setGalleryEditorMessageType("error");
+      } finally {
+        setIsSavingProduct(false);
       }
     },
     [
+      onSaveSuccess,
       detail,
       gallerySlots,
       contentDraft,
+      isSavingProduct,
       releaseGalleryPreviewUrls,
       closeEditProductMode,
     ],
@@ -512,6 +543,7 @@ export function useProductEditor(detail) {
     activeContentBlock,
     galleryEditorMessage,
     galleryEditorMessageType,
+    isSavingProduct,
     setIsEditingProduct,
     setGallerySlots,
     setSelectedGallerySlot,

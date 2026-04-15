@@ -4,7 +4,7 @@ import {
   getCouponDiscountTargetLabel,
   normalizeCouponDiscountTarget,
 } from "../data/couponsData";
-import { getAllProductCouponRecords } from "./productCouponsStorage";
+import { isSameProductId } from "./productIds";
 
 const PASSENGER_COUNT_KEYS = {
   adult: ["adult", "adults"],
@@ -197,7 +197,7 @@ export function evaluateProductCouponForBooking({
 
   const normalizedTotalAmount = toNumericValue(totalAmount);
   const matchesProduct =
-    !productId || Number(coupon.productId) === Number(productId);
+    !productId || isSameProductId(coupon.productId, productId);
   const isActive = coupon.status === "active";
   const needsTravelDate = Boolean(coupon.startsAt || coupon.endsAt);
   const isTravelDateValid = matchesCouponTravelDate(coupon, travelDate);
@@ -256,13 +256,13 @@ export function evaluateProductCouponForBooking({
 export function getDateAvailableProductCoupons({
   productId,
   travelDate,
-  coupons = getAllProductCouponRecords(),
+  coupons = [],
 }) {
   return coupons.filter(
     (coupon) =>
       coupon.scope === "product" &&
       coupon.status === "active" &&
-      (!productId || Number(coupon.productId) === Number(productId)) &&
+      (!productId || isSameProductId(coupon.productId, productId)) &&
       matchesCouponTravelDate(coupon, travelDate),
   );
 }
@@ -273,13 +273,13 @@ export function getProductCouponEvaluationsForBooking({
   passengerSubtotals,
   travelDate,
   totalAmount,
-  coupons = getAllProductCouponRecords(),
+  coupons = [],
 }) {
   return coupons
     .filter(
       (coupon) =>
         coupon.scope === "product" &&
-        (!productId || Number(coupon.productId) === Number(productId)),
+        (!productId || isSameProductId(coupon.productId, productId)),
     )
     .map((coupon) =>
       evaluateProductCouponForBooking({
@@ -314,7 +314,7 @@ export function getBestProductCouponEvaluationForBooking(input) {
   );
 }
 
-export function findProductCouponByCode(code, productId) {
+export function findProductCouponByCode(code, productId, coupons = []) {
   const normalizedCode = String(code ?? "").trim().toUpperCase();
 
   if (!normalizedCode) {
@@ -322,11 +322,11 @@ export function findProductCouponByCode(code, productId) {
   }
 
   return (
-    getAllProductCouponRecords().find(
+    (coupons ?? []).find(
       (coupon) =>
         coupon.scope === "product" &&
         coupon.code === normalizedCode &&
-        (!productId || Number(coupon.productId) === Number(productId)),
+        (!productId || isSameProductId(coupon.productId, productId)),
     ) ?? null
   );
 }

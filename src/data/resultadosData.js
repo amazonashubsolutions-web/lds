@@ -1,7 +1,7 @@
 import {
   getResultsCardsFromCatalog,
   resultCategoriesFromCatalog,
-} from "./productsData";
+} from "./productsData.js";
 
 export const ALL_RESULTS_CATEGORY_ID = "all";
 

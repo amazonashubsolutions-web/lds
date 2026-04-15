@@ -1,9 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { notificationEventLabels } from "../../data/notificationsData";
 import {
-  headerNotifications,
-  notificationEventLabels,
-} from "../../data/notificationsData";
+  fetchMyNotifications,
+  markNotificationAsReadInSupabase,
+  subscribeToNotificationRead,
+} from "../../services/notifications/notificationsService.js";
+
+function getRelativeTime(dateString) {
+  if (!dateString) return "";
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const diffMins = Math.round(diffMs / 60000);
+  if (diffMins < 1) return `Hace un momento`;
+  if (diffMins < 60) return `Hace ${diffMins} min${diffMins !== 1 ? 's' : ''}`;
+  const diffHrs = Math.round(diffMins / 60);
+  if (diffHrs < 24) return `Hace ${diffHrs} hora${diffHrs !== 1 ? 's' : ''}`;
+  const diffDays = Math.round(diffHrs / 24);
+  return `Hace ${diffDays} dia${diffDays !== 1 ? 's' : ''}`;
+}
 
 function BellIcon() {
   return (
@@ -16,9 +30,53 @@ function BellIcon() {
 
 export default function HeaderNotifications() {
   const [isOpen, setIsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const notificationsRef = useRef(null);
-  const unreadCount = headerNotifications.filter((item) => !item.read).length;
+  
+  useEffect(() => {
+    let isMounted = true;
+    fetchMyNotifications()
+      .then((data) => {
+        if (isMounted) setNotifications(data || []);
+      })
+      .catch((error) => console.error("Error cargando notificaciones:", error));
+      
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    return subscribeToNotificationRead(({ notificationId, readAt }) => {
+      setNotifications((current) =>
+        current.map((notification) =>
+          notification.id === notificationId
+            ? { ...notification, read_at: readAt }
+            : notification
+        )
+      );
+      setSelectedNotification((current) =>
+        current?.id === notificationId ? { ...current, read_at: readAt } : current
+      );
+    });
+  }, []);
+
+  const unreadNotifications = notifications.filter((item) => !item.read_at);
+  const unreadCount = unreadNotifications.length;
+
+  const handleOpenNotification = async (notification) => {
+    setIsOpen(false);
+    setSelectedNotification(notification);
+
+    if (!notification.read_at) {
+      try {
+        await markNotificationAsReadInSupabase(notification.id);
+      } catch (err) {
+        console.error("Error marcando notificacion como leida:", err);
+      }
+    }
+  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -89,28 +147,47 @@ export default function HeaderNotifications() {
             </div>
 
             <div className="header-notifications-list">
-              {headerNotifications.map((notification) => (
-                <button
-                  className={`header-notifications-item header-notifications-item--${notification.severity}`}
-                  key={notification.id}
-                  onClick={() => {
-                    setIsOpen(false);
-                    setSelectedNotification(notification);
-                  }}
-                  type="button"
-                >
-                  <div className="header-notifications-meta">
-                    <span
-                      className={`header-notifications-event header-notifications-event--${notification.severity}`}
-                    >
-                      {notificationEventLabels[notification.event] ?? notification.event}
-                    </span>
-                  </div>
-                  <strong>{notification.title}</strong>
-                  <p>{notification.text}</p>
-                  <span>{notification.time}</span>
-                </button>
-              ))}
+              {unreadNotifications.length === 0 ? (
+                <div style={{ padding: "16px", textAlign: "center", color: "#64748b" }}>
+                  No tienes notificaciones nuevas
+                </div>
+              ) : (
+                unreadNotifications.map((notification) => (
+                  <button
+                    className={
+                      notification.read_at
+                        ? `header-notifications-item header-notifications-item--${notification.severity || "low"} header-notifications-item--read`
+                        : `header-notifications-item header-notifications-item--${notification.severity || "low"} header-notifications-item--unread`
+                    }
+                    key={notification.id}
+                    onClick={() => handleOpenNotification(notification)}
+                    type="button"
+                  >
+                    {!notification.read_at && (
+                      <span className="header-notifications-unread-dot" style={{ display: "inline-block", width: "8px", height: "8px", background: "#3b82f6", borderRadius: "50%", position: "absolute", top: "16px", right: "16px" }}></span>
+                    )}
+                    <div className="header-notifications-meta">
+                      <span
+                        className={`header-notifications-event header-notifications-event--${notification.severity || "low"}`}
+                      >
+                        {notificationEventLabels[notification.type] ?? notification.type}
+                      </span>
+                      <span
+                        className={
+                          notification.read_at
+                            ? "header-notifications-status header-notifications-status--read"
+                            : "header-notifications-status header-notifications-status--unread"
+                        }
+                      >
+                        {notification.read_at ? "Leida" : "No leida"}
+                      </span>
+                    </div>
+                    <strong>{notification.title}</strong>
+                    <p>{notification.body}</p>
+                    <span>{getRelativeTime(notification.created_at)}</span>
+                  </button>
+                ))
+              )}
             </div>
           </div>
         ) : null}
@@ -131,13 +208,13 @@ export default function HeaderNotifications() {
                 aria-labelledby="header-notification-modal-title"
               >
                 <div
-                  className={`panel-control-notification-modal-head panel-control-notification-modal-head--${selectedNotification.severity}`}
+                  className={`panel-control-notification-modal-head panel-control-notification-modal-head--${selectedNotification.severity || "low"}`}
                 >
                   <div>
                     <span
-                      className={`panel-control-notification-event panel-control-notification-event--${selectedNotification.severity}`}
+                      className={`panel-control-notification-event panel-control-notification-event--${selectedNotification.severity || "low"}`}
                     >
-                      {notificationEventLabels[selectedNotification.event] ?? selectedNotification.event}
+                      {notificationEventLabels[selectedNotification.type] ?? selectedNotification.type}
                     </span>
                     <h4 id="header-notification-modal-title">{selectedNotification.title}</h4>
                   </div>
@@ -151,27 +228,27 @@ export default function HeaderNotifications() {
                 </div>
 
                 <div className="panel-control-notification-modal-body">
-                  <p>{selectedNotification.text}</p>
+                  <p>{selectedNotification.body}</p>
                   <div className="panel-control-notification-modal-details">
                     <div className="panel-control-notification-modal-detail">
                       <span>Agencia</span>
-                      <strong>{selectedNotification.agency}</strong>
+                      <strong>{selectedNotification.agency_name || "-"}</strong>
                     </div>
                     <div className="panel-control-notification-modal-detail">
-                      <span>Fecha</span>
-                      <strong>{selectedNotification.date}</strong>
+                      <span>Fecha viaje</span>
+                      <strong>{selectedNotification.travel_date_string || "-"}</strong>
                     </div>
                     <div className="panel-control-notification-modal-detail">
                       <span>Ciudad</span>
-                      <strong>{selectedNotification.city}</strong>
+                      <strong>{selectedNotification.city_name || "-"}</strong>
                     </div>
                     <div className="panel-control-notification-modal-detail">
                       <span>Motivo</span>
-                      <strong>{selectedNotification.reason}</strong>
+                      <strong>{selectedNotification.reason || "Sin observaciones registradas."}</strong>
                     </div>
                   </div>
-                  <span className="panel-control-notification-modal-time">
-                    {selectedNotification.time}
+                  <span className="panel-control-notification-modal-time" style={{ display: "block", marginTop: "1rem", color: "#64748b", fontSize: "0.85rem" }}>
+                    Enviada {getRelativeTime(selectedNotification.created_at)}
                   </span>
                 </div>
               </div>

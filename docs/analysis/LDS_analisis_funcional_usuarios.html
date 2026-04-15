@@ -1,0 +1,1056 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LDS - Informe Funcional Consolidado</title>
+  <style>
+    :root {
+      --ink: #1f2937;
+      --muted: #4b5563;
+      --line: #d1d5db;
+      --accent: #0f766e;
+      --accent-soft: #ccfbf1;
+      --warn-soft: #fef3c7;
+      --warn-line: #f59e0b;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--ink);
+      background: #e5e7eb;
+      line-height: 1.55;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 18mm 16mm;
+    }
+    h1, h2, h3 { margin: 0 0 10px; line-height: 1.2; }
+    h1 { font-size: 28px; color: #0b3d3a; }
+    h2 {
+      margin-top: 28px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--accent);
+      font-size: 20px;
+      color: #0f172a;
+    }
+    h3 { margin-top: 18px; font-size: 16px; color: #0f172a; }
+    p { margin: 0 0 12px; color: var(--muted); }
+    ol, ul { margin: 8px 0 14px 22px; padding: 0; }
+    li { margin: 4px 0; }
+    .lead {
+      margin-top: 10px;
+      padding: 14px 16px;
+      border-left: 5px solid var(--accent);
+      background: var(--accent-soft);
+      color: #134e4a;
+    }
+    .meta {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .meta-card {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-alt);
+      border-radius: 10px;
+    }
+    .meta-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #0f172a;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: #ecfeff;
+      color: #134e4a;
+    }
+    .note {
+      padding: 12px 14px;
+      background: var(--warn-soft);
+      border: 1px solid var(--warn-line);
+      border-radius: 10px;
+      color: #78350f;
+      margin: 12px 0 16px;
+    }
+    .tag {
+      display: inline-block;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #075985;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+    @media print {
+      body { background: var(--surface); }
+      .page {
+        margin: 0;
+        width: auto;
+        min-height: auto;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>LDS - Informe Funcional Consolidado</h1>
+    <p class="lead">
+      Documento unificado de seguimiento para la implementacion funcional de LDS. Consolida reglas de agencias, usuarios, paneles, reservas, estados, operacion, check-in, no show, cupones, reembolsos, notificaciones, productos y reportes.
+    </p>
+
+    <section class="meta">
+      <div class="meta-card">
+        <strong>Proyecto</strong>
+        LDS
+      </div>
+      <div class="meta-card">
+        <strong>Fecha</strong>
+        8 de abril de 2026
+      </div>
+      <div class="meta-card">
+        <strong>Tipo</strong>
+        Informe funcional consolidado
+      </div>
+      <div class="meta-card">
+        <strong>Objetivo</strong>
+        Base de trabajo para seguimiento, implementacion y validacion
+      </div>
+    </section>
+
+    <div>
+      <span class="tag">Agencias</span>
+      <span class="tag">Usuarios</span>
+      <span class="tag">Reservas</span>
+      <span class="tag">Check-in</span>
+      <span class="tag">No Show</span>
+      <span class="tag">Cupones</span>
+      <span class="tag">Reembolsos</span>
+      <span class="tag">Alianzas</span>
+      <span class="tag">Productos</span>
+      <span class="tag">Reportes</span>
+    </div>
+
+    <h2>1. Estructura General de LDS</h2>
+    <ol>
+      <li>LDS manejara agencias vendedoras y agencias proveedoras.</li>
+      <li>Ambos tipos de agencia pueden vender productos turisticos.</li>
+      <li>Las agencias proveedoras, ademas de vender, tambien tienen responsabilidades operativas.</li>
+      <li>La reserva es la entidad central del sistema y se conecta con cancelaciones, cupones, reembolsos, notificaciones, check-in, no show, reservas hijas y reportes.</li>
+    </ol>
+
+    <h2>2. Informacion de Agencia</h2>
+    <h3>2.1. Datos generales</h3>
+    <ol>
+      <li>Nombre</li>
+      <li>NIT</li>
+      <li>Tipo de persona: juridica o fisica</li>
+      <li>Direccion</li>
+      <li>Telefono de contacto</li>
+      <li>Email de la empresa</li>
+      <li>Horario de atencion</li>
+      <li>Ciudad</li>
+      <li>Pais</li>
+    </ol>
+
+    <h3>2.2. Representante legal</h3>
+    <ol>
+      <li>Nombre</li>
+      <li>Tipo de documento</li>
+      <li>Numero de documento</li>
+      <li>Telefono de contacto</li>
+      <li>Email del representante</li>
+      <li>Cargo</li>
+    </ol>
+
+    <h3>2.3. Vista de empresa en LDS</h3>
+    <p>Al abrir una agencia debe verse tambien el listado de usuarios asociados con:</p>
+    <ol>
+      <li>Nombre</li>
+      <li>Tipo de usuario</li>
+      <li>Estado: activo o inactivo</li>
+    </ol>
+    <p>Tambien debe permitir filtros para buscar usuarios por:</p>
+    <ol>
+      <li>Nombre</li>
+      <li>Tipo de usuario</li>
+      <li>Estado</li>
+    </ol>
+
+    <h2>3. Roles del Sistema</h2>
+    <ol>
+      <li>Super usuario</li>
+      <li>Usuario de agencia vendedora</li>
+      <li>Admin de agencia vendedora</li>
+      <li>Usuario de agencia proveedora</li>
+      <li>Admin de agencia proveedora</li>
+    </ol>
+
+    <h2>4. Acceso a Paneles</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rol</th>
+          <th>Panel de reservas</th>
+          <th>Panel operativo proveedor</th>
+          <th>Panel de productos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Usuario agencia vendedora</td>
+          <td>Si</td>
+          <td>No</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Admin agencia vendedora</td>
+          <td>Si</td>
+          <td>No</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Usuario agencia proveedora</td>
+          <td>Si</td>
+          <td>Si, limitado</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Admin agencia proveedora</td>
+          <td>Si</td>
+          <td>Si</td>
+          <td>Si</td>
+        </tr>
+        <tr>
+          <td>Super usuario</td>
+          <td>Si</td>
+          <td>Si</td>
+          <td>Si</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      Ni el usuario ni el admin de agencia vendedora tienen acceso al panel de productos en ningun caso. La agencia vendedora solo opera con panel de reservas.
+    </div>
+
+    <h2>5. Reglas de Usuario</h2>
+    <h3>5.1. Datos para crear usuario</h3>
+    <ol>
+      <li>Celular</li>
+      <li>Email</li>
+      <li>Foto de usuario</li>
+      <li>Nombre</li>
+      <li>Apellido</li>
+      <li>Fecha de nacimiento</li>
+      <li>Direccion</li>
+    </ol>
+
+    <h3>5.2. Estados del usuario</h3>
+    <ol>
+      <li>Activo</li>
+      <li>Inactivo</li>
+    </ol>
+
+    <h3>5.3. Reglas de activacion</h3>
+    <ol>
+      <li>Todo usuario nuevo se crea inicialmente en estado inactivo.</li>
+      <li>Solo se activa una vez confirme su email.</li>
+      <li>Cuando un usuario se reactive tambien debe comprobarse via email que el correo existe.</li>
+      <li>Un usuario puede ser activado o inactivado.</li>
+      <li>Un usuario puede cambiar su numero de celular.</li>
+    </ol>
+
+    <h3>5.4. Edicion de perfil</h3>
+    <p>Todos los usuarios pueden editar su propia informacion de perfil, como minimo:</p>
+    <ol>
+      <li>Nombre</li>
+      <li>Foto</li>
+      <li>Email</li>
+      <li>Celular</li>
+    </ol>
+
+    <h2>6. Capacidades por Rol</h2>
+    <h3>6.1. Usuario de agencia vendedora</h3>
+    <ol>
+      <li>Vender productos turisticos.</li>
+      <li>Crear cotizaciones.</li>
+      <li>Crear reservas.</li>
+      <li>Ver sus propias reservas.</li>
+      <li>Cancelar sus propias reservas.</li>
+      <li>Solicitar reembolso de sus propias reservas.</li>
+      <li>Crear anotaciones en reservas.</li>
+      <li>Editar su propio perfil.</li>
+    </ol>
+
+    <h3>6.2. Admin de agencia vendedora</h3>
+    <ol>
+      <li>Todo lo del usuario vendedor.</li>
+      <li>Ver reservas de sus agentes.</li>
+      <li>Cancelar reservas de sus agentes.</li>
+      <li>Solicitar reembolso de reservas de sus agentes.</li>
+      <li>Crear usuarios agentes de viajes para su agencia.</li>
+      <li>Editar su propio perfil.</li>
+    </ol>
+
+    <h3>6.3. Usuario de agencia proveedora</h3>
+    <ol>
+      <li>Vender productos turisticos.</li>
+      <li>Crear cotizaciones.</li>
+      <li>Crear reservas.</li>
+      <li>Ver sus propias reservas.</li>
+      <li>Cancelar sus propias reservas.</li>
+      <li>Solicitar reembolso de sus propias reservas.</li>
+      <li>Acceder al panel operativo limitado.</li>
+      <li>Ver reservas por producto y fecha.</li>
+      <li>Ver pasajeros por producto y fecha.</li>
+      <li>Hacer check-in.</li>
+      <li>Editar su propio perfil.</li>
+    </ol>
+
+    <h3>6.4. Admin de agencia proveedora</h3>
+    <ol>
+      <li>Todo lo del usuario proveedor.</li>
+      <li>Ver reservas de sus agentes.</li>
+      <li>Cancelar reservas de sus agentes.</li>
+      <li>Solicitar reembolso de reservas de sus agentes.</li>
+      <li>Crear usuarios agentes de viajes para su agencia.</li>
+      <li>Gestionar productos: ver, crear, editar e inhabilitar.</li>
+      <li>Editar su propio perfil.</li>
+    </ol>
+
+    <h3>6.5. Super usuario</h3>
+    <ol>
+      <li>Puede hacer todo lo que hace cualquier otro rol.</li>
+      <li>Crear agencias vendedoras y proveedoras.</li>
+      <li>Crear usuarios admin y agentes de viajes.</li>
+      <li>Crear productos indicando a que agencia proveedora pertenecen.</li>
+      <li>Modificar perfiles de usuario.</li>
+      <li>Asignar o restablecer contrasenas.</li>
+      <li>Cambiar estados de reservas, productos y demas entidades.</li>
+      <li>Toda operacion que haga debe quedar asociada a una agencia cuando aplique.</li>
+    </ol>
+
+    <h2>7. Cotizaciones</h2>
+    <ol>
+      <li>Todos los usuarios pueden crear cotizaciones de productos turisticos.</li>
+      <li>Cada cotizacion debe quedar asociada al usuario creador y a la agencia correspondiente.</li>
+    </ol>
+
+    <h2>7.1. Alianzas</h2>
+    <h3>7.1.1. Objetivo del modulo</h3>
+    <ol>
+      <li>Permite que dos agencias creen una alianza estrategica comercial.</li>
+      <li>El foco inicial es que la agencia proveedora le conceda credito a la agencia vendedora para emisiones.</li>
+      <li>Ese credito se denomina Facturado.</li>
+      <li>Sirve para que la agencia vendedora pueda emitir y vender sin pagar de inmediato por pasarela o pago en linea.</li>
+      <li>El valor se paga despues a la agencia proveedora segun la alianza comercial.</li>
+    </ol>
+
+    <h3>7.1.2. Lista principal de alianzas</h3>
+    <ol>
+      <li>Cuando un admin abre la opcion Alianzas en el panel de control podra ver la lista de alianzas que ha creado.</li>
+      <li>La lista debe mostrar: Agencia Proveedora, Agencia Vendedora, Estado de la alianza y boton Ver.</li>
+      <li>Debajo de la lista debe existir el boton Crear alianza.</li>
+    </ol>
+
+    <h3>7.1.3. Estados de la alianza</h3>
+    <ol>
+      <li>Activo</li>
+      <li>Inactivo</li>
+      <li>Suspendido</li>
+    </ol>
+    <p><strong>Suspendido</strong> significa que la alianza sigue existiendo, pero la agencia vendedora tiene una pendencia con la agencia proveedora.</p>
+    <p>Las pendencias pueden ser, por ejemplo:</p>
+    <ol>
+      <li>Falta de pago</li>
+      <li>Falta de actualizacion de algun documento legal de la empresa vendedora</li>
+    </ol>
+
+    <h3>7.1.4. Pantalla Crear alianza</h3>
+    <ol>
+      <li>Debe mostrar Ciudad y Nombre de la agencia proveedora.</li>
+      <li>Debe tener un bloque con el titulo Buscar Agencia Aliada.</li>
+      <li>Debe incluir un label con el texto DIGITE EL NOMBRE DE LA AGENCIA.</li>
+      <li>Debe tener un input de texto con icono al lado izquierdo y el boton Buscar.</li>
+      <li>Debajo debe existir un espacio para mostrar el resultado de la busqueda.</li>
+    </ol>
+
+    <p>El resultado de la busqueda debe mostrar la informacion de la agencia vendedora:</p>
+    <ol>
+      <li>Nombre de la agencia</li>
+      <li>NIT</li>
+      <li>Tipo de persona: juridica o fisica</li>
+      <li>Direccion</li>
+      <li>Telefono</li>
+      <li>Email</li>
+      <li>Ciudad</li>
+      <li>Pais</li>
+    </ol>
+
+    <p>Adicionalmente, la pantalla debe tener:</p>
+    <ol>
+      <li>Un label con el texto Valor Facturado.</li>
+      <li>Un input para digitar el valor a dar como credito facturado.</li>
+      <li>Un input de imagen para cargar el contrato entre las agencias.</li>
+    </ol>
+
+    <h3>7.1.5. Pantalla Ver alianza</h3>
+    <ol>
+      <li>Debe mostrar Ciudad, Agencia aliada, Valor Facturado y Saldo Actual.</li>
+      <li>Debajo debe existir un filtro por fechas como hoy, ultimos 7 dias, esta semana y otros lapsos.</li>
+      <li>Luego debe mostrar el movimiento de la alianza en el lapso de tiempo definido.</li>
+    </ol>
+
+    <p>La tabla de movimientos debe mostrar:</p>
+    <ol>
+      <li>Movimiento</li>
+      <li>Fecha</li>
+      <li>Descripcion</li>
+      <li>Valor</li>
+      <li>Saldo</li>
+      <li>Boton Ver</li>
+    </ol>
+
+    <p>Reglas del historial de movimientos:</p>
+    <ol>
+      <li>Los movimientos van del mas reciente al mas antiguo.</li>
+      <li>El primer movimiento de la lista debe ser el mas actual y reflejar el saldo actual.</li>
+      <li>Si el movimiento es una Venta, el valor debe mostrarse en rojo porque disminuye el saldo disponible.</li>
+      <li>Si el movimiento es un Pago, el valor debe mostrarse en negro porque suma al saldo disponible.</li>
+    </ol>
+
+    <h3>7.1.6. Accion del boton Ver en movimientos</h3>
+    <ol>
+      <li>Si el movimiento es Pago, el boton Ver debe abrir el recibo.</li>
+      <li>Si el movimiento es Venta, el boton Ver debe abrir la reserva asociada a esa venta.</li>
+    </ol>
+
+    <h2>8. Reservas</h2>
+    <h3>8.1. CRUD real</h3>
+    <ol>
+      <li>Crear</li>
+      <li>Ver</li>
+      <li>Actualizar</li>
+      <li>No eliminar</li>
+    </ol>
+    <p>Una reserva no se elimina fisicamente. Solo cambia de estado.</p>
+
+    <h3>8.2. Estados de reserva</h3>
+    <ol>
+      <li>Reservada</li>
+      <li>Emitida</li>
+      <li>Cancelada por usuario</li>
+      <li>Cancelada por vencimiento</li>
+      <li>En reembolso</li>
+    </ol>
+
+    <h3>8.3. Significado de estados</h3>
+    <p><strong>Reservada:</strong> fue creada pero aun no ha sido emitida y tiene tiempo limite para emision.</p>
+    <p><strong>Emitida:</strong> ya fue confirmada y no vence.</p>
+    <p><strong>Cancelada por usuario:</strong> fue cancelada manualmente por un usuario autorizado.</p>
+    <p><strong>Cancelada por vencimiento:</strong> no fue emitida a tiempo, pierde validez y libera cupos.</p>
+    <p><strong>En reembolso:</strong> solo aplica si la reserva ya estaba emitida.</p>
+
+    <h3>8.4. Reglas de vencimiento</h3>
+    <ol>
+      <li>Solo las reservas reservadas tienen tiempo limite para emitirse.</li>
+      <li>Si el tiempo vence, la reserva pasa a cancelada por vencimiento.</li>
+      <li>Una reserva emitida no tiene fecha de vencimiento.</li>
+      <li>La reserva cancelada por vencimiento libera cupos y ya no puede emitirse.</li>
+    </ol>
+
+    <h3>8.5. Regla de visibilidad</h3>
+    <ol>
+      <li>Aunque una reserva este inactiva por cancelamiento, reembolso o vencimiento, siempre debe poder abrirse.</li>
+      <li>Debe mostrar todos sus detalles, historial, pasajeros, novedades y movimientos.</li>
+    </ol>
+
+    <h2>9. Cancelaciones</h2>
+    <h3>9.1. CRUD real de cancelacion</h3>
+    <ol>
+      <li>Crear</li>
+      <li>Ver</li>
+      <li>No actualizar</li>
+      <li>No eliminar</li>
+    </ol>
+
+    <h3>9.2. Cancelacion total</h3>
+    <ol>
+      <li>La agencia que vendio puede cancelar la reserva completa.</li>
+      <li>Si estaba reservada: libera cupos, genera cancelacion y notificacion, pero no cupón.</li>
+      <li>Si estaba emitida: libera cupos, genera cancelacion, notificacion y resolucion economica por reembolso o crédito.</li>
+    </ol>
+
+    <h3>9.3. Cancelacion parcial por turista</h3>
+    <ol>
+      <li>La agencia que vendio puede cancelar solo a un turista dentro de una reserva.</li>
+      <li>La reserva original sigue con los demas pasajeros.</li>
+      <li>Se crea una reserva hija para el pasajero cancelado.</li>
+      <li>La reserva hija nace cancelada.</li>
+      <li>Queda trazabilidad del movimiento.</li>
+    </ol>
+
+    <h3>9.4. Reglas economicas al cancelar</h3>
+    <ol>
+      <li>Cuando se cancela una reserva o un turista, LDS debe preguntar siempre si se quiere pedir reembolso o generar crédito disponible mediante cupón.</li>
+      <li>Cada reserva tiene configuracion especifica de multa por cancelamiento y multa por reembolso.</li>
+      <li>El valor final se calcula con el valor correspondiente menos la multa aplicable segun la opcion elegida.</li>
+      <li>Si se elige reembolso, se crea el reembolso.</li>
+      <li>Si se elige crédito, se crea el cupón de cliente.</li>
+    </ol>
+
+    <h2>10. Division de Reserva</h2>
+    <ol>
+      <li>Si una reserva esta reservada o emitida, debe permitir dividirla.</li>
+      <li>Uno o varios turistas salen de la reserva original y pasan a una nueva reserva activa.</li>
+      <li>La nueva reserva mantiene producto, destino, fechas, itinerario y precios.</li>
+      <li>La division no es cancelacion.</li>
+      <li>No genera cupón ni reembolso.</li>
+    </ol>
+
+    <h2>11. Cupones de Cliente</h2>
+    <h3>11.1. CRUD real</h3>
+    <ol>
+      <li>Crear</li>
+      <li>Ver</li>
+      <li>Actualizar estado</li>
+      <li>No eliminar</li>
+    </ol>
+
+    <h3>11.2. Estados del cupón</h3>
+    <ol>
+      <li>Activo</li>
+      <li>Inactivo</li>
+    </ol>
+
+    <h3>11.3. Regla de vencimiento</h3>
+    <ol>
+      <li>Si la fecha de vencimiento caduca, el cupón pasa a inactivo.</li>
+      <li>Un cupón nunca se elimina.</li>
+    </ol>
+
+    <h3>11.4. Cuando se genera</h3>
+    <ol>
+      <li>Si una reserva reservada se cancela: no genera cupón.</li>
+      <li>Si una reserva emitida se cancela: se resuelve por reembolso o crédito mediante cupón.</li>
+      <li>Si una reserva se cancela por vencimiento: no genera cupón.</li>
+      <li>En no show se genera un cupón individual por cada turista separado a una reserva hija cancelada.</li>
+    </ol>
+
+    <h2>12. Reembolsos</h2>
+    <h3>12.1. CRUD real</h3>
+    <ol>
+      <li>Crear</li>
+      <li>Ver</li>
+      <li>Actualizar estado</li>
+      <li>No eliminar</li>
+    </ol>
+
+    <h3>12.2. Estados del reembolso</h3>
+    <ol>
+      <li>En proceso de reembolso</li>
+      <li>Para pago</li>
+      <li>Pagado</li>
+    </ol>
+
+    <h3>12.3. Reglas</h3>
+    <ol>
+      <li>Solo una reserva emitida puede pasar a en reembolso.</li>
+      <li>Una reserva emitida en reembolso libera cupos solo si la solicitud ocurre antes de la fecha de viaje o embarque.</li>
+      <li>Si la cancelacion o reembolso ocurre antes del viaje, los cupos pueden revenderse.</li>
+    </ol>
+
+    <h2>13. Notificaciones</h2>
+    <ol>
+      <li>Cada cambio de estado de una reserva genera una notificacion.</li>
+      <li>Aplica para reservada, emitida, cancelada por usuario, cancelada por vencimiento y en reembolso.</li>
+    </ol>
+
+    <h2>14. Calendario de Productos, Lista de Pasajeros y Check-in</h2>
+    <h3>14.1. Calendario de Productos</h3>
+    <ol>
+      <li>Es un modulo orientado a gestion visual de disponibilidad.</li>
+      <li>Lo usa principalmente el admin de la empresa proveedora.</li>
+      <li>Debe permitir identificar rapidamente fechas mas ocupadas y fechas con baja o nula ocupacion.</li>
+    </ol>
+
+    <h3>14.2. Bloque superior de informacion del producto</h3>
+    <p>La vista calendario debe mostrar en la parte superior:</p>
+    <ol>
+      <li>Nombre del producto</li>
+      <li>Ciudad</li>
+      <li>Punto de encuentro</li>
+      <li>Hora de salida</li>
+      <li>Hora de llegada</li>
+      <li>Descripcion breve</li>
+    </ol>
+
+    <h3>14.3. Navegacion del calendario</h3>
+    <ol>
+      <li>Debe permitir cambiar rapidamente de fecha.</li>
+      <li>Debe permitir cambiar de mes.</li>
+      <li>Debe permitir cambiar de anio.</li>
+    </ol>
+
+    <h3>14.4. Visualizacion de las celdas</h3>
+    <ol>
+      <li>Cada celda debe mostrar el numero del dia, por ejemplo 15 o 16.</li>
+      <li>Si no hay reservas, la celda va en blanco.</li>
+      <li>Si hay reservas, la celda usa color verde como fondo.</li>
+      <li>La intensidad del verde cambia segun el porcentaje de ocupacion.</li>
+      <li>A mayor ocupacion, menor transparencia y mas intensidad del verde.</li>
+      <li>Si la agencia proveedora decide que no operara ese dia, la celda puede mostrarse en rojo.</li>
+    </ol>
+
+    <h3>14.5. Temporada alta en el calendario</h3>
+    <ol>
+      <li>Despues de definir el lapso de fechas activas, LDS debe leer los rangos de temporada alta definidos al crear el producto.</li>
+      <li>Las fechas de temporada alta deben mostrarse con el numero del dia dentro de una bolita negra o gris oscuro.</li>
+      <li>El color del numero debe ser blanco para contrastar.</li>
+      <li>La bolita de temporada alta no reemplaza el color verde de ocupacion.</li>
+      <li>El verde sigue siendo el fondo de la celda y la bolita solo rodea el numero del dia.</li>
+    </ol>
+
+    <h3>14.6. Activacion inicial del producto desde calendario</h3>
+    <ol>
+      <li>Despues de crear un producto, el siguiente paso es habilitarlo o activarlo.</li>
+      <li>Al hacer clic en habilitar, LDS debe redirigir al calendario del producto.</li>
+      <li>Si el producto es nuevo o esta inactivo, el calendario debe abrir automaticamente un modal para definir fechas activas.</li>
+      <li>Mientras ese modal este abierto, no debe cerrarse con Escape ni con clic fuera del modal.</li>
+      <li>Solo se podra entrar a ver el calendario cuando se definan las fechas en que el producto estara activo.</li>
+    </ol>
+
+    <h3>14.7. Rango permitido para activar un producto</h3>
+    <ol>
+      <li>La fecha inicial no puede ser anterior a hoy.</li>
+      <li>La fecha inicial se puede escoger desde hoy hasta el 31 de diciembre del mismo anio.</li>
+      <li>La fecha final debe ir desde la fecha inicial elegida hasta el 31 de enero del anio siguiente.</li>
+      <li>Ejemplo: si hoy es 9 de abril de 2026, la fecha inicial puede ir de 9 de abril de 2026 a 31 de diciembre de 2026 y la fecha final de la fecha inicial elegida hasta 31 de enero de 2027.</li>
+    </ol>
+
+    <h3>14.8. Inactivar y reactivar fechas del calendario</h3>
+    <ol>
+      <li>Una fecha especifica del calendario solo puede inactivarse si no tiene reservas activas.</li>
+      <li>La inactivacion solo esta permitida para el admin de la agencia proveedora y el super usuario.</li>
+      <li>Si la fecha tiene reservas activas, nadie puede inactivarla, ni siquiera el super usuario.</li>
+      <li>Cuando alguien intente inactivar una fecha con reservas activas, LDS debe bloquear la accion y generar un email de alerta al super usuario para proteger a los turistas.</li>
+      <li>Una fecha inactiva puede activarse nuevamente por el admin de la agencia duenia del producto y por el super usuario.</li>
+    </ol>
+
+    <h3>14.9. Lista de pasajeros</h3>
+    <ol>
+      <li>El check-in no aparece dentro del panel de reservas.</li>
+      <li>Aparece en una opcion individual del panel de control llamada Lista de pasajeros.</li>
+      <li>La vista principal de Lista de pasajeros debe mostrar: Nombre Producto, Fecha, Estado y el boton Ver lista.</li>
+      <li>Los estados de la lista pueden ser Inactivo, Activo y Check In.</li>
+      <li>Una lista puede quedar inactiva porque ya paso la fecha y hora del embarque.</li>
+    </ol>
+
+    <h3>14.10. Informacion al abrir una lista</h3>
+    <p>Al abrir una lista deben mostrarse los pasajeros del paseo con la siguiente informacion por bloque individual:</p>
+    <ol>
+      <li>Localizador</li>
+      <li>Agencia</li>
+      <li>Tipo de pasajero: ADT, Ninio, Bebe</li>
+      <li>Documento del pasajero</li>
+      <li>Pais</li>
+      <li>Sexo</li>
+      <li>Edad</li>
+      <li>Celular</li>
+    </ol>
+
+    <h3>14.11. Botones por estado de la lista</h3>
+    <ol>
+      <li>Si la lista esta Activa, al lado de cada pasajero debe aparecer el boton Reserva.</li>
+      <li>El boton Reserva abre la reserva a la que pertenece el pasajero.</li>
+      <li>Si la lista esta en estado Check In, deben aparecer el boton Reserva y el boton Check in.</li>
+    </ol>
+
+    <h3>14.12. Novedades dentro del bloque del pasajero</h3>
+    <ol>
+      <li>Si un pasajero cancelo o pidio reembolso antes de viajar, la novedad debe mostrarse debajo de su informacion, dentro del mismo bloque.</li>
+      <li>La novedad debe mostrar: Nombre pasajero, Estado cancelado o Reembolso, Fecha de novedad, Agencia que hizo el movimiento, Usuario que hizo el movimiento, Cupon disponible con codigo o en su defecto Valor reembolso y Fecha de reembolso.</li>
+      <li>Al lado de cada novedad debe existir un boton Ver.</li>
+      <li>Si la novedad corresponde a cupón, el boton sera Ver cupon.</li>
+      <li>Si la novedad corresponde a reembolso, el boton sera Ver reembolso.</li>
+    </ol>
+
+    <h3>14.13. Comportamiento de listas inactivas</h3>
+    <ol>
+      <li>Una lista inactiva indica que ya paso la hora del embarque y que el check-in debio haberse realizado.</li>
+      <li>Debe mostrar el resultado final de la operacion.</li>
+      <li>Los pasajeros que si viajaron deben mostrar debajo del bloque la novedad: Pasajero Chequeado, Fecha de Check in, Hora exacta del check in y Por [nombre del agente que hizo el check in].</li>
+      <li>Los pasajeros que no viajaron deben mostrar la novedad: Nombre pasajero, No Show, fecha del no show, Agencia que marco el no show y Cupon de los creditos disponibles.</li>
+      <li>La lista inactiva debe ofrecer una opcion adicional llamada Reportes.</li>
+    </ol>
+
+    <h3>14.14. Reportes de listas inactivas</h3>
+    <p>Los reportes de listas inactivas deben permitir generar PDF y enviar por email.</p>
+    <ol>
+      <li>Reporte de Embarque: muestra Localizador, Nombre, Agencia, Estado: Cancelado, Check in, Reembolso o No Show. Debe incluir boton Ver en caso de novedades, excepto para Check in.</li>
+      <li>Reporte de No Show: solo muestra los pasajeros con No Show y el boton Ver.</li>
+      <li>Reporte de Reembolsos: solo muestra los pasajeros que pidieron reembolso dentro de la lista y el boton Ver.</li>
+      <li>Reporte de Cancelados: solo muestra los pasajeros de la lista que cancelaron el paseo antes del Check in y el boton Ver.</li>
+    </ol>
+
+    <h2>15. No Show y Cancelacion Parcial Operativa</h2>
+    <ol>
+      <li>El no show se maneja por turista, no por reserva completa.</li>
+      <li>Si un turista no embarca, se marca como no show.</li>
+      <li>Se genera una cancelacion parcial.</li>
+      <li>Se crea una reserva hija individual para ese turista.</li>
+      <li>La reserva hija nace cancelada.</li>
+      <li>La reserva hija genera un cupón individual.</li>
+      <li>La reserva original conserva a los pasajeros que si embarcaron.</li>
+      <li>La reserva original mantiene su localizador y registra la novedad.</li>
+    </ol>
+
+    <h3>15.1. Historico de no show</h3>
+    <p>Dentro de la reserva original debe quedar historico con:</p>
+    <ol>
+      <li>Turista que no embarco</li>
+      <li>Fecha del no show</li>
+      <li>Reserva hija generada</li>
+      <li>Resultado operativo del evento</li>
+    </ol>
+
+    <h2>16. Panel de Reservas</h2>
+    <h3>16.1. Busqueda principal</h3>
+    <p>Debe permitir buscar por:</p>
+    <ol>
+      <li>Codigo localizador</li>
+      <li>Fecha de emision</li>
+      <li>Fecha de creacion</li>
+      <li>Fecha de embarque</li>
+    </ol>
+
+    <p>Tambien por lapsos:</p>
+    <ol>
+      <li>Hoy</li>
+      <li>Ultimos 7 dias</li>
+      <li>Ultimos 15 dias</li>
+      <li>Ultimos 30 dias</li>
+      <li>Fecha inicio</li>
+      <li>Fecha fin</li>
+    </ol>
+
+    <h3>16.2. Filtros sobre resultados</h3>
+    <ol>
+      <li>Nombre de turista</li>
+      <li>Documento</li>
+      <li>Estado</li>
+    </ol>
+
+    <h3>16.3. Agrupacion por producto</h3>
+    <ol>
+      <li>El panel debe poder agrupar resultados por producto turistico.</li>
+      <li>Ejemplo: Producto 1 con 5 reservas, Producto 2 con 10, Producto 3 con 1.</li>
+      <li>Esto debe permitir filtrar la tabla por producto.</li>
+    </ol>
+
+    <h3>16.4. En agencias proveedoras</h3>
+    <ol>
+      <li>Debe diferenciar reservas de productos propios y reservas de productos vendidos para otros.</li>
+      <li>No toda reserva vendida por una agencia proveedora corresponde a operacion propia.</li>
+      <li>El check-in operativo tiene sentido especialmente para productos propios.</li>
+    </ol>
+
+    <h2>17. Detalle de Reserva</h2>
+    <p>Al abrir una reserva, LDS debe mostrar:</p>
+    <ol>
+      <li>Informacion general: localizador, producto, agencia, estado, fechas y usuario creador.</li>
+      <li>Pasajeros y sus estados individuales.</li>
+      <li>Valores pagados.</li>
+      <li>Si se aplico algun cupón o descuento.</li>
+      <li>Si la tarifa fue de temporada alta.</li>
+      <li>Forma de pago.</li>
+      <li>Historico de movimientos desde la creacion hasta el check-in.</li>
+      <li>Notas especiales.</li>
+      <li>Novedades como cancelamientos, no show, reservas hijas y reembolsos.</li>
+    </ol>
+
+    <h3>17.1. Acciones desde la reserva</h3>
+    <ol>
+      <li>Imprimir</li>
+      <li>Enviar por email</li>
+    </ol>
+
+    <h3>17.2. Anotaciones</h3>
+    <ol>
+      <li>Los usuarios de agencias vendedoras pueden crear anotaciones en las reservas.</li>
+    </ol>
+
+    <h2>18. Reportes</h2>
+    <h3>18.1. Reporte de ventas</h3>
+    <p>Puede mostrarse en modo detallado o consolidado.</p>
+
+    <h4>Detalle</h4>
+    <ol>
+      <li>Localizador</li>
+      <li>Fecha de emision</li>
+      <li>Valor</li>
+      <li>Usuario que vendio</li>
+      <li>Tipo de venta: facturado o pago por pasarela de pago</li>
+      <li>Filtros por usuario, fecha, forma de pago y demas informacion visible</li>
+      <li>Salida en PDF o envio por email</li>
+    </ol>
+
+    <h4>Consolidado por valor</h4>
+    <ol>
+      <li>Muestra cuanto valor suma el total de ventas por producto.</li>
+      <li>Ejemplo: cuanto suma hoy el Producto A, cuanto suma hoy el Producto B.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Consolidado por forma de pago</h4>
+    <ol>
+      <li>Por cada producto, suma el valor vendido por cada forma de pago usada.</li>
+      <li>Ejemplo: Producto A con valor de forma de pago 1 y valor de forma de pago 2.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Consolidado por usuario</h4>
+    <ol>
+      <li>Por cada producto, muestra cuanto vendio cada usuario.</li>
+      <li>Ejemplo: Producto A vendido por Edwin, Maria y Alberto, cada uno con su valor total vendido.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h3>18.2. Reporte de ganancias</h3>
+    <p>Tambien tiene modo detallado y consolidado.</p>
+
+    <h4>Detalle</h4>
+    <ol>
+      <li>Localizador</li>
+      <li>Fecha</li>
+      <li>Ganancia</li>
+      <li>Usuario</li>
+      <li>Tipo de pago: facturado o en linea</li>
+      <li>PDF o envio por email</li>
+    </ol>
+
+    <h4>Consolidado por forma de pago</h4>
+    <ol>
+      <li>Filtro por fecha.</li>
+      <li>Por cada producto, muestra la ganancia total por forma de pago.</li>
+      <li>Ejemplo: Producto A forma de pago 1 con valor total de ganancia, Producto A forma de pago 2 con valor total de ganancia.</li>
+      <li>PDF o envio por email.</li>
+    </ol>
+
+    <h4>Consolidado por usuario</h4>
+    <ol>
+      <li>Filtro por fecha.</li>
+      <li>Por cada producto, muestra la ganancia generada por cada usuario.</li>
+      <li>Ejemplo: Producto A usuario X y la ganancia que genero ese usuario.</li>
+      <li>PDF o envio por email.</li>
+    </ol>
+
+    <h3>18.3. Reporte de ventas facturado</h3>
+    <p>Facturado significa un credito dado entre agencias aliadas para emitir y operar sin pagar de inmediato. Una venta facturada puede estar en estado pagado o no pagado, y aun asi operarse si existe acuerdo comercial entre agencias.</p>
+
+    <h4>Detalle</h4>
+    <ol>
+      <li>Localizador</li>
+      <li>Fecha</li>
+      <li>Valor</li>
+      <li>Agencia que vendio</li>
+      <li>Estado: pagado o no pagado</li>
+      <li>PDF o envio por email</li>
+    </ol>
+
+    <h4>Consolidado por agencia</h4>
+    <ol>
+      <li>Agrupa por producto, agencia que vendio y estado de pago.</li>
+      <li>Ejemplo: Producto A, Agencia X, valor facturado en estado pagado o no pagado.</li>
+      <li>PDF o envio por email.</li>
+    </ol>
+
+    <h4>Consolidado por estado</h4>
+    <ol>
+      <li>No distingue productos.</li>
+      <li>Muestra cuanto valor total esta en estado pagado y cuanto esta en no pagado.</li>
+      <li>Sirve para ver cuanto de lo operado ya fue pagado y cuanto sigue pendiente.</li>
+      <li>PDF o envio por email.</li>
+    </ol>
+
+    <h3>18.4. Reporte de novedades</h3>
+    <p>El modulo de novedades debe ofrecer reportes generales y reportes especificos por tipo de novedad. Todos los reportes deben permitir generar PDF y enviar por email.</p>
+
+    <h4>Reporte general de novedades</h4>
+    <ol>
+      <li>Definiendo una fecha o rango, muestra cuantas novedades hay por Cancelados, No Show y Reembolsos.</li>
+      <li>Ejemplo: en los ultimos 7 dias hay 7 cancelados, 5 reembolsos y 3 no show.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Reporte de cancelados</h4>
+    <ol>
+      <li>Tiene version consolidada por producto y version detallada.</li>
+      <li>Consolidado por producto: muestra cuantos cancelados hubo en cada producto.</li>
+      <li>Detallado: muestra Nombre Producto, Localizador, Nombre turista, Fecha de cancelamiento, Agencia que marco cancelamiento y boton Ver.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Reporte de no show</h4>
+    <ol>
+      <li>Tiene version consolidada por producto y version detallada.</li>
+      <li>Consolidado por producto: muestra cuantos no show hubo por producto.</li>
+      <li>Detallado: muestra Nombre Producto, Localizador, Nombre turista, Fecha del no show, Agencia que marco el no show y boton Ver.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Reporte de reembolsos dentro de novedades</h4>
+    <ol>
+      <li>Tiene version consolidada por producto y version detallada.</li>
+      <li>Consolidado por producto: muestra cuantos reembolsos hubo por producto.</li>
+      <li>Detallado: muestra Nombre Producto, Localizador, Nombre turista, Fecha del reembolso o novedad, Agencia que hizo el movimiento y boton Ver.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h3>18.5. Gestion de reembolsos</h3>
+    <p>El modulo de gestion de reembolsos tendra tres reportes principales, todos con filtros por fecha y opcion de generar PDF o enviar por email.</p>
+
+    <h4>Reporte de reembolsos en reembolso</h4>
+    <ol>
+      <li>Filtrable por hoy, ultimos 7 dias, ultimos 15 dias, ultimos 30 dias, fecha inicio y fecha fin.</li>
+      <li>Muestra Producto, Localizador, Pasajero, Fecha solicitado, Agencia que solicito y boton Ver.</li>
+      <li>Solo incluye reembolsos en estado En reembolso.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Reporte de reembolsos pagados</h4>
+    <ol>
+      <li>Usa la misma estructura: Producto, Localizador, Pasajero, Fecha solicitado, Agencia que solicito y boton Ver.</li>
+      <li>Solo incluye reembolsos en estado Pagado.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h4>Reporte de reembolsos por pagar</h4>
+    <ol>
+      <li>Usa la misma estructura: Producto, Localizador, Pasajero, Fecha solicitado, Agencia que solicito y boton Ver.</li>
+      <li>Solo incluye reembolsos en estado Por pagar.</li>
+      <li>Permite PDF o envio por email.</li>
+    </ol>
+
+    <h2>19. Matriz Resumida de Transiciones de Reserva</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Origen</th>
+          <th>Destino</th>
+          <th>Libera cupos</th>
+          <th>Genera cancelacion</th>
+          <th>Genera cupón o crédito</th>
+          <th>Genera notificacion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Reservada</td>
+          <td>Emitida</td>
+          <td>No</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Si</td>
+        </tr>
+        <tr>
+          <td>Reservada</td>
+          <td>Cancelada por usuario</td>
+          <td>Si</td>
+          <td>Si</td>
+          <td>No</td>
+          <td>Si</td>
+        </tr>
+        <tr>
+          <td>Reservada</td>
+          <td>Cancelada por vencimiento</td>
+          <td>Si</td>
+          <td>Si</td>
+          <td>No</td>
+          <td>Si</td>
+        </tr>
+        <tr>
+          <td>Emitida</td>
+          <td>Cancelada por usuario</td>
+          <td>Si</td>
+          <td>Si</td>
+          <td>Si, segun reembolso o crédito</td>
+          <td>Si</td>
+        </tr>
+        <tr>
+          <td>Emitida</td>
+          <td>En reembolso</td>
+          <td>Si, solo antes de la fecha de viaje</td>
+          <td>No</td>
+          <td>No</td>
+          <td>Si</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>20. Reglas Maestras Consolidadas</h2>
+    <ol>
+      <li>Todos los usuarios pueden vender.</li>
+      <li>Todos los usuarios pueden crear cotizaciones.</li>
+      <li>Todos los usuarios pueden crear reservas.</li>
+      <li>Todos los usuarios pueden editar su propio perfil.</li>
+      <li>La agencia vendedora no accede al panel de productos.</li>
+      <li>La agencia proveedora tiene foco comercial, operativo y de producto.</li>
+      <li>Solo el admin proveedor gestiona productos.</li>
+      <li>El super usuario puede hacerlo todo, pero asignando cada entidad a una agencia cuando corresponda.</li>
+      <li>La reserva nunca se elimina.</li>
+      <li>La cancelacion nunca se elimina ni se edita.</li>
+      <li>El cupón nunca se elimina.</li>
+      <li>El reembolso nunca se elimina.</li>
+      <li>Las reservadas vencen si no se emiten a tiempo.</li>
+      <li>Las emitidas no vencen.</li>
+      <li>Las reservas inactivas siempre deben abrirse en detalle.</li>
+      <li>El check-in es por turista.</li>
+      <li>El no show genera reserva hija cancelada y trazabilidad.</li>
+      <li>La cancelacion debe preguntar siempre entre reembolso o crédito en cupón.</li>
+      <li>Cada reserva tiene su configuracion de multas.</li>
+      <li>Cada cambio de estado genera notificacion.</li>
+      <li>La liberacion de cupos en reembolso emitido depende de que aun no llegue la fecha de viaje o embarque.</li>
+    </ol>
+
+    <h2>21. Conclusion</h2>
+    <ol>
+      <li>La reserva es la entidad central del sistema.</li>
+      <li>Los permisos dependen del rol y del tipo de agencia.</li>
+      <li>El lado vendedor tiene foco comercial y de reservas.</li>
+      <li>El lado proveedor tiene foco comercial, operativo y de productos.</li>
+      <li>El super usuario gobierna todo el sistema con trazabilidad por agencia.</li>
+      <li>El detalle de reserva debe ser completamente auditable.</li>
+      <li>Cancelacion, cupón, reembolso, check-in, no show, reservas hijas y reportes forman un flujo integral que debe implementarse de manera coherente.</li>
+    </ol>
+  </main>
+</body>
+</html>
+

@@ -1,6 +1,10 @@
 import RelatedProductCard from "./RelatedProductCard";
 
 export default function RelatedProductsSection({ items }) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return null;
+  }
+
   return (
     <section className="detalle-producto-related">
       <div className="detalle-producto-related-head">

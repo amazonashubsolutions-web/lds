@@ -11,16 +11,12 @@ import ResultsToolbar from "../components/resultados/ResultsToolbar";
 import {
   ALL_RESULTS_CATEGORY_ID,
   footerData,
-  getResultsCards,
   resultCategories,
   resultsFilters,
   resultsPagination,
   resultsSummary,
 } from "../data/resultadosData";
-import {
-  getResolvedProductStatus,
-  subscribeToProductStatusChanges,
-} from "../utils/productStatusStorage";
+import { fetchPublicResultsCardsFromSupabase } from "../services/products/publicCatalog.js";
 
 const PRICE_ASC_SORT_OPTION = "Precio: menor a mayor";
 const PRICE_DESC_SORT_OPTION = "Precio: mayor a menor";
@@ -135,7 +131,9 @@ function scrollToPageTop() {
 
 export default function ResultadosPage() {
   const [searchParams] = useSearchParams();
-  const [, setStatusRefreshVersion] = useState(0);
+  const [resultsCardsState, setResultsCardsState] = useState([]);
+  const [isLoadingResults, setIsLoadingResults] = useState(true);
+  const [resultsLoadError, setResultsLoadError] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileFiltersMounted, setMobileFiltersMounted] = useState(false);
   const [activeCategoryId, setActiveCategoryId] = useState(ALL_RESULTS_CATEGORY_ID);
@@ -156,20 +154,62 @@ export default function ResultadosPage() {
   const searchedDate = searchParams.get("fecha");
 
   useEffect(() => {
-    return subscribeToProductStatusChanges(() => {
-      setStatusRefreshVersion((current) => current + 1);
-    });
+    let isMounted = true;
+    setIsLoadingResults(true);
+    setResultsLoadError("");
+
+    fetchPublicResultsCardsFromSupabase()
+      .then((nextResultsCards) => {
+        if (!isMounted || !Array.isArray(nextResultsCards)) {
+          return;
+        }
+
+        setResultsCardsState(nextResultsCards);
+      })
+      .catch((error) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setResultsCardsState([]);
+        setResultsLoadError(
+          error?.message ||
+            "No fue posible consultar el catalogo en Supabase. Revisa tu conexion e intenta de nuevo.",
+        );
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingResults(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const activeResultsCards = getResultsCards().filter(
-    (item) => getResolvedProductStatus(item.id, item.status) === "active"
-  );
+  const activeResultsCards = resultsCardsState.filter((item) => item.status === "active");
   const resultsPriceValues = activeResultsCards.map((item) => item.price);
   const resultsMinPrice =
     resultsPriceValues.length > 0 ? Math.min(...resultsPriceValues) : 0;
   const resultsMaxPrice =
     resultsPriceValues.length > 0 ? Math.max(...resultsPriceValues) : 0;
   const [selectedPriceLimit, setSelectedPriceLimit] = useState(resultsMaxPrice);
+
+  useEffect(() => {
+    setSelectedPriceLimit((current) => {
+      if (resultsMaxPrice <= 0) {
+        return 0;
+      }
+
+      if (current <= 0 || current > resultsMaxPrice) {
+        return resultsMaxPrice;
+      }
+
+      return current;
+    });
+  }, [resultsMaxPrice]);
+
   const effectiveSelectedPriceLimit =
     resultsMaxPrice > 0 ? Math.min(selectedPriceLimit, resultsMaxPrice) : 0;
   const formattedSearchedDate = searchedDate
@@ -484,7 +524,27 @@ export default function ResultadosPage() {
                 />
               </div>
             ) : null}
-            <ResultsGrid items={orderedResults} searchedDate={searchedDate ?? ""} />
+            <ResultsGrid
+              items={isLoadingResults || resultsLoadError ? [] : orderedResults}
+              searchedDate={searchedDate ?? ""}
+              isLoading={isLoadingResults}
+              emptyTitle={
+                isLoadingResults
+                  ? "Estamos cargando productos desde Supabase"
+                  : resultsLoadError
+                    ? "No pudimos cargar los productos"
+                    : "No encontramos resultados para esta combinacion"
+              }
+              emptyDescription={
+                isLoadingResults
+                  ? "Espera un momento mientras consultamos el catalogo mas reciente."
+                  : resultsLoadError
+                    ? resultsLoadError
+                    : activeResultsCards.length === 0
+                      ? "Todavia no hay productos activos cargados en Supabase para mostrar en esta vista."
+                      : "Prueba con otra categoria o cambia las subcategorias seleccionadas."
+              }
+            />
             <ResultsPagination currentPage={1} pages={resultsPagination} />
           </div>
         </div>

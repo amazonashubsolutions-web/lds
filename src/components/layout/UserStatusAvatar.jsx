@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { usePanelSession } from "../../contexts/PanelSessionContext";
+import { resolveUserPhotoUrl } from "../../utils/userPhotos";
 
 function ChevronDownIcon() {
   return (
@@ -33,6 +35,7 @@ function LogoutIcon() {
 export default function UserStatusAvatar() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const { displayName, profile, signOut } = usePanelSession();
 
   useEffect(() => {
     if (!isOpen) {
@@ -67,7 +70,7 @@ export default function UserStatusAvatar() {
       >
         <div className="header-user-status" aria-hidden="true">
           <img
-            src="/images/user/hermano juanpa.jpg"
+            src={resolveUserPhotoUrl(profile?.photo_url)}
             alt=""
             className="header-user-status-image"
           />
@@ -75,7 +78,7 @@ export default function UserStatusAvatar() {
         </div>
 
         <div className="header-user-copy">
-          <strong>Pedro</strong>
+          <strong>{String(displayName ?? "Usuario LDS").split(" ")[0]}</strong>
         </div>
 
         <span className="header-user-chevron" aria-hidden="true">
@@ -102,6 +105,10 @@ export default function UserStatusAvatar() {
           <button
             className="header-user-dropdown-item header-user-dropdown-item--danger"
             type="button"
+            onClick={() => {
+              setIsOpen(false);
+              signOut().catch(() => {});
+            }}
           >
             <span className="header-user-dropdown-icon" aria-hidden="true">
               <LogoutIcon />

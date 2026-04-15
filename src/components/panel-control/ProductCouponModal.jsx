@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import LoadingSpinner from "../common/LoadingSpinner";
 import {
   COUPON_DISCOUNT_TARGET_LABELS,
   formatPassengerConditionsSentence,
@@ -81,6 +82,7 @@ export default function ProductCouponModal({
   onRuleConditionChange,
   onStartsAtBlur,
   onSubmit,
+  isSubmitting = false,
   submitLabel = "Guardar cupon",
   title,
 }) {
@@ -102,7 +104,10 @@ export default function ProductCouponModal({
   }
 
   return (
-    <div className="panel-control-product-coupon-modal-backdrop" onClick={onClose}>
+    <div
+      className="panel-control-product-coupon-modal-backdrop"
+      onClick={isSubmitting ? undefined : onClose}
+    >
       <div
         className="panel-control-product-coupon-modal"
         role="dialog"
@@ -115,6 +120,7 @@ export default function ProductCouponModal({
           className="panel-control-product-coupon-modal-close"
           onClick={onClose}
           aria-label="Cerrar formulario de cupon"
+          disabled={isSubmitting}
         >
           <span className="material-icons-outlined">close</span>
         </button>
@@ -163,6 +169,7 @@ export default function ProductCouponModal({
                 onChange={onFieldChange}
                 placeholder="Ej. MINCA15"
                 autoComplete="off"
+                disabled={isSubmitting}
                 required
               />
             </label>
@@ -184,6 +191,7 @@ export default function ProductCouponModal({
                 autoComplete="off"
                 inputMode="numeric"
                 maxLength={3}
+                disabled={isSubmitting}
                 required
               />
             </label>
@@ -197,6 +205,7 @@ export default function ProductCouponModal({
                 onChange={onFieldChange}
                 onBlur={onStartsAtBlur}
                 min={formData.createdAtValue}
+                disabled={isSubmitting}
                 required
               />
             </label>
@@ -209,6 +218,7 @@ export default function ProductCouponModal({
                 value={formData.endsAt}
                 onChange={onFieldChange}
                 min={formData.startsAt || formData.createdAtValue}
+                disabled={isSubmitting}
                 required
               />
             </label>
@@ -221,6 +231,7 @@ export default function ProductCouponModal({
                 onChange={onFieldChange}
                 placeholder="Explica el motivo u objetivo comercial de la creacion del cupon."
                 rows={3}
+                disabled={isSubmitting}
                 required
               />
             </label>
@@ -253,6 +264,7 @@ export default function ProductCouponModal({
                               event.target.value,
                             )
                           }
+                          disabled={isSubmitting}
                           required
                         >
                           {availableOptions.map((option) => (
@@ -274,6 +286,7 @@ export default function ProductCouponModal({
                               event.target.value,
                             )
                           }
+                          disabled={isSubmitting}
                           required
                         >
                           {PASSENGER_OPERATOR_OPTIONS.map((option) => (
@@ -303,6 +316,7 @@ export default function ProductCouponModal({
                           autoComplete="off"
                           inputMode="numeric"
                           maxLength={3}
+                          disabled={isSubmitting}
                           required
                         />
                       </label>
@@ -313,6 +327,7 @@ export default function ProductCouponModal({
                         type="button"
                         className="panel-control-product-coupon-rule-remove"
                         onClick={() => onRemoveRuleCondition(condition.id)}
+                        disabled={isSubmitting}
                       >
                         Eliminar condicion
                       </button>
@@ -330,6 +345,7 @@ export default function ProductCouponModal({
                   type="button"
                   className="panel-control-product-coupon-rule-add"
                   onClick={onAddRuleCondition}
+                  disabled={isSubmitting}
                 >
                   Agregar condicion
                 </button>
@@ -352,6 +368,7 @@ export default function ProductCouponModal({
                   name="discountTarget"
                   value={formData.discountTarget}
                   onChange={onFieldChange}
+                  disabled={isSubmitting}
                 >
                   {COUPON_DISCOUNT_TARGET_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -372,14 +389,19 @@ export default function ProductCouponModal({
               type="button"
               className="panel-control-product-coupon-form-secondary"
               onClick={onClose}
+              disabled={isSubmitting}
             >
               Cancelar
             </button>
             <button
               type="submit"
               className="panel-control-product-coupon-form-primary"
+              disabled={isSubmitting}
             >
-              {submitLabel}
+              <span className="lds-button-content">
+                {isSubmitting ? <LoadingSpinner label={submitLabel} size="sm" /> : null}
+                <span>{isSubmitting ? "Guardando..." : submitLabel}</span>
+              </span>
             </button>
           </div>
         </form>

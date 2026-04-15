@@ -1,0 +1,3002 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LDS - Backlog Priorizado</title>
+  <style>
+    :root { --paper:#fffdf8; --ink:#1f2a24; --muted:#5e6a63; --line:#d8d1c2; --accent:#1f7a52; --accent-soft:#e6f4ed; --code:#f2efe7; --table-head:#efe8d9; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family: Georgia, "Times New Roman", serif; background:linear-gradient(180deg,#efe8d9 0%,#f8f5ee 100%); color:var(--ink); }
+    .page { max-width:1100px; margin:32px auto; background:var(--paper); padding:40px 46px; border:1px solid var(--line); border-radius:20px; box-shadow:0 18px 60px rgba(70,52,20,.08); }
+    h1,h2,h3,h4 { margin:0 0 12px; line-height:1.2; }
+    h1 { font-size:34px; margin-bottom:18px; color:#163d2c; }
+    h2 { font-size:24px; margin-top:34px; padding-top:12px; border-top:1px solid var(--line); }
+    h3 { font-size:20px; margin-top:24px; color:#204f3a; }
+    h4 { font-size:17px; margin-top:18px; }
+    p { margin:0 0 12px; color:var(--ink); }
+    ul, ol { margin:0 0 14px 22px; padding:0; }
+    li { margin:0 0 6px; }
+    code { background:var(--code); padding:2px 6px; border-radius:6px; font-size:.95em; }
+    pre { background:#f2efe7; border:1px solid var(--line); padding:14px; border-radius:12px; overflow:auto; white-space:pre-wrap; word-break:break-word; font-size:12px; line-height:1.45; }
+    .lead { background:var(--accent-soft); border:1px solid #cfe5d9; color:#214936; padding:14px 16px; border-radius:14px; margin-bottom:22px; }
+    .table-wrap { overflow-x:auto; margin:10px 0 18px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th, td { border:1px solid var(--line); padding:9px 10px; vertical-align:top; text-align:left; }
+    th { background:var(--table-head); }
+    .footer { margin-top:28px; padding-top:12px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+    @page { size:A4; margin:12mm; }
+    @media print { body { background:white; } .page { margin:0; box-shadow:none; border:none; border-radius:0; padding:0; max-width:none; } table { font-size:11px; } th, td { padding:6px 7px; } pre { font-size:10px; } }
+  </style>
+</head>
+<body>
+<main class="page">
+<p>﻿# LDS - Backlog Priorizado, Criterios de Aceptacion, Tareas Tecnicas y Roadmap</p>
+<h2>1. Escala de prioridad</h2>
+<ul>
+<li><code>P0</code>: indispensable para el MVP operativo</li>
+<li><code>P1</code>: importante para salida comercial controlada</li>
+<li><code>P2</code>: mejora funcional necesaria para escalar</li>
+<li><code>P3</code>: mejora posterior o de optimizacion</li>
+</ul>
+<h2>2. Historias priorizadas con criterios de aceptacion</h2>
+<h3>Modulo 1. Acceso, usuarios y agencias</h3>
+<h4>US-001 - Crear agencias</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>super usuario</code>, quiero crear agencias vendedoras y proveedoras para habilitar nuevas empresas dentro de LDS.</li>
+<li>Criterios de aceptacion:</li>
+<li>se puede crear una agencia con nombre, NIT, tipo de persona, direccion, telefono, email, horario, ciudad y pais</li>
+<li>se puede registrar el representante legal con nombre, documento, telefono, email y cargo</li>
+<li>la agencia queda clasificada como <code>vendedora</code> o <code>proveedora</code></li>
+<li>la agencia queda disponible para asociar usuarios</li>
+</ul>
+<h4>US-002 - Crear usuarios por agencia</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>admin de agencia</code> o <code>super usuario</code>, quiero crear usuarios asociados a una agencia para habilitar operacion comercial.</li>
+<li>Criterios de aceptacion:</li>
+<li>el formulario solicita nombre, apellido, celular, email, foto, fecha de nacimiento y direccion</li>
+<li>todo usuario nuevo se crea en estado <code>inactivo</code></li>
+<li>todo usuario queda asociado a una agencia especifica</li>
+<li>se permite definir si el usuario es <code>admin</code> o <code>agente de viajes</code></li>
+</ul>
+<h4>US-003 - Activacion por email</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero activar usuarios solo despues de confirmar email para asegurar que el correo existe.</li>
+<li>Criterios de aceptacion:</li>
+<li>al crear el usuario se envia email de activacion</li>
+<li>mientras no confirme, el usuario permanece <code>inactivo</code></li>
+<li>al confirmar el email, el estado cambia a <code>activo</code></li>
+<li>si el usuario es reactivado despues de estar inactivo, se vuelve a validar email</li>
+</ul>
+<h4>US-004 - Editar perfil propio</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario</code>, quiero editar mi propio perfil para mantener actualizados mis datos.</li>
+<li>Criterios de aceptacion:</li>
+<li>el usuario puede cambiar nombre, foto, email, celular y otros datos personales permitidos</li>
+<li>los cambios quedan guardados en su perfil</li>
+<li>si cambia el email, el sistema puede requerir nueva validacion</li>
+</ul>
+<h4>US-005 - Ver detalle de agencia y usuarios asociados</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>admin de agencia</code> o <code>super usuario</code>, quiero abrir el detalle de una agencia y ver la lista de usuarios asociados, con su rol y estado, para poder administrarlos.</li>
+<li>Criterios de aceptacion:</li>
+<li>la vista de agencia muestra los datos generales y del representante legal</li>
+<li>la vista muestra una tabla de usuarios asociados</li>
+<li>cada usuario muestra nombre, tipo de usuario y estado</li>
+<li>la tabla permite buscar por nombre y filtrar por tipo y estado</li>
+</ul>
+<h3>Modulo 2. Productos y configuracion comercial</h3>
+<h4>US-006 - Crear producto turistico</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>admin de agencia proveedora</code>, quiero crear un producto turistico con su informacion comercial y operativa para ponerlo a la venta.</li>
+<li>Criterios de aceptacion:</li>
+<li>el producto registra nombre, ciudad, punto de encuentro, horario de salida, horario de llegada y descripcion breve</li>
+<li>el producto permite configurar temporadas altas</li>
+<li>el producto permite configurar multas de cancelamiento, no show y reembolso</li>
+<li>el producto queda en estado pendiente de habilitacion al finalizar el formulario</li>
+</ul>
+<h4>US-007 - Habilitar producto con fechas activas</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>admin de agencia proveedora</code>, quiero habilitar un producto definiendo fechas activas para permitir su venta y operacion.</li>
+<li>Criterios de aceptacion:</li>
+<li>al hacer clic en <code>habilitar</code>, LDS redirige al calendario del producto</li>
+<li>si el producto es nuevo o inactivo, se abre automaticamente un modal obligatorio</li>
+<li>el modal no se puede cerrar con <code>Escape</code> ni con clic fuera</li>
+<li>el usuario debe definir fecha inicial y fecha final antes de usar el calendario</li>
+<li>la fecha inicial no permite valores anteriores a hoy</li>
+<li>la fecha inicial solo permite seleccionar hasta el 31 de diciembre del mismo ano</li>
+<li>la fecha final solo permite seleccionar desde la fecha inicial hasta el 31 de enero del ano siguiente</li>
+</ul>
+<h3>Modulo 3. Calendario de productos</h3>
+<h4>US-008 - Ver calendario de ocupacion</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>admin de agencia proveedora</code>, quiero ver el calendario del producto para identificar rapidamente fechas libres, ocupadas y no operables.</li>
+<li>Criterios de aceptacion:</li>
+<li>la vista muestra nombre del producto, ciudad, punto de encuentro, hora de salida, hora de llegada y descripcion breve</li>
+<li>cada celda muestra el numero del dia</li>
+<li>las celdas sin reservas aparecen en blanco</li>
+<li>las celdas con reservas usan verde con intensidad segun porcentaje de ocupacion</li>
+<li>las celdas no operables aparecen en rojo</li>
+<li>el calendario permite navegar por fecha, mes y ano</li>
+</ul>
+<h4>US-009 - Marcar temporada alta en calendario</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>admin de agencia proveedora</code>, quiero ver en el calendario las fechas de temporada alta para distinguirlas de un vistazo.</li>
+<li>Criterios de aceptacion:</li>
+<li>las fechas definidas como temporada alta se muestran con una bolita negra o gris oscuro alrededor del numero del dia</li>
+<li>el numero del dia se muestra en blanco para dar contraste</li>
+<li>la marca de temporada alta no reemplaza el color de ocupacion de la celda</li>
+</ul>
+<h4>US-010 - Inactivar y reactivar fechas</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>admin de agencia proveedora</code> o <code>super usuario</code>, quiero inactivar o reactivar fechas operativas del producto respetando reglas de proteccion al cliente.</li>
+<li>Criterios de aceptacion:</li>
+<li>una fecha solo se puede inactivar si no tiene reservas activas</li>
+<li>si la fecha tiene reservas activas, nadie puede inactivarla</li>
+<li>si alguien intenta inactivarla con reservas activas, LDS bloquea la accion y envia alerta por email al super usuario</li>
+<li>una fecha inactiva puede ser reactivada por el admin proveedor o el super usuario</li>
+</ul>
+<h3>Modulo 4. Reservas</h3>
+<h4>US-011 - Crear reserva</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>usuario operativo de agencia vendedora o proveedora</code>, <code>admin de agencia</code> o <code>super usuario</code>, quiero crear una reserva para vender un producto turistico a un cliente.</li>
+<li>Criterios de aceptacion:</li>
+<li>todos los roles operativos autorizados pueden crear reservas</li>
+<li>la reserva queda asociada al usuario creador y a la agencia correspondiente</li>
+<li>la reserva puede nacer en estado <code>reservada</code></li>
+<li>la reserva conserva localizador unico</li>
+</ul>
+<h4>US-012 - Ver detalle completo de reserva</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>usuario autorizado sobre la reserva</code>, <code>admin de su agencia</code> o <code>super usuario</code>, quiero abrir una reserva y ver toda su informacion comercial, operativa, financiera e historica para darle seguimiento.</li>
+<li>Criterios de aceptacion:</li>
+<li>la reserva muestra informacion general, pasajeros, estados individuales y metodo de pago</li>
+<li>la reserva muestra valores pagados, descuentos y cupones aplicados</li>
+<li>la reserva muestra historial de movimientos desde la creacion hasta el check in</li>
+<li>la reserva muestra notas especiales y novedades</li>
+<li>aunque la reserva este inactiva por cancelacion, reembolso o vencimiento, sigue abriendo en modo consulta</li>
+</ul>
+<h4>US-013 - Buscar y filtrar reservas</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>usuario operativo con acceso al panel de reservas</code>, <code>admin de agencia</code> o <code>super usuario</code>, quiero buscar y filtrar reservas rapidamente para encontrar operaciones especificas.</li>
+<li>Criterios de aceptacion:</li>
+<li>se puede buscar por localizador</li>
+<li>se puede filtrar por fecha de emision, fecha de creacion y fecha de embarque</li>
+<li>se puede usar periodos rapidos: hoy, ultimos 7 dias, ultimos 15 dias, ultimos 30 dias</li>
+<li>se puede filtrar por fecha inicio y fecha fin</li>
+<li>despues de obtener resultados, se puede refinar por nombre de turista, documento y estado</li>
+<li>los resultados se pueden agrupar por producto con conteos</li>
+</ul>
+<h4>US-014 - Imprimir y enviar reserva</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario autorizado sobre la reserva</code>, <code>admin de su agencia</code> o <code>super usuario</code>, quiero imprimir o enviar por email una reserva para compartirla con el cliente.</li>
+<li>Criterios de aceptacion:</li>
+<li>la reserva ofrece accion <code>Imprimir</code></li>
+<li>la reserva ofrece accion <code>Enviar por email</code></li>
+<li>la accion usa los datos completos de la reserva</li>
+</ul>
+<h4>US-015 - Dividir reserva</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario autorizado sobre la reserva</code>, <code>admin de su agencia</code> o <code>super usuario</code>, quiero dividir una reserva activa para separar uno o varios pasajeros en una nueva reserva manteniendo las mismas condiciones.</li>
+<li>Criterios de aceptacion:</li>
+<li>la accion solo aplica a reservas <code>reservadas</code> o <code>emitidas</code></li>
+<li>la reserva nueva conserva producto, destino, fechas, itinerario y precios</li>
+<li>la reserva original conserva los pasajeros restantes</li>
+<li>la division no genera cancelacion, cupon ni reembolso</li>
+</ul>
+<h3>Modulo 5. Estados y notificaciones de reserva</h3>
+<h4>US-016 - Gestionar estados de reserva</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero gestionar el ciclo de vida de la reserva para aplicar reglas operativas y comerciales.</li>
+<li>Criterios de aceptacion:</li>
+<li>la reserva soporta estados <code>reservada</code>, <code>emitida</code>, <code>cancelada por usuario</code>, <code>cancelada por vencimiento</code> y <code>en reembolso</code></li>
+<li>una reserva <code>reservada</code> puede vencer si no se emite a tiempo</li>
+<li>una reserva <code>emitida</code> no vence</li>
+<li>solo una reserva <code>emitida</code> puede pasar a <code>en reembolso</code></li>
+</ul>
+<h4>US-017 - Notificar cambio de estado</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero generar notificaciones cada vez que cambia el estado de una reserva para mantener trazabilidad.</li>
+<li>Criterios de aceptacion:</li>
+<li>todo cambio de estado genera una notificacion</li>
+<li>aplica a reservada, emitida, cancelada por usuario, cancelada por vencimiento y en reembolso</li>
+<li>la notificacion queda registrada para consulta</li>
+</ul>
+<h3>Modulo 6. Cancelaciones, cupones y reembolsos</h3>
+<h4>US-018 - Cancelar reserva completa o por pasajero</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>creador de reserva</code> o <code>admin de su agencia</code>, quiero cancelar una reserva completa o solo un pasajero para resolver solicitudes del cliente.</li>
+<li>Criterios de aceptacion:</li>
+<li>se permite cancelacion completa</li>
+<li>se permite cancelacion individual por pasajero</li>
+<li>la cancelacion parcial crea una reserva hija cancelada para el pasajero afectado</li>
+<li>toda cancelacion crea registro historico de cancelacion</li>
+</ul>
+<h4>US-019 - Resolver cancelacion con cupon o reembolso</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero preguntar si una cancelacion se resuelve por cupon o reembolso para aplicar la salida correcta.</li>
+<li>Criterios de aceptacion:</li>
+<li>al cancelar, LDS pregunta si se desea <code>reembolso</code> o <code>credito en cupon</code></li>
+<li>si la reserva estaba <code>reservada</code>, no se genera cupon automaticamente por simple cancelacion</li>
+<li>si la reserva estaba <code>emitida</code>, la resolucion puede terminar en cupon o reembolso segun eleccion</li>
+<li>el sistema calcula el valor neto despues de multas</li>
+</ul>
+<h4>US-020 - Aplicar reglas de multas</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero aplicar correctamente multas de cancelacion, no show y reembolso para calcular el saldo del cliente.</li>
+<li>Criterios de aceptacion:</li>
+<li>la multa de cancelacion y la multa de no show son excluyentes</li>
+<li>la multa de reembolso se aplica adicionalmente si el cliente solicita reembolso</li>
+<li>los valores son definidos por el dueno del producto</li>
+<li>el sistema soporta productos con reembolso alto o sin reembolso</li>
+</ul>
+<h4>US-021 - Cancelacion sin multas por responsabilidad de la agencia</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero devolver el 100 por ciento al cliente cuando la cancelacion o alteracion es responsabilidad del dueno del producto.</li>
+<li>Criterios de aceptacion:</li>
+<li>si la agencia dueÃ±a del producto cancela por clima, operacion o cambios de fecha u horario, multa de cancelacion = 0</li>
+<li>si el cliente solicita reembolso en ese escenario, tasa de reembolso = 0</li>
+<li>el cliente puede recibir cupon del 100 por ciento o reembolso integral</li>
+<li>si el cliente acepta el cambio de fecha u horario, no se genera multa ni devolucion y la reserva continua operando</li>
+<li>LDS envia email automatico notificando la alteracion al cliente</li>
+</ul>
+<h4>US-022 - Ver y gestionar cupon</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario autorizado sobre la reserva o el cupon</code>, <code>admin de su agencia</code> o <code>super usuario</code>, quiero abrir un cupon y ver toda su informacion y relacion con la reserva para gestionarlo correctamente.</li>
+<li>Criterios de aceptacion:</li>
+<li>el cupon muestra codigo, agencias, agente creador, motivo y fecha</li>
+<li>el cupon muestra bloque de informacion de reserva asociada</li>
+<li>el cupon muestra bloque economico con valor del producto, multa y saldo final</li>
+<li>el cupon permite PDF y envio por email</li>
+<li>el cupon ofrece accion para solicitar reembolso si el cliente no desea usarlo</li>
+</ul>
+<h4>US-023 - Ver y gestionar reembolso</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>usuario autorizado sobre el reembolso</code>, <code>admin de su agencia</code> o <code>super usuario</code>, quiero abrir un reembolso y ver su estructura completa para hacer seguimiento financiero entre agencias.</li>
+<li>Criterios de aceptacion:</li>
+<li>el reembolso muestra codigo, agencias involucradas, creador, fechas y estado</li>
+<li>el reembolso muestra la informacion de la reserva y del pasajero</li>
+<li>el reembolso muestra bloque economico con tarifa, multas aplicadas y saldo</li>
+<li>si el estado es <code>Por pagar</code>, la agencia dueÃ±a del producto puede subir comprobante de pago</li>
+<li>la agencia compradora puede solicitar pago por email automatico si sigue pendiente</li>
+<li>cuando el pago existe, la agencia compradora puede ver y descargar el comprobante</li>
+</ul>
+<h3>Modulo 7. Lista de pasajeros y check in</h3>
+<h4>US-024 - Ver listas de pasajeros</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>usuario de agencia proveedora</code> o <code>admin de agencia proveedora</code>, quiero ver listas de pasajeros por producto y fecha para operar el servicio del dia.</li>
+<li>Criterios de aceptacion:</li>
+<li>la entrada al modulo se hace desde <code>Lista de pasajeros</code>, no desde el panel de reservas</li>
+<li>la pantalla principal muestra nombre de producto, fecha, estado y boton <code>Ver lista</code></li>
+<li>la lista puede estar <code>Inactiva</code>, <code>Activa</code> o <code>Check in</code></li>
+</ul>
+<h4>US-025 - Operar check in por pasajero</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>operador proveedor</code>, quiero marcar check in o no show por pasajero para reflejar quien realmente viajo.</li>
+<li>Criterios de aceptacion:</li>
+<li>al abrir la lista se muestran localizador, agencia, tipo de pasajero, documento, pais, sexo, edad y celular</li>
+<li>si la lista esta <code>Activa</code>, cada pasajero muestra boton <code>Reserva</code></li>
+<li>si la lista esta en estado <code>Check in</code>, cada pasajero muestra botones <code>Reserva</code> y <code>Check in</code></li>
+<li>el check in se realiza por pasajero, no por reserva completa</li>
+</ul>
+<h4>US-026 - Gestionar no show y reservas hijas</h4>
+<ul>
+<li>Prioridad: <code>P0</code></li>
+<li>Historia: Como <code>sistema</code>, quiero manejar no show por pasajero creando reservas hijas y cupones para mantener trazabilidad completa.</li>
+<li>Criterios de aceptacion:</li>
+<li>al marcar no show, se crea una reserva hija individual cancelada</li>
+<li>se genera un cupon individual para ese pasajero</li>
+<li>la reserva original conserva a quienes si viajaron</li>
+<li>la reserva original guarda historico con turista, fecha de no show y reserva hija creada</li>
+</ul>
+<h4>US-027 - Ver novedades en lista inactiva</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario proveedor</code>, quiero revisar listas inactivas con novedades finales para consultar el resultado del embarque.</li>
+<li>Criterios de aceptacion:</li>
+<li>pasajeros chequeados muestran fecha, hora exacta y agente que hizo check in</li>
+<li>pasajeros no show muestran fecha, agencia y cupon asociado</li>
+<li>pasajeros con cancelacion o reembolso muestran bloque de novedad debajo de su informacion</li>
+<li>si la novedad es cupon, existe boton <code>Ver cupon</code></li>
+<li>si la novedad es reembolso, existe boton <code>Ver reembolso</code></li>
+</ul>
+<h3>Modulo 8. Reportes</h3>
+<h4>US-028 - Reporte de ventas</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario</code>, quiero generar reportes de ventas detallados y consolidados para analizar el desempeno comercial.</li>
+<li>Criterios de aceptacion:</li>
+<li>el reporte detallado muestra localizador, fecha de emision, valor, usuario vendedor y tipo de venta</li>
+<li>el reporte consolidado soporta agrupacion por valor, forma de pago y usuario</li>
+<li>el reporte permite filtros por usuario, fecha y forma de pago</li>
+<li>el reporte permite PDF y envio por email</li>
+</ul>
+<h4>US-029 - Reporte de ganancias</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario</code>, quiero generar reportes de ganancias detallados y consolidados para medir utilidad por producto y vendedor.</li>
+<li>Criterios de aceptacion:</li>
+<li>el reporte detallado muestra localizador, fecha, ganancia, usuario y tipo de pago</li>
+<li>el consolidado soporta agrupacion por forma de pago y por usuario</li>
+<li>el reporte permite filtros por fecha</li>
+<li>el reporte permite PDF y envio por email</li>
+</ul>
+<h4>US-030 - Reporte de ventas facturado</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario</code>, quiero generar reportes de ventas facturadas para controlar creditos operados entre agencias.</li>
+<li>Criterios de aceptacion:</li>
+<li>el detallado muestra localizador, fecha, valor, agencia que vendio y estado pagado/no pagado</li>
+<li>existe consolidado por agencia</li>
+<li>existe consolidado por estado general pagado/no pagado</li>
+<li>el reporte permite PDF y envio por email</li>
+</ul>
+<h4>US-031 - Reportes de novedades y reembolsos</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>usuario</code>, quiero generar reportes de novedades y gestion de reembolsos para controlar incidencias operativas.</li>
+<li>Criterios de aceptacion:</li>
+<li>existe reporte general de novedades por fechas con cancelados, no show y reembolsos</li>
+<li>existen reportes especificos consolidados y detallados por producto para cancelados, no show y reembolsos</li>
+<li>existen reportes de reembolsos <code>En reembolso</code>, <code>Pagados</code> y <code>Por pagar</code></li>
+<li>todos permiten filtros por fecha, PDF y envio por email</li>
+</ul>
+<h3>Modulo 9. Alianzas y ventas facturadas</h3>
+<h4>US-032 - Crear alianza comercial</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>admin de agencia proveedora</code>, quiero crear una alianza con una agencia vendedora para otorgarle credito facturado.</li>
+<li>Criterios de aceptacion:</li>
+<li>la pantalla muestra ciudad y nombre de la agencia proveedora</li>
+<li>existe bloque <code>Buscar Agencia Aliada</code> con input y boton <code>Buscar</code></li>
+<li>LDS devuelve nombre, NIT, tipo de persona, direccion, telefono, email, ciudad y pais de la agencia encontrada</li>
+<li>se puede ingresar el <code>Valor Facturado</code></li>
+<li>se puede adjuntar imagen del contrato entre agencias</li>
+</ul>
+<h4>US-033 - Ver lista de alianzas</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>admin</code>, quiero ver las alianzas creadas para consultar su estado y abrir su detalle.</li>
+<li>Criterios de aceptacion:</li>
+<li>la lista muestra agencia proveedora, agencia vendedora, estado y boton <code>Ver</code></li>
+<li>existen estados <code>Activo</code>, <code>Inactivo</code> y <code>Suspendido</code></li>
+<li>la pantalla principal ofrece boton <code>Crear alianza</code></li>
+</ul>
+<h4>US-034 - Ver movimientos de alianza</h4>
+<ul>
+<li>Prioridad: <code>P1</code></li>
+<li>Historia: Como <code>admin</code>, quiero abrir una alianza y ver sus movimientos para controlar el saldo del credito facturado.</li>
+<li>Criterios de aceptacion:</li>
+<li>la vista muestra ciudad, agencia aliada, valor facturado y saldo actual</li>
+<li>existe filtro por tiempo: hoy, ultimos 7 dias, esta semana y otros periodos</li>
+<li>los movimientos se muestran del mas reciente al mas antiguo</li>
+<li>la tabla muestra movimiento, fecha, descripcion, valor, saldo y boton <code>Ver</code></li>
+<li>una <code>Venta</code> se ve en rojo y descuenta saldo</li>
+<li>un <code>Pago</code> se ve en negro y suma saldo</li>
+<li>si el movimiento es pago, <code>Ver</code> abre el recibo</li>
+<li>si el movimiento es venta, <code>Ver</code> abre la reserva</li>
+</ul>
+<h2>3. Tareas tecnicas por modulo</h2>
+<h3>3.1. Acceso, usuarios y agencias</h3>
+<ul>
+<li>modelar tablas o colecciones: <code>agencies</code>, <code>legal_representatives</code>, <code>users</code></li>
+<li>definir roles y permisos base</li>
+<li>implementar flujo de activacion por email</li>
+<li>crear CRUD de usuarios con relacion obligatoria a agencia</li>
+<li>crear vista detalle de agencia con tabla de usuarios y filtros</li>
+</ul>
+<h3>3.2. Productos y calendario</h3>
+<ul>
+<li>modelar <code>products</code>, <code>product_subcategories</code>, <code>product_subcategory_links</code>, <code>product_detail_content</code>, <code>product_gallery_images</code>, <code>product_seasons</code>, <code>product_penalties</code>, <code>product_calendar_dates</code></li>
+<li>implementar wizard o flujo de creacion de producto</li>
+<li>implementar redireccion obligatoria al calendario al habilitar</li>
+<li>implementar modal bloqueante de fechas activas</li>
+<li>construir componente calendario con reglas de color por ocupacion, temporada alta y fechas no operables</li>
+<li>implementar acciones de inactivar/reactivar fechas con validacion de reservas activas</li>
+<li>implementar alerta por email al super usuario cuando se intente cerrar una fecha con reservas activas</li>
+</ul>
+<h3>3.3. Reservas</h3>
+<ul>
+<li>modelar <code>reservations</code>, <code>reservation_passengers</code>, <code>reservation_notes</code>, <code>reservation_status_history</code></li>
+<li>definir maquina de estados de reserva</li>
+<li>implementar buscador, filtros y agrupacion por producto</li>
+<li>construir vista detalle de reserva con bloques general, pasajeros, financiero, historial y novedades</li>
+<li>implementar impresion y envio por email</li>
+<li>implementar division de reserva</li>
+</ul>
+<h3>3.4. Cancelaciones, cupones y reembolsos</h3>
+<ul>
+<li>modelar <code>cancellations</code>, <code>coupons</code>, <code>refunds</code>, <code>refund_receipts</code>, <code>refund_payment_reminders</code></li>
+<li>implementar motor de calculo de multas</li>
+<li>distinguir origen del cambio: cliente, no show, agencia duena del producto</li>
+<li>implementar flujo de cancelacion total y parcial</li>
+<li>generar reservas hijas en cancelaciones parciales y no show</li>
+<li>implementar pantalla detalle de cupon</li>
+<li>implementar pantalla detalle de reembolso</li>
+<li>implementar subida, consulta y descarga de comprobante de pago</li>
+<li>implementar recordatorio automatico por email para pagos pendientes</li>
+</ul>
+<h3>3.5. Lista de pasajeros y check in</h3>
+<ul>
+<li>modelar <code>passenger_lists</code>, <code>passenger_list_items</code>, <code>passenger_list_status_history</code>, <code>checkin_events</code>, <code>no_show_events</code></li>
+<li>construir pantalla principal de listas con estados <code>Inactiva</code>, <code>Activa</code> y <code>Check in</code></li>
+<li>construir detalle por pasajero con botones dinamicos</li>
+<li>implementar accion <code>Reserva</code></li>
+<li>implementar flujo <code>Check in</code></li>
+<li>implementar flujo <code>No show</code> con reserva hija y cupon</li>
+<li>implementar bloque de novedades por pasajero</li>
+<li>implementar reportes internos de lista inactiva</li>
+<li>definir de forma oficial que el cambio de estado de lista lo realizan <code>admin proveedor</code> y <code>super usuario</code>, mientras <code>usuario proveedor</code> opera <code>check in</code> y <code>no show</code></li>
+</ul>
+<h3>3.6. Reportes</h3>
+<ul>
+<li>definir consultas agregadas para ventas, ganancias, facturado, novedades y reembolsos</li>
+<li>implementar filtros de fecha reutilizables</li>
+<li>construir tablas detalladas y consolidadas</li>
+<li>generar exportacion PDF</li>
+<li>implementar envio por email con adjunto o enlace</li>
+</ul>
+<h3>3.7. Alianzas</h3>
+<ul>
+<li>modelar <code>alliances</code>, <code>alliance_movements</code>, <code>alliance_status_history</code></li>
+<li>implementar buscador de agencias aliadas</li>
+<li>implementar creacion de alianza con valor facturado</li>
+<li>implementar estados de alianza</li>
+<li>implementar vista detalle con saldo actual e historial</li>
+<li>enlazar movimientos de tipo venta con reserva y tipo pago con recibo</li>
+<li>definir que el contrato principal de la alianza vive en <code>alliances.contract_file</code> y no en una tabla separada</li>
+</ul>
+<h2>4. Roadmap por sprint</h2>
+<h2>Sprint 1 - Fundacion del sistema</h2>
+<ul>
+<li>Objetivo: dejar listas las bases de acceso, agencias y usuarios</li>
+<li>Historias:</li>
+<li><code>US-001</code></li>
+<li><code>US-002</code></li>
+<li><code>US-003</code></li>
+<li><code>US-005</code></li>
+<li>Entregables tecnicos:</li>
+<li>modelo de agencias y usuarios</li>
+<li>roles base</li>
+<li>activacion por email</li>
+<li>vista de agencia con usuarios asociados</li>
+</ul>
+<h2>Sprint 2 - Productos y habilitacion inicial</h2>
+<ul>
+<li>Objetivo: permitir crear productos con reglas comerciales y habilitarlos</li>
+<li>Historias:</li>
+<li><code>US-006</code></li>
+<li><code>US-007</code></li>
+<li>Entregables tecnicos:</li>
+<li>CRUD de productos</li>
+<li>configuracion de temporadas</li>
+<li>configuracion de multas</li>
+<li>flujo de habilitacion al calendario</li>
+</ul>
+<h2>Sprint 3 - Calendario operativo</h2>
+<ul>
+<li>Objetivo: visualizar disponibilidad y controlar fechas operativas</li>
+<li>Historias:</li>
+<li><code>US-008</code></li>
+<li><code>US-009</code></li>
+<li><code>US-010</code></li>
+<li>Entregables tecnicos:</li>
+<li>calendario con colores de ocupacion</li>
+<li>marca de temporada alta</li>
+<li>bloqueo de fechas con reservas activas</li>
+<li>reactivacion de fechas</li>
+</ul>
+<h2>Sprint 4 - Reservas base</h2>
+<ul>
+<li>Objetivo: crear y consultar reservas con detalle robusto</li>
+<li>Historias:</li>
+<li><code>US-011</code></li>
+<li><code>US-012</code></li>
+<li><code>US-013</code></li>
+<li><code>US-014</code></li>
+<li>Entregables tecnicos:</li>
+<li>creacion de reservas</li>
+<li>detalle completo de reserva</li>
+<li>busqueda y filtros</li>
+<li>impresion y email</li>
+</ul>
+<h2>Sprint 5 - Estados, cancelaciones y division</h2>
+<ul>
+<li>Objetivo: controlar ciclo de vida y cancelaciones</li>
+<li>Historias:</li>
+<li><code>US-015</code></li>
+<li><code>US-016</code></li>
+<li><code>US-017</code></li>
+<li><code>US-018</code></li>
+<li><code>US-019</code></li>
+<li><code>US-020</code></li>
+<li><code>US-021</code></li>
+<li>Entregables tecnicos:</li>
+<li>maquina de estados</li>
+<li>notificaciones por cambio de estado</li>
+<li>cancelacion total y parcial</li>
+<li>calculo de multas</li>
+<li>escenarios por responsabilidad de agencia</li>
+</ul>
+<h2>Sprint 6 - Cupones, reembolsos y no show</h2>
+<ul>
+<li>Objetivo: cerrar la postventa y la trazabilidad economica</li>
+<li>Historias:</li>
+<li><code>US-022</code></li>
+<li><code>US-023</code></li>
+<li><code>US-026</code></li>
+<li>Entregables tecnicos:</li>
+<li>detalle de cupon</li>
+<li>detalle de reembolso</li>
+<li>comprobantes de pago</li>
+<li>recordatorio automatico por email</li>
+<li>reservas hijas por no show</li>
+</ul>
+<h2>Sprint 7 - Lista de pasajeros y check in</h2>
+<ul>
+<li>Objetivo: operar la salida del producto por pasajero</li>
+<li>Historias:</li>
+<li><code>US-024</code></li>
+<li><code>US-025</code></li>
+<li><code>US-027</code></li>
+<li>Entregables tecnicos:</li>
+<li>modulo lista de pasajeros</li>
+<li>check in por pasajero</li>
+<li>novedades por pasajero</li>
+<li>reportes de listas inactivas</li>
+</ul>
+<h2>Sprint 8 - Alianzas y facturado</h2>
+<ul>
+<li>Objetivo: habilitar la operacion comercial entre agencias con cupo facturado</li>
+<li>Historias:</li>
+<li><code>US-032</code></li>
+<li><code>US-033</code></li>
+<li><code>US-034</code></li>
+<li>Entregables tecnicos:</li>
+<li>creacion de alianza</li>
+<li>listado y estados</li>
+<li>movimientos de credito facturado</li>
+<li>enlaces a recibo y reserva</li>
+</ul>
+<h2>Sprint 9 - Reporteria ejecutiva</h2>
+<ul>
+<li>Objetivo: dar salida a reportes comerciales, operativos y financieros</li>
+<li>Historias:</li>
+<li><code>US-028</code></li>
+<li><code>US-029</code></li>
+<li><code>US-030</code></li>
+<li><code>US-031</code></li>
+<li>Entregables tecnicos:</li>
+<li>reportes de ventas</li>
+<li>reportes de ganancias</li>
+<li>reportes de facturado</li>
+<li>reportes de novedades</li>
+<li>reportes de reembolsos</li>
+<li>exportacion PDF y envio por email</li>
+</ul>
+<h2>5. Orden recomendado de ejecucion</h2>
+<ol>
+<li>usuarios y agencias</li>
+<li>productos</li>
+<li>calendario</li>
+<li>reservas</li>
+<li>estados y cancelaciones</li>
+<li>cupones y reembolsos</li>
+<li>check in y listas de pasajeros</li>
+<li>alianzas</li>
+<li>reportes</li>
+</ol>
+<h2>6. Riesgos y dependencias principales</h2>
+<ul>
+<li>sin modelo de agencias y roles no se puede cerrar permisos</li>
+<li>sin producto y calendario no se puede controlar disponibilidad</li>
+<li>sin maquina de estados no se puede resolver cancelacion, cupon y reembolso</li>
+<li>no show depende de reservas, pasajeros, check in y cupones</li>
+<li>alianzas depende de reservas y ventas facturadas</li>
+<li>reportes dependen de que todos los movimientos queden bien trazados</li>
+</ul>
+<h2>7. Correcciones de rol aplicadas al backlog</h2>
+<ul>
+<li><code>US-005</code>: se aclaro que la vista detalle de agencia aplica a <code>admin de agencia</code> y <code>super usuario</code></li>
+<li><code>US-011</code>: se aclaro que la creacion de reservas aplica a usuarios operativos de agencia, admins y super usuario</li>
+<li><code>US-012</code>: se aclaro que el detalle de reserva aplica a quien tenga control sobre esa reserva, su admin o el super usuario</li>
+<li><code>US-013</code>: se aclaro que el buscador de reservas aplica a quien tiene acceso al panel de reservas</li>
+<li><code>US-014</code>: se aclaro que imprimir y enviar reserva aplica a quien tenga permiso sobre la reserva</li>
+<li><code>US-015</code>: se aclaro que la division de reserva aplica solo a quien pueda operar esa reserva</li>
+<li><code>US-022</code>: se aclaro que el cupon lo puede abrir quien tenga control sobre la reserva o el cupon, su admin o super usuario</li>
+<li><code>US-023</code>: se aclaro que el reembolso lo puede abrir quien tenga control sobre ese reembolso, su admin o super usuario</li>
+<li><code>US-024</code>: se corrigio el actor a <code>usuario de agencia proveedora</code> o <code>admin de agencia proveedora</code></li>
+<li><code>US-008</code>, <code>US-009</code> y <code>US-010</code>: el calendario queda restringido al <code>admin de agencia proveedora</code> y al <code>super usuario</code> solo en acciones de control ya definidas</li>
+</ul>
+<h2>8. Desglose tecnico detallado de Sprint 1</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativa la base institucional del sistema: agencias, usuarios, roles, activacion por email y vista administrativa de agencias</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-001</code></li>
+<li><code>US-002</code></li>
+<li><code>US-003</code></li>
+<li><code>US-005</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT-001 - Modelo de agencias</h4>
+<ul>
+<li>crear entidad <code>agencies</code></li>
+<li>campos base: nombre, nit, tipo_persona, direccion, telefono, email_empresa, horario_atencion, ciudad, pais, agency_type</li>
+<li>definir estados base si se requieren a futuro</li>
+</ul>
+<h4>BT-002 - Modelo de representante legal</h4>
+<ul>
+<li>crear entidad <code>agency_legal_representatives</code></li>
+<li>relacion uno a uno con agencia</li>
+<li>campos: nombre, tipo_documento, numero_documento, telefono, email, cargo</li>
+</ul>
+<h4>BT-003 - Modelo de usuarios</h4>
+<ul>
+<li>crear entidad <code>users</code></li>
+<li>campos: nombre, apellido, celular, email, foto, fecha_nacimiento, direccion, status, email_verified_at</li>
+<li>agregar relacion obligatoria con <code>agency_id</code></li>
+<li>agregar rol: <code>super_user</code>, <code>agency_admin</code>, <code>travel_agent</code></li>
+</ul>
+<h4>BT-004 - Reglas de permisos base</h4>
+<ul>
+<li>crear capa de autorizacion por rol</li>
+<li>definir permisos minimos para super usuario y admin de agencia</li>
+<li>bloquear operaciones si el usuario esta inactivo</li>
+</ul>
+<h4>BT-005 - Flujo de activacion por email</h4>
+<ul>
+<li>generar token de activacion</li>
+<li>crear endpoint o accion para confirmar cuenta</li>
+<li>cambiar estado a <code>activo</code> al confirmar email</li>
+<li>registrar fecha de validacion</li>
+</ul>
+<h4>BT-006 - Reactivacion con validacion</h4>
+<ul>
+<li>crear logica para reactivar usuarios</li>
+<li>exigir verificacion de email antes de volver a activar</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT-001 - Formulario de creacion de agencia</h4>
+<ul>
+<li>construir formulario con datos generales</li>
+<li>construir subbloque del representante legal</li>
+<li>validaciones de campos obligatorios</li>
+</ul>
+<h4>FT-002 - Formulario de creacion de usuario</h4>
+<ul>
+<li>construir formulario con datos personales</li>
+<li>selector de agencia</li>
+<li>selector de tipo de usuario</li>
+<li>indicador visual de estado inicial <code>inactivo</code></li>
+</ul>
+<h4>FT-003 - Pantalla detalle de agencia</h4>
+<ul>
+<li>construir vista con resumen institucional</li>
+<li>construir tabla de usuarios asociados</li>
+<li>mostrar tipo de usuario y estado</li>
+<li>agregar buscador por nombre</li>
+<li>agregar filtros por tipo y estado</li>
+</ul>
+<h4>FT-004 - Pantalla de activacion por email</h4>
+<ul>
+<li>construir vista de confirmacion</li>
+<li>manejar token valido, vencido o ya utilizado</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT-001 - Auditoria minima</h4>
+<ul>
+<li>guardar <code>created_by</code>, <code>updated_by</code> donde aplique</li>
+<li>registrar fecha de creacion y actualizacion</li>
+</ul>
+<h4>TT-002 - Seeds o datos iniciales</h4>
+<ul>
+<li>crear super usuario inicial</li>
+<li>crear catalogo base de roles y estados</li>
+</ul>
+<h4>TT-003 - Tests base</h4>
+<ul>
+<li>tests de creacion de agencia</li>
+<li>tests de creacion de usuario</li>
+<li>tests de activacion por email</li>
+<li>tests de permisos de acceso a detalle de agencia</li>
+</ul>
+<h3>Definicion de terminado del Sprint 1</h3>
+<ul>
+<li>un super usuario puede crear una agencia</li>
+<li>un admin o super usuario puede crear usuarios asociados a una agencia</li>
+<li>todo usuario nuevo queda inactivo</li>
+<li>un usuario puede activarse via email</li>
+<li>la vista detalle de agencia muestra sus usuarios con filtros funcionales</li>
+</ul>
+<h2>9. Matriz de epicas, historias y dependencias</h2>
+<div class="table-wrap"><table><thead><tr><th>Epica</th><th>Nombre</th><th>Historias</th><th>Depende de</th><th>Prioridad</th><th>Sprint sugerido</th></tr></thead><tbody><tr><td>E-01</td><td>Agencias y usuarios</td><td>US-001, US-002, US-003, US-004, US-005</td><td>Ninguna</td><td>P0</td><td>Sprint 1</td></tr><tr><td>E-02</td><td>Productos y configuracion comercial</td><td>US-006, US-007</td><td>E-01</td><td>P0</td><td>Sprint 2</td></tr><tr><td>E-03</td><td>Calendario de productos</td><td>US-008, US-009, US-010</td><td>E-02, E-04</td><td>P0</td><td>Sprint 3</td></tr><tr><td>E-04</td><td>Reservas base</td><td>US-011, US-012, US-013, US-014, US-015</td><td>E-01, E-02</td><td>P0</td><td>Sprint 4</td></tr><tr><td>E-05</td><td>Estados y notificaciones</td><td>US-016, US-017</td><td>E-04</td><td>P0</td><td>Sprint 5</td></tr><tr><td>E-06</td><td>Cancelaciones y reglas economicas</td><td>US-018, US-019, US-020, US-021</td><td>E-04, E-05</td><td>P0</td><td>Sprint 5</td></tr><tr><td>E-07</td><td>Cupones y reembolsos</td><td>US-022, US-023</td><td>E-06</td><td>P0</td><td>Sprint 6</td></tr><tr><td>E-08</td><td>Lista de pasajeros y check in</td><td>US-024, US-025, US-026, US-027</td><td>E-04, E-05, E-07</td><td>P0</td><td>Sprint 7</td></tr><tr><td>E-09</td><td>Reportes comerciales y operativos</td><td>US-028, US-029, US-030, US-031</td><td>E-04, E-06, E-07, E-08, E-10</td><td>P1</td><td>Sprint 9</td></tr><tr><td>E-10</td><td>Alianzas y facturado</td><td>US-032, US-033, US-034</td><td>E-01, E-04</td><td>P1</td><td>Sprint 8</td></tr></tbody></table></div>
+<h2>10. Dependencias clave entre epicas</h2>
+<ul>
+<li><code>E-01 -&gt; E-02</code>: no se puede crear producto sin agencia ni roles definidos</li>
+<li><code>E-02 -&gt; E-03</code>: no existe calendario funcional si el producto no tiene configuracion base</li>
+<li><code>E-04 -&gt; E-03</code>: la ocupacion del calendario depende de reservas reales</li>
+<li><code>E-04 -&gt; E-05</code>: los estados viven sobre la reserva</li>
+<li><code>E-05 -&gt; E-06</code>: las cancelaciones y el reembolso dependen del estado de la reserva</li>
+<li><code>E-06 -&gt; E-07</code>: cupones y reembolsos nacen de cancelaciones o no show</li>
+<li><code>E-04 + E-05 + E-07 -&gt; E-08</code>: check in y no show dependen de reservas, estados y salidas economicas</li>
+<li><code>E-01 + E-04 -&gt; E-10</code>: las alianzas requieren agencias y ventas operables</li>
+<li><code>E-04 + E-06 + E-07 + E-08 + E-10 -&gt; E-09</code>: los reportes dependen de todos los movimientos trazados</li>
+</ul>
+<h2>11. Siguiente paso recomendado</h2>
+<ul>
+<li>convertir cada historia de <code>Sprint 2</code> en tareas tecnicas pequenas</li>
+<li>definir entidades y relaciones de base de datos</li>
+<li>preparar una matriz de permisos tecnica por rol y modulo</li>
+</ul>
+<h2>12. Desglose tecnico detallado de Sprint 2</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativa la creacion de productos con su configuracion comercial base y su habilitacion inicial mediante calendario</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-006</code></li>
+<li><code>US-007</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT2-001 - Modelo principal de productos</h4>
+<ul>
+<li>crear entidad <code>products</code></li>
+<li>campos base: provider_agency_id, nombre, ciudad, punto_encuentro, descripcion_breve, hora_salida, hora_llegada, status</li>
+<li>definir estado inicial del producto: <code>draft</code> o <code>pending_activation</code></li>
+<li>agregar trazabilidad de creacion y actualizacion</li>
+</ul>
+<h4>BT2-002 - Modelo de temporadas del producto</h4>
+<ul>
+<li>crear entidad <code>product_seasons</code></li>
+<li>relacion uno a muchos con <code>products</code></li>
+<li>definir tipo de temporada: <code>high</code> y <code>low</code></li>
+<li>almacenar fecha_inicio, fecha_fin, nombre_opcional y estado</li>
+</ul>
+<h4>BT2-003 - Modelo de reglas economicas</h4>
+<ul>
+<li>crear entidad <code>product_penalty_rules</code></li>
+<li>relacion uno a uno con <code>products</code> o una versionada si se quiere historico</li>
+<li>campos: multa_cancelacion, multa_no_show, multa_reembolso, tarifa_administrativa, permite_reembolso, observaciones</li>
+</ul>
+<h4>BT2-004 - Reglas de validacion de producto</h4>
+<ul>
+<li>validar que solo <code>admin de agencia proveedora</code> y <code>super usuario</code> puedan crear productos</li>
+<li>validar que todo producto quede asociado a una agencia proveedora</li>
+<li>validar coherencia entre hora_salida y hora_llegada</li>
+<li>validar que las temporadas no se crucen de forma invalida si el negocio no lo permite</li>
+</ul>
+<h4>BT2-005 - Flujo de habilitacion inicial</h4>
+<ul>
+<li>crear accion para cambiar producto de <code>pending_activation</code> a <code>active</code></li>
+<li>obligar paso previo por definicion de fechas activas del calendario</li>
+<li>impedir activacion si faltan reglas base del producto</li>
+</ul>
+<h4>BT2-006 - Modelo de activacion por calendario</h4>
+<ul>
+<li>crear entidad <code>product_active_ranges</code></li>
+<li>relacion uno a muchos con <code>products</code></li>
+<li>campos: fecha_inicio, fecha_fin, creado_por, motivo_opcional</li>
+<li>validar que fecha_inicio sea desde hoy y no mas alla del 31 de diciembre del ano en curso</li>
+<li>validar que fecha_fin sea desde fecha_inicio hasta el 31 de enero del ano siguiente</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT2-001 - Formulario de creacion de producto</h4>
+<ul>
+<li>construir formulario principal del producto</li>
+<li>incluir nombre, ciudad, punto de encuentro, descripcion breve, hora de salida y hora de llegada</li>
+<li>mostrar asociacion visible con agencia proveedora</li>
+<li>agregar validaciones de campos obligatorios</li>
+</ul>
+<h4>FT2-002 - Seccion de temporadas</h4>
+<ul>
+<li>construir bloque para definir rangos de temporada alta</li>
+<li>permitir agregar, editar y eliminar rangos antes de guardar</li>
+<li>mostrar resumen visual de rangos configurados</li>
+</ul>
+<h4>FT2-003 - Seccion de multas y reglas comerciales</h4>
+<ul>
+<li>construir bloque para multa de cancelacion, multa de no show y multa de reembolso</li>
+<li>permitir definir si el producto permite o no reembolso</li>
+<li>mostrar ayuda visual con ejemplos de calculo</li>
+</ul>
+<h4>FT2-004 - Accion de habilitar producto</h4>
+<ul>
+<li>agregar boton o CTA de <code>Habilitar</code></li>
+<li>al activarlo, redirigir al calendario del producto</li>
+<li>si el producto esta nuevo o inactivo, abrir modal obligatorio de fechas activas</li>
+</ul>
+<h4>FT2-005 - Modal de fechas activas</h4>
+<ul>
+<li>construir modal bloqueante</li>
+<li>impedir cierre con <code>Escape</code></li>
+<li>impedir cierre con clic fuera</li>
+<li>validar rango permitido de fecha inicial y fecha final</li>
+<li>mostrar mensaje claro de que el calendario no se podra usar hasta definir fechas activas</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT2-001 - Auditoria y trazabilidad</h4>
+<ul>
+<li>guardar quien creo el producto</li>
+<li>guardar quien definio rangos activos</li>
+<li>guardar ultima fecha de habilitacion</li>
+</ul>
+<h4>TT2-002 - Tests base de producto</h4>
+<ul>
+<li>tests de creacion de producto por rol permitido</li>
+<li>tests de bloqueo para roles no autorizados</li>
+<li>tests de validacion de rangos de temporada</li>
+<li>tests de validacion de rangos de fechas activas</li>
+<li>tests de redireccion al calendario al habilitar</li>
+</ul>
+<h3>Definicion de terminado del Sprint 2</h3>
+<ul>
+<li>un admin de agencia proveedora o super usuario puede crear un producto asociado a una agencia proveedora</li>
+<li>el producto puede guardar temporadas altas y reglas de multas</li>
+<li>el producto no queda operativo hasta pasar por el flujo de habilitacion</li>
+<li>el modal de fechas activas obliga a definir disponibilidad inicial valida</li>
+<li>el producto queda listo para entrar a la vista de calendario en el siguiente sprint</li>
+</ul>
+<h2>13. Matriz tecnica de permisos por rol y modulo</h2>
+<div class="table-wrap"><table><thead><tr><th>Modulo / Accion tecnica</th><th>Super usuario</th><th>Admin agencia vendedora</th><th>Usuario agencia vendedora</th><th>Admin agencia proveedora</th><th>Usuario agencia proveedora</th></tr></thead><tbody><tr><td>Crear agencias</td><td>Si</td><td>No</td><td>No</td><td>No</td><td>No</td></tr><tr><td>Ver agencias</td><td>Si</td><td>Solo su agencia</td><td>No directo, solo contexto propio</td><td>Solo su agencia</td><td>No directo, solo contexto propio</td></tr><tr><td>Editar agencias</td><td>Si</td><td>No</td><td>No</td><td>No</td><td>No</td></tr><tr><td>Crear usuarios de agencia</td><td>Si</td><td>Si, solo su agencia</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Activar / inactivar usuarios</td><td>Si</td><td>Si, solo su agencia</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Editar perfil propio</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Crear productos</td><td>Si, asignando agencia proveedora</td><td>No</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Editar productos</td><td>Si</td><td>No</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Inhabilitar productos</td><td>Si</td><td>No</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Habilitar productos</td><td>Si</td><td>No</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Ver calendario de producto</td><td>Si</td><td>No</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Inactivar fecha de calendario</td><td>Si, solo si no hay reservas activas</td><td>No</td><td>No</td><td>Si, solo si no hay reservas activas</td><td>No</td></tr><tr><td>Reactivar fecha de calendario</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>No</td></tr><tr><td>Crear cotizaciones</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Crear reservas</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Ver reservas propias</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Ver reservas de agentes</td><td>Si</td><td>Si, solo su agencia</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Ver reservas globales</td><td>Si</td><td>No</td><td>No</td><td>No</td><td>No</td></tr><tr><td>Editar reservas propias editables</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Editar reservas de agentes</td><td>Si</td><td>Si, solo su agencia</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Cancelar reserva completa propia</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Cancelar reserva completa de agentes</td><td>Si</td><td>Si, solo su agencia</td><td>No</td><td>Si, solo su agencia</td><td>No</td></tr><tr><td>Cancelar pasajero individual</td><td>Si</td><td>Si, sobre reservas bajo su control</td><td>Si, sobre sus reservas</td><td>Si, sobre reservas bajo su control</td><td>Si, sobre sus reservas</td></tr><tr><td>Dividir reserva</td><td>Si</td><td>Si, sobre reservas bajo su control</td><td>Si, sobre sus reservas</td><td>Si, sobre reservas bajo su control</td><td>Si, sobre sus reservas</td></tr><tr><td>Crear anotaciones en reservas</td><td>Si</td><td>Si</td><td>Si</td><td>No definido por negocio actual</td><td>No definido por negocio actual</td></tr><tr><td>Imprimir reserva</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Enviar reserva por email</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Ver cupones bajo su control</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Solicitar reembolso</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Ver reembolsos bajo su control</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td><td>Si</td></tr><tr><td>Subir comprobante de reembolso</td><td>Si</td><td>No</td><td>No</td><td>Si, si es dueÃ±a del producto</td><td>No</td></tr><tr><td>Solicitar pago de reembolso por email</td><td>Si</td><td>Si, si espera pago</td><td>Si, si espera pago</td><td>Si, si espera pago</td><td>Si, si espera pago</td></tr><tr><td>Ver listas de pasajeros</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>Si</td></tr><tr><td>Operar check in</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>Si</td></tr><tr><td>Marcar no show</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>Si</td></tr><tr><td>Ver panel operativo proveedor</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>Si</td></tr><tr><td>Crear alianzas</td><td>Si</td><td>No</td><td>No</td><td>Si, como agencia proveedora</td><td>No</td></tr><tr><td>Ver alianzas de su agencia</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>No</td></tr><tr><td>Ver movimientos de alianza</td><td>Si</td><td>No</td><td>No</td><td>Si</td><td>No</td></tr><tr><td>Reportes globales</td><td>Si</td><td>No</td><td>No</td><td>No</td><td>No</td></tr><tr><td>Reportes de su agencia</td><td>Si</td><td>Si</td><td>Segun visibilidad habilitada</td><td>Si</td><td>Segun visibilidad habilitada</td></tr></tbody></table></div>
+<h2>14. DiseÃ±o propuesto de entidades y relaciones</h2>
+<h3>14.1. Entidades principales</h3>
+<h4><code>agencies</code></h4>
+<ul>
+<li>id</li>
+<li>agency_type: <code>seller</code> | <code>provider</code></li>
+<li>nombre</li>
+<li>nit</li>
+<li>tipo_persona</li>
+<li>direccion</li>
+<li>telefono_contacto</li>
+<li>email_empresa</li>
+<li>horario_atencion</li>
+<li>ciudad</li>
+<li>pais</li>
+<li>status</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>agency_legal_representatives</code></h4>
+<ul>
+<li>id</li>
+<li>agency_id</li>
+<li>nombre</li>
+<li>tipo_documento</li>
+<li>numero_documento</li>
+<li>telefono_contacto</li>
+<li>email</li>
+<li>cargo</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>users</code></h4>
+<ul>
+<li>id</li>
+<li>agency_id nullable para super usuario</li>
+<li>role: <code>super_user</code> | <code>agency_admin</code> | <code>travel_agent</code></li>
+<li>first_name</li>
+<li>last_name</li>
+<li>email</li>
+<li>email_verified_at</li>
+<li>phone</li>
+<li>birth_date</li>
+<li>address</li>
+<li>photo_url</li>
+<li>status: <code>active</code> | <code>inactive</code></li>
+<li>password_hash</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>products</code></h4>
+<ul>
+<li>id</li>
+<li>provider_agency_id</li>
+<li>nombre</li>
+<li>ciudad</li>
+<li>region nullable</li>
+<li>category_key</li>
+<li>punto_encuentro</li>
+<li>descripcion_breve</li>
+<li>hora_salida</li>
+<li>hora_llegada</li>
+<li>pricing_label</li>
+<li>pricing_unit_label</li>
+<li>cover_image_url nullable</li>
+<li>is_featured</li>
+<li>status: <code>draft</code> | <code>pending_activation</code> | <code>active</code> | <code>inactive</code></li>
+<li>created_by</li>
+<li>updated_by</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>product_subcategories</code></h4>
+<ul>
+<li>id</li>
+<li>category_key</li>
+<li>subcategory_key unique</li>
+<li>nombre</li>
+<li>sort_order</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>product_subcategory_links</code></h4>
+<ul>
+<li>product_id</li>
+<li>product_subcategory_id</li>
+<li>created_at</li>
+</ul>
+<h4><code>product_detail_content</code></h4>
+<ul>
+<li>product_id</li>
+<li>slug unique</li>
+<li>eyebrow nullable</li>
+<li>summary nullable</li>
+<li>meta jsonb</li>
+<li>overview jsonb</li>
+<li>itinerary jsonb</li>
+<li>includes jsonb</li>
+<li>excludes jsonb</li>
+<li>recommendations jsonb</li>
+<li>considerations jsonb</li>
+<li>cancellation_policies jsonb</li>
+<li>booking_config jsonb</li>
+<li>updated_by_user_id nullable</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>product_gallery_images</code></h4>
+<ul>
+<li>id</li>
+<li>product_id</li>
+<li>image_url</li>
+<li>file_name nullable</li>
+<li>position</li>
+<li>is_primary</li>
+<li>created_by_user_id nullable</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>product_seasons</code></h4>
+<ul>
+<li>id</li>
+<li>product_id</li>
+<li>season_type: <code>high</code> | <code>low</code></li>
+<li>fecha_inicio</li>
+<li>fecha_fin</li>
+<li>nombre_opcional</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>product_penalty_rules</code></h4>
+<ul>
+<li>id</li>
+<li>product_id</li>
+<li>tarifa_administrativa</li>
+<li>multa_cancelacion</li>
+<li>multa_no_show</li>
+<li>multa_reembolso</li>
+<li>permite_reembolso</li>
+<li>observaciones</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>product_active_ranges</code></h4>
+<ul>
+<li>id</li>
+<li>product_id</li>
+<li>fecha_inicio</li>
+<li>fecha_fin</li>
+<li>created_by</li>
+<li>created_at</li>
+</ul>
+<h4><code>product_calendar_dates</code></h4>
+<ul>
+<li>id</li>
+<li>product_id</li>
+<li>fecha</li>
+<li>is_operable</li>
+<li>occupancy_percentage</li>
+<li>blocked_reason nullable</li>
+<li>updated_by</li>
+<li>updated_at</li>
+</ul>
+<h4><code>quotations</code></h4>
+<ul>
+<li>id</li>
+<li>agency_id</li>
+<li>user_id</li>
+<li>product_id</li>
+<li>status</li>
+<li>total_amount</li>
+<li>notes</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>reservations</code></h4>
+<ul>
+<li>id</li>
+<li>locator</li>
+<li>product_id</li>
+<li>product_owner_agency_id</li>
+<li>seller_agency_id</li>
+<li>created_by_user_id</li>
+<li>parent_reservation_id nullable</li>
+<li>origin_type: <code>direct</code> | <code>split</code> | <code>partial_cancellation</code> | <code>no_show_child</code></li>
+<li>status: <code>reserved</code> | <code>issued</code> | <code>cancelled_by_user</code> | <code>cancelled_by_expiration</code> | <code>refund_in_progress</code></li>
+<li>reservation_type: <code>full</code> | <code>child</code></li>
+<li>booking_date</li>
+<li>issue_date nullable</li>
+<li>travel_date</li>
+<li>embark_time</li>
+<li>payment_type: <code>online</code> | <code>facturado</code> | <code>other</code></li>
+<li>payment_status nullable</li>
+<li>total_amount</li>
+<li>currency</li>
+<li>season_type nullable</li>
+<li>notes_summary nullable</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>reservation_passengers</code></h4>
+<ul>
+<li>id</li>
+<li>reservation_id</li>
+<li>first_name</li>
+<li>last_name</li>
+<li>passenger_type: <code>ADT</code> | <code>CHD</code> | <code>INF</code></li>
+<li>document_type</li>
+<li>document_number</li>
+<li>country</li>
+<li>sex</li>
+<li>birth_date nullable</li>
+<li>age</li>
+<li>phone</li>
+<li>passenger_status: <code>active</code> | <code>cancelled</code> | <code>checked_in</code> | <code>no_show</code> | <code>refund_requested</code></li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>reservation_notes</code></h4>
+<ul>
+<li>id</li>
+<li>reservation_id</li>
+<li>created_by_user_id</li>
+<li>body</li>
+<li>created_at</li>
+</ul>
+<h4><code>reservation_status_history</code></h4>
+<ul>
+<li>id</li>
+<li>reservation_id</li>
+<li>previous_status nullable</li>
+<li>new_status</li>
+<li>reason</li>
+<li>changed_by_user_id nullable</li>
+<li>changed_at</li>
+</ul>
+<h4><code>notifications</code></h4>
+<ul>
+<li>id</li>
+<li>user_id nullable</li>
+<li>agency_id nullable</li>
+<li>reservation_id nullable</li>
+<li>type</li>
+<li>title</li>
+<li>body</li>
+<li>read_at nullable</li>
+<li>created_at</li>
+</ul>
+<h4><code>cancellations</code></h4>
+<ul>
+<li>id</li>
+<li>reservation_id</li>
+<li>reservation_passenger_id nullable</li>
+<li>cancellation_scope: <code>full_reservation</code> | <code>single_passenger</code></li>
+<li>reason_type: <code>customer_request</code> | <code>no_show</code> | <code>provider_operation</code> | <code>expiration</code></li>
+<li>requested_solution: <code>coupon</code> | <code>refund</code></li>
+<li>requested_by_user_id</li>
+<li>agency_id</li>
+<li>effective_at</li>
+<li>notes nullable</li>
+<li>created_at</li>
+</ul>
+<h4><code>coupons</code></h4>
+<ul>
+<li>id</li>
+<li>code</li>
+<li>reservation_id</li>
+<li>reservation_passenger_id nullable</li>
+<li>cancellation_id nullable</li>
+<li>buyer_agency_id</li>
+<li>seller_agency_id</li>
+<li>created_by_user_id</li>
+<li>reason</li>
+<li>requested_at</li>
+<li>original_product_amount</li>
+<li>applied_penalty_amount</li>
+<li>available_balance</li>
+<li>status: <code>active</code> | <code>inactive</code></li>
+<li>expires_at nullable</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>refunds</code></h4>
+<ul>
+<li>id</li>
+<li>code</li>
+<li>reservation_id</li>
+<li>reservation_passenger_id nullable</li>
+<li>cancellation_id nullable</li>
+<li>source_coupon_id nullable</li>
+<li>buyer_agency_id</li>
+<li>seller_agency_id</li>
+<li>created_by_user_id</li>
+<li>request_date</li>
+<li>refund_date nullable</li>
+<li>status: <code>por_pagar</code> | <code>en_reembolso</code> | <code>pagado</code></li>
+<li>original_product_amount</li>
+<li>cancellation_penalty_amount</li>
+<li>no_show_penalty_amount</li>
+<li>refund_fee_amount</li>
+<li>refund_total_amount</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>refund_receipts</code></h4>
+<ul>
+<li>id</li>
+<li>refund_id unique</li>
+<li>uploaded_by_user_id</li>
+<li>uploaded_by_agency_id</li>
+<li>receipt_file_url</li>
+<li>payment_date</li>
+<li>notes nullable</li>
+<li>created_at</li>
+</ul>
+<h4><code>refund_payment_reminders</code></h4>
+<ul>
+<li>id</li>
+<li>refund_id</li>
+<li>requested_by_user_id</li>
+<li>requested_by_agency_id</li>
+<li>reminder_channel</li>
+<li>reminder_target_email nullable</li>
+<li>notes nullable</li>
+<li>requested_at</li>
+</ul>
+<h4><code>passenger_lists</code></h4>
+<ul>
+<li>id</li>
+<li>product_id</li>
+<li>fecha_operacion</li>
+<li>embark_time</li>
+<li>status: <code>inactive</code> | <code>active</code> | <code>check_in</code></li>
+<li>created_by_user_id nullable</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>passenger_list_items</code></h4>
+<ul>
+<li>id</li>
+<li>passenger_list_id</li>
+<li>reservation_id</li>
+<li>reservation_passenger_id</li>
+<li>item_status: <code>pending</code> | <code>checked_in</code> | <code>no_show</code> | <code>cancelled</code> | <code>refund</code></li>
+<li>checked_in_at nullable</li>
+<li>checked_in_by_user_id nullable</li>
+<li>no_show_at nullable</li>
+<li>no_show_by_user_id nullable</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>passenger_list_status_history</code></h4>
+<ul>
+<li>id</li>
+<li>passenger_list_id</li>
+<li>previous_status nullable</li>
+<li>new_status</li>
+<li>reason nullable</li>
+<li>changed_by_user_id</li>
+<li>changed_at</li>
+</ul>
+<h4><code>checkin_events</code></h4>
+<ul>
+<li>id</li>
+<li>passenger_list_id</li>
+<li>passenger_list_item_id unique</li>
+<li>reservation_id</li>
+<li>reservation_passenger_id</li>
+<li>checked_in_by_user_id</li>
+<li>checked_in_at</li>
+<li>notes nullable</li>
+<li>created_at</li>
+</ul>
+<h4><code>no_show_events</code></h4>
+<ul>
+<li>id</li>
+<li>passenger_list_id</li>
+<li>passenger_list_item_id unique</li>
+<li>reservation_id</li>
+<li>reservation_passenger_id</li>
+<li>cancellation_id nullable</li>
+<li>coupon_id nullable</li>
+<li>refund_id nullable</li>
+<li>marked_by_user_id</li>
+<li>marked_at</li>
+<li>notes nullable</li>
+<li>created_at</li>
+</ul>
+<h4><code>alliances</code></h4>
+<ul>
+<li>id</li>
+<li>provider_agency_id</li>
+<li>seller_agency_id</li>
+<li>city</li>
+<li>facturado_limit</li>
+<li>current_balance</li>
+<li>contract_file</li>
+<li>status: <code>active</code> | <code>inactive</code> | <code>suspended</code></li>
+<li>suspended_reason nullable</li>
+<li>created_by_user_id</li>
+<li>created_at</li>
+<li>updated_at</li>
+</ul>
+<h4><code>alliance_movements</code></h4>
+<ul>
+<li>id</li>
+<li>alliance_id</li>
+<li>movement_type: <code>sale</code> | <code>payment</code></li>
+<li>movement_date</li>
+<li>description</li>
+<li>amount</li>
+<li>balance_after</li>
+<li>reservation_id nullable</li>
+<li>receipt_file nullable</li>
+<li>created_by_user_id nullable</li>
+<li>created_at</li>
+</ul>
+<h4><code>alliance_status_history</code></h4>
+<ul>
+<li>id</li>
+<li>alliance_id</li>
+<li>previous_status nullable</li>
+<li>new_status</li>
+<li>reason nullable</li>
+<li>changed_by_user_id</li>
+<li>created_at</li>
+</ul>
+<h3>14.2. Relaciones principales</h3>
+<ul>
+<li>una <code>agency</code> tiene muchos <code>users</code></li>
+<li>una <code>agency</code> tiene un <code>agency_legal_representative</code></li>
+<li>una <code>provider agency</code> tiene muchos <code>products</code></li>
+<li>un <code>product</code> puede tener un <code>product_detail_content</code></li>
+<li>un <code>product</code> tiene muchas <code>product_gallery_images</code></li>
+<li>un <code>product</code> tiene muchas <code>product_subcategory_links</code></li>
+<li>un <code>product</code> tiene muchas <code>product_seasons</code></li>
+<li>un <code>product</code> tiene una configuracion de <code>product_penalty_rules</code></li>
+<li>un <code>product</code> tiene muchos <code>product_active_ranges</code></li>
+<li>un <code>product</code> tiene muchas <code>product_calendar_dates</code></li>
+<li>una <code>reservation</code> pertenece a un <code>product</code></li>
+<li>una <code>reservation</code> pertenece a una <code>seller agency</code></li>
+<li>una <code>reservation</code> referencia a la <code>product owner agency</code></li>
+<li>una <code>reservation</code> tiene muchos <code>reservation_passengers</code></li>
+<li>una <code>reservation</code> tiene muchas <code>reservation_notes</code></li>
+<li>una <code>reservation</code> tiene muchos <code>reservation_status_history</code></li>
+<li>una <code>reservation</code> puede tener muchas <code>cancellations</code></li>
+<li>una <code>reservation</code> puede tener muchos <code>coupons</code></li>
+<li>una <code>reservation</code> puede tener muchos <code>refunds</code></li>
+<li>una <code>reservation</code> puede tener una <code>parent_reservation</code></li>
+<li>un <code>refund</code> puede tener un <code>refund_receipt</code></li>
+<li>un <code>refund</code> puede tener muchos <code>refund_payment_reminders</code></li>
+<li>una <code>passenger_list</code> pertenece a un <code>product</code></li>
+<li>una <code>passenger_list</code> tiene muchos <code>passenger_list_items</code></li>
+<li>una <code>passenger_list</code> tiene muchos <code>passenger_list_status_history</code></li>
+<li>un <code>passenger_list_item</code> apunta a un <code>reservation_passenger</code></li>
+<li>un <code>passenger_list_item</code> puede tener un <code>checkin_event</code></li>
+<li>un <code>passenger_list_item</code> puede tener un <code>no_show_event</code></li>
+<li>una <code>alliance</code> une una <code>provider agency</code> con una <code>seller agency</code></li>
+<li>una <code>alliance</code> tiene muchos <code>alliance_movements</code></li>
+<li>una <code>alliance</code> tiene muchos <code>alliance_status_history</code></li>
+</ul>
+<h3>14.3. Reglas de integridad recomendadas</h3>
+<ul>
+<li>no permitir <code>products.provider_agency_id</code> con una agencia de tipo <code>seller</code></li>
+<li>no permitir crear <code>alliances</code> entre dos agencias del mismo tipo si el negocio no lo requiere</li>
+<li>no permitir mas de una <code>alliance</code> para la misma pareja <code>provider_agency_id + seller_agency_id</code></li>
+<li>no permitir activar usuarios sin email verificado</li>
+<li>no permitir <code>refunds.status = pagado</code> sin comprobante asociado</li>
+<li>no permitir mas de una <code>passenger_list</code> por <code>product_id + fecha_operacion</code></li>
+<li>no permitir inactivar <code>product_calendar_dates</code> si existen reservas activas en esa fecha</li>
+<li>no permitir <code>reservation.status = refund_in_progress</code> si no existe al menos un <code>refund</code></li>
+<li>no permitir <code>coupon.status = active</code> si esta vencido</li>
+<li>no permitir <code>passenger_list.status = check_in</code> si la fecha operativa no corresponde a una fecha activa del producto</li>
+<li>no permitir <code>refund_payment_reminders</code> sobre reembolsos en estado <code>pagado</code></li>
+<li>no permitir crear una <code>alliance</code> donde <code>provider_agency_id = seller_agency_id</code></li>
+</ul>
+<h3>14.4. Orden sugerido de modelado en base de datos</h3>
+<ol>
+<li>agencies</li>
+<li>agency_legal_representatives</li>
+<li>users</li>
+<li>products</li>
+<li>product_seasons</li>
+<li>product_penalty_rules</li>
+<li>product_active_ranges</li>
+<li>product_calendar_dates</li>
+<li>quotations</li>
+<li>reservations</li>
+<li>reservation_passengers</li>
+<li>reservation_notes</li>
+<li>reservation_status_history</li>
+<li>notifications</li>
+<li>cancellations</li>
+<li>coupons</li>
+<li>refunds</li>
+<li>passenger_lists</li>
+<li>passenger_list_items</li>
+<li>alliances</li>
+<li>alliance_movements</li>
+</ol>
+<h2>15. Desglose tecnico detallado de Sprint 3</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativo el modulo de calendario de productos con visualizacion de ocupacion, temporadas, fechas no operables y control seguro de activacion e inactivacion de fechas</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-008</code></li>
+<li><code>US-009</code></li>
+<li><code>US-010</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT3-001 - Servicio de calendario por producto</h4>
+<ul>
+<li>crear consulta principal que entregue el mes solicitado de un producto</li>
+<li>devolver para cada fecha: porcentaje de ocupacion, si es operable, si pertenece a temporada alta y si tiene reservas activas</li>
+<li>validar acceso por rol para <code>admin de agencia proveedora</code> y controles del <code>super usuario</code></li>
+</ul>
+<h4>BT3-002 - Calculo de ocupacion por fecha</h4>
+<ul>
+<li>calcular ocupacion usando reservas activas asociadas al producto y a la fecha</li>
+<li>definir formula de ocupacion respecto al cupo del producto o capacidad configurada</li>
+<li>exponer porcentaje listo para la UI</li>
+</ul>
+<h4>BT3-003 - Sincronizacion con temporadas</h4>
+<ul>
+<li>leer rangos de <code>product_seasons</code></li>
+<li>marcar en la respuesta del calendario cuales fechas estan en <code>high season</code></li>
+<li>soportar rangos que crucen fin de mes</li>
+</ul>
+<h4>BT3-004 - Gestion de fechas no operables</h4>
+<ul>
+<li>crear accion para marcar una fecha como <code>no operable</code></li>
+<li>validar que no existan reservas activas antes de inactivar</li>
+<li>bloquear accion si hay reservas activas</li>
+<li>registrar motivo opcional de cierre operativo</li>
+</ul>
+<h4>BT3-005 - Reactivacion de fecha</h4>
+<ul>
+<li>crear accion para reactivar fecha inactiva</li>
+<li>registrar usuario que reactivÃ³ y fecha del cambio</li>
+</ul>
+<h4>BT3-006 - Alerta de seguridad al super usuario</h4>
+<ul>
+<li>cuando alguien intente inactivar una fecha con reservas activas, generar evento de alerta</li>
+<li>enviar email automatico al super usuario</li>
+<li>registrar intento en auditoria</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT3-001 - Vista principal de calendario</h4>
+<ul>
+<li>construir encabezado superior del producto con nombre, ciudad, punto de encuentro, hora salida, hora llegada y descripcion breve</li>
+<li>construir grilla mensual de calendario</li>
+<li>permitir navegacion por fecha, mes y ano</li>
+</ul>
+<h4>FT3-002 - Render visual por estado de celda</h4>
+<ul>
+<li>pintar celdas en blanco si no hay reservas</li>
+<li>pintar verde con intensidad proporcional si hay ocupacion</li>
+<li>pintar rojo si el producto no opera ese dia</li>
+<li>mostrar siempre el numero del dia</li>
+</ul>
+<h4>FT3-003 - Render visual de temporada alta</h4>
+<ul>
+<li>mostrar bolita negra o gris oscuro alrededor del numero del dia en temporada alta</li>
+<li>mantener el fondo verde o rojo independiente de la bolita</li>
+<li>asegurar contraste de texto blanco en la bolita</li>
+</ul>
+<h4>FT3-004 - Acciones sobre celda</h4>
+<ul>
+<li>mostrar accion de inactivar si la fecha es operable y no tiene reservas activas</li>
+<li>mostrar accion de reactivar si la fecha esta inactiva</li>
+<li>ocultar o bloquear accion de inactivar si hay reservas activas</li>
+<li>mostrar mensajes claros de bloqueo</li>
+</ul>
+<h4>FT3-005 - Mensajeria de estado</h4>
+<ul>
+<li>mostrar tooltip o ayuda visual sobre el significado de colores</li>
+<li>mostrar confirmacion al inactivar o reactivar fecha</li>
+<li>mostrar mensaje de alerta cuando la accion fue bloqueada por reservas activas</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT3-001 - Auditoria de cambios de calendario</h4>
+<ul>
+<li>guardar fecha, usuario y accion realizada sobre el calendario</li>
+<li>guardar intentos fallidos de cierre de fecha con reservas activas</li>
+</ul>
+<h4>TT3-002 - Tests del calendario</h4>
+<ul>
+<li>tests de consulta de calendario por rol permitido</li>
+<li>tests de calculo de ocupacion</li>
+<li>tests de marcacion de temporada alta</li>
+<li>tests de inactivacion permitida sin reservas activas</li>
+<li>tests de bloqueo de inactivacion con reservas activas</li>
+<li>tests de reactivacion de fecha</li>
+</ul>
+<h3>Definicion de terminado del Sprint 3</h3>
+<ul>
+<li>el admin de agencia proveedora puede ver el calendario de sus productos</li>
+<li>el calendario refleja ocupacion, temporada alta y fechas no operables</li>
+<li>una fecha sin reservas activas puede inactivarse</li>
+<li>una fecha con reservas activas no puede inactivarse por ningun rol</li>
+<li>al bloquear la inactivacion se notifica al super usuario</li>
+<li>una fecha inactiva puede reactivarse por admin proveedor o super usuario</li>
+</ul>
+<h2>16. Diagrama entidad-relacion propuesto</h2>
+<h3>16.1. Vista general en Mermaid</h3>
+<pre>erDiagram
+    AGENCIES ||--o{ USERS : has
+    AGENCIES ||--|| AGENCY_LEGAL_REPRESENTATIVES : has
+    AGENCIES ||--o{ PRODUCTS : owns
+    PRODUCTS ||--o{ PRODUCT_SEASONS : has
+    PRODUCTS ||--|| PRODUCT_PENALTY_RULES : has
+    PRODUCTS ||--o{ PRODUCT_ACTIVE_RANGES : has
+    PRODUCTS ||--o{ PRODUCT_CALENDAR_DATES : has
+    PRODUCTS ||--o{ PASSENGER_LISTS : operates
+    PRODUCTS ||--o{ RESERVATIONS : booked_for
+
+    AGENCIES ||--o{ QUOTATIONS : creates
+    USERS ||--o{ QUOTATIONS : owns
+
+    AGENCIES ||--o{ RESERVATIONS : sells
+    USERS ||--o{ RESERVATIONS : creates
+    RESERVATIONS ||--o{ RESERVATION_PASSENGERS : contains
+    RESERVATIONS ||--o{ RESERVATION_NOTES : stores
+    RESERVATIONS ||--o{ RESERVATION_STATUS_HISTORY : tracks
+    RESERVATIONS ||--o{ CANCELLATIONS : has
+    RESERVATIONS ||--o{ COUPONS : generates
+    RESERVATIONS ||--o{ REFUNDS : generates
+    RESERVATIONS ||--o{ RESERVATIONS : parent_of
+
+    RESERVATION_PASSENGERS ||--o{ CANCELLATIONS : affects
+    RESERVATION_PASSENGERS ||--o{ COUPONS : affects
+    RESERVATION_PASSENGERS ||--o{ REFUNDS : affects
+    PASSENGER_LISTS ||--o{ PASSENGER_LIST_ITEMS : contains
+    RESERVATION_PASSENGERS ||--o{ PASSENGER_LIST_ITEMS : appears_in
+
+    AGENCIES ||--o{ ALLIANCES : provider_side
+    AGENCIES ||--o{ ALLIANCES : seller_side
+    ALLIANCES ||--o{ ALLIANCE_MOVEMENTS : has
+    RESERVATIONS ||--o{ ALLIANCE_MOVEMENTS : references</pre>
+<h3>16.2. Relaciones mas sensibles para negocio</h3>
+<ul>
+<li><code>products.provider_agency_id -&gt; agencies.id</code></li>
+<li><code>users.agency_id -&gt; agencies.id</code></li>
+<li><code>reservations.product_id -&gt; products.id</code></li>
+<li><code>reservations.seller_agency_id -&gt; agencies.id</code></li>
+<li><code>reservations.product_owner_agency_id -&gt; agencies.id</code></li>
+<li><code>reservation_passengers.reservation_id -&gt; reservations.id</code></li>
+<li><code>cancellations.reservation_id -&gt; reservations.id</code></li>
+<li><code>coupons.reservation_id -&gt; reservations.id</code></li>
+<li><code>refunds.reservation_id -&gt; reservations.id</code></li>
+<li><code>passenger_lists.product_id -&gt; products.id</code></li>
+<li><code>passenger_list_items.reservation_passenger_id -&gt; reservation_passengers.id</code></li>
+<li><code>alliances.provider_agency_id -&gt; agencies.id</code></li>
+<li><code>alliances.seller_agency_id -&gt; agencies.id</code></li>
+<li><code>alliance_movements.alliance_id -&gt; alliances.id</code></li>
+</ul>
+<h2>17. DiseÃ±o de endpoints / API por modulo</h2>
+<h3>17.1. Convenciones generales</h3>
+<ul>
+<li>prefijo base sugerido: <code>/api/v1</code></li>
+<li>autenticacion sugerida: <code>Bearer token</code></li>
+<li>respuestas con paginacion para listados grandes</li>
+<li>filtros por query string</li>
+<li>toda accion sensible debe registrar auditoria</li>
+</ul>
+<h3>17.2. Autenticacion y perfil</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>POST</td><td><code>/api/v1/auth/login</code></td><td>Todos</td><td>iniciar sesion</td></tr><tr><td>POST</td><td><code>/api/v1/auth/logout</code></td><td>Todos</td><td>cerrar sesion</td></tr><tr><td>POST</td><td><code>/api/v1/auth/activate</code></td><td>Usuario inactivo</td><td>activar cuenta por email</td></tr><tr><td>POST</td><td><code>/api/v1/auth/resend-activation</code></td><td>Admin o usuario</td><td>reenviar email de activacion</td></tr><tr><td>GET</td><td><code>/api/v1/me</code></td><td>Todos</td><td>ver perfil propio</td></tr><tr><td>PATCH</td><td><code>/api/v1/me</code></td><td>Todos</td><td>editar perfil propio</td></tr></tbody></table></div>
+<h3>17.3. Agencias</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/agencies</code></td><td>Super usuario</td><td>listar agencias</td></tr><tr><td>GET</td><td><code>/api/v1/agencies/search</code></td><td>Super usuario, admin proveedor</td><td>buscar agencias vendedoras candidatas para alianza por nombre o NIT</td></tr><tr><td>POST</td><td><code>/api/v1/agencies</code></td><td>Super usuario</td><td>crear agencia</td></tr><tr><td>GET</td><td><code>/api/v1/agencies/{agencyId}</code></td><td>Super usuario, admin de agencia</td><td>ver detalle de agencia</td></tr><tr><td>PATCH</td><td><code>/api/v1/agencies/{agencyId}</code></td><td>Super usuario</td><td>editar datos de agencia</td></tr><tr><td>GET</td><td><code>/api/v1/agencies/{agencyId}/users</code></td><td>Super usuario, admin de agencia</td><td>listar usuarios de la agencia</td></tr><tr><td>POST</td><td><code>/api/v1/agencies/{agencyId}/users</code></td><td>Super usuario, admin de agencia</td><td>crear usuario dentro de la agencia</td></tr></tbody></table></div>
+<h3>17.4. Usuarios</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/users/{userId}</code></td><td>Super usuario, admin de agencia</td><td>ver detalle de usuario</td></tr><tr><td>PATCH</td><td><code>/api/v1/users/{userId}</code></td><td>Super usuario, admin de agencia</td><td>editar usuario de su control</td></tr><tr><td>POST</td><td><code>/api/v1/users/{userId}/activate</code></td><td>Super usuario, admin de agencia</td><td>activar usuario con validacion</td></tr><tr><td>POST</td><td><code>/api/v1/users/{userId}/deactivate</code></td><td>Super usuario, admin de agencia</td><td>inactivar usuario</td></tr></tbody></table></div>
+<h3>17.5. Productos</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/products</code></td><td>Super usuario, admin proveedor</td><td>listar productos</td></tr><tr><td>POST</td><td><code>/api/v1/products</code></td><td>Super usuario, admin proveedor</td><td>crear producto</td></tr><tr><td>GET</td><td><code>/api/v1/products/{productId}</code></td><td>Super usuario, admin proveedor</td><td>ver detalle de producto</td></tr><tr><td>PATCH</td><td><code>/api/v1/products/{productId}</code></td><td>Super usuario, admin proveedor</td><td>editar producto</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/activate</code></td><td>Super usuario, admin proveedor</td><td>iniciar flujo de habilitacion</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/deactivate</code></td><td>Super usuario, admin proveedor</td><td>inhabilitar producto</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/seasons</code></td><td>Super usuario, admin proveedor</td><td>crear rango de temporada</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/penalties</code></td><td>Super usuario, admin proveedor</td><td>guardar reglas de multas</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/active-ranges</code></td><td>Super usuario, admin proveedor</td><td>guardar fechas activas iniciales</td></tr></tbody></table></div>
+<h3>17.6. Calendario de productos</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/products/{productId}/calendar?month=MM&amp;year=YYYY</code></td><td>Admin proveedor, super usuario</td><td>ver calendario mensual</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/calendar/dates/{date}/deactivate</code></td><td>Admin proveedor, super usuario</td><td>inactivar fecha si no tiene reservas activas</td></tr><tr><td>POST</td><td><code>/api/v1/products/{productId}/calendar/dates/{date}/reactivate</code></td><td>Admin proveedor, super usuario</td><td>reactivar fecha</td></tr><tr><td>GET</td><td><code>/api/v1/products/{productId}/calendar/dates/{date}</code></td><td>Admin proveedor, super usuario</td><td>ver detalle operativo de una fecha</td></tr></tbody></table></div>
+<h3>17.7. Cotizaciones</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/quotations</code></td><td>Todos los usuarios operativos</td><td>listar cotizaciones</td></tr><tr><td>POST</td><td><code>/api/v1/quotations</code></td><td>Todos los usuarios operativos</td><td>crear cotizacion</td></tr><tr><td>GET</td><td><code>/api/v1/quotations/{quotationId}</code></td><td>DueÃ±o, admin de agencia, super usuario</td><td>ver detalle de cotizacion</td></tr><tr><td>PATCH</td><td><code>/api/v1/quotations/{quotationId}</code></td><td>DueÃ±o, admin de agencia, super usuario</td><td>actualizar cotizacion</td></tr></tbody></table></div>
+<h3>17.8. Reservas</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/reservations</code></td><td>Usuarios con panel de reservas</td><td>listar y filtrar reservas</td></tr><tr><td>POST</td><td><code>/api/v1/reservations</code></td><td>Usuarios operativos, admins, super usuario</td><td>crear reserva</td></tr><tr><td>GET</td><td><code>/api/v1/reservations/{reservationId}</code></td><td>Usuario autorizado, admin, super usuario</td><td>ver detalle completo</td></tr><tr><td>PATCH</td><td><code>/api/v1/reservations/{reservationId}</code></td><td>Usuario autorizado, admin, super usuario</td><td>editar reserva editable</td></tr><tr><td>POST</td><td><code>/api/v1/reservations/{reservationId}/split</code></td><td>Usuario autorizado, admin, super usuario</td><td>dividir reserva</td></tr><tr><td>POST</td><td><code>/api/v1/reservations/{reservationId}/print</code></td><td>Usuario autorizado, admin, super usuario</td><td>generar vista imprimible</td></tr><tr><td>POST</td><td><code>/api/v1/reservations/{reservationId}/email</code></td><td>Usuario autorizado, admin, super usuario</td><td>enviar reserva por email</td></tr><tr><td>POST</td><td><code>/api/v1/reservations/{reservationId}/notes</code></td><td>Usuario vendedor autorizado, admin vendedor, super usuario</td><td>crear anotacion</td></tr></tbody></table></div>
+<h3>17.9. Cancelaciones, cupones y reembolsos</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>POST</td><td><code>/api/v1/reservations/{reservationId}/cancel</code></td><td>Creador, admin de su agencia, super usuario</td><td>cancelar reserva completa</td></tr><tr><td>POST</td><td><code>/api/v1/reservations/{reservationId}/passengers/{passengerId}/cancel</code></td><td>Creador, admin de su agencia, super usuario</td><td>cancelar pasajero individual</td></tr><tr><td>GET</td><td><code>/api/v1/cancellations/{cancellationId}</code></td><td>Usuario autorizado, admin, super usuario</td><td>ver cancelacion</td></tr><tr><td>GET</td><td><code>/api/v1/coupons/{couponId}</code></td><td>Usuario autorizado, admin, super usuario</td><td>ver cupon</td></tr><tr><td>POST</td><td><code>/api/v1/coupons/{couponId}/refund-request</code></td><td>Usuario autorizado, admin, super usuario</td><td>solicitar reembolso desde cupon</td></tr><tr><td>POST</td><td><code>/api/v1/coupons/{couponId}/email</code></td><td>Usuario autorizado, admin, super usuario</td><td>enviar cupon por email</td></tr><tr><td>POST</td><td><code>/api/v1/coupons/{couponId}/pdf</code></td><td>Usuario autorizado, admin, super usuario</td><td>generar PDF del cupon</td></tr><tr><td>GET</td><td><code>/api/v1/refunds/{refundId}</code></td><td>Usuario autorizado, admin, super usuario</td><td>ver reembolso</td></tr><tr><td>POST</td><td><code>/api/v1/refunds/{refundId}/receipt</code></td><td>Agencia vendedora o dueÃ±a del producto, super usuario</td><td>subir comprobante de pago</td></tr><tr><td>POST</td><td><code>/api/v1/refunds/{refundId}/request-payment</code></td><td>Agencia que espera pago, super usuario</td><td>solicitar pago por email</td></tr><tr><td>GET</td><td><code>/api/v1/refunds/{refundId}/receipt</code></td><td>Agencia que espera pago, admin, super usuario</td><td>descargar comprobante</td></tr></tbody></table></div>
+<h3>17.10. Lista de pasajeros y check in</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/passenger-lists</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>listar listas por producto y fecha</td></tr><tr><td>GET</td><td><code>/api/v1/passenger-lists/{listId}</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>ver lista de pasajeros</td></tr><tr><td>PATCH</td><td><code>/api/v1/passenger-lists/{listId}/status</code></td><td>Admin proveedor, super usuario</td><td>cambiar estado de lista entre <code>inactive</code>, <code>active</code> y <code>check_in</code></td></tr><tr><td>POST</td><td><code>/api/v1/passenger-lists/{listId}/passengers/{passengerId}/check-in</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>marcar check in</td></tr><tr><td>POST</td><td><code>/api/v1/passenger-lists/{listId}/passengers/{passengerId}/no-show</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>marcar no show</td></tr><tr><td>GET</td><td><code>/api/v1/passenger-lists/{listId}/reports/boarding</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>reporte de embarque</td></tr><tr><td>GET</td><td><code>/api/v1/passenger-lists/{listId}/reports/no-show</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>reporte de no show</td></tr><tr><td>GET</td><td><code>/api/v1/passenger-lists/{listId}/reports/refunds</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>reporte de reembolsos</td></tr><tr><td>GET</td><td><code>/api/v1/passenger-lists/{listId}/reports/cancelled</code></td><td>Usuario proveedor, admin proveedor, super usuario</td><td>reporte de cancelados</td></tr></tbody></table></div>
+<h3>17.11. Alianzas</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/alliances</code></td><td>Super usuario, admin proveedor</td><td>listar alianzas</td></tr><tr><td>POST</td><td><code>/api/v1/alliances</code></td><td>Super usuario, admin proveedor</td><td>crear alianza</td></tr><tr><td>GET</td><td><code>/api/v1/alliances/{allianceId}</code></td><td>Super usuario, admin proveedor</td><td>ver detalle de alianza</td></tr><tr><td>PATCH</td><td><code>/api/v1/alliances/{allianceId}</code></td><td>Super usuario, admin proveedor</td><td>actualizar estado o cupo</td></tr><tr><td>GET</td><td><code>/api/v1/alliances/{allianceId}/movements</code></td><td>Super usuario, admin proveedor</td><td>ver movimientos de alianza</td></tr><tr><td>POST</td><td><code>/api/v1/alliances/{allianceId}/payments</code></td><td>Super usuario, admin proveedor</td><td>registrar pago a la alianza</td></tr></tbody></table></div>
+<h3>17.12. Reportes</h3>
+<div class="table-wrap"><table><thead><tr><th>Metodo</th><th>Endpoint</th><th>Actor principal</th><th>Uso</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/v1/reports/sales</code></td><td>Super usuario, roles habilitados</td><td>reporte de ventas</td></tr><tr><td>GET</td><td><code>/api/v1/reports/earnings</code></td><td>Super usuario, roles habilitados</td><td>reporte de ganancias</td></tr><tr><td>GET</td><td><code>/api/v1/reports/facturado-sales</code></td><td>Super usuario, roles habilitados</td><td>reporte de ventas facturadas</td></tr><tr><td>GET</td><td><code>/api/v1/reports/novelties</code></td><td>Super usuario, roles habilitados</td><td>reporte general de novedades</td></tr><tr><td>GET</td><td><code>/api/v1/reports/refunds</code></td><td>Super usuario, roles habilitados</td><td>reportes de reembolsos</td></tr><tr><td>POST</td><td><code>/api/v1/reports/export/pdf</code></td><td>Super usuario, roles habilitados</td><td>exportar reporte en PDF</td></tr><tr><td>POST</td><td><code>/api/v1/reports/export/email</code></td><td>Super usuario, roles habilitados</td><td>enviar reporte por email</td></tr></tbody></table></div>
+<h4>Convencion de filtros para reportes</h4>
+<ul>
+<li>todos los endpoints de reportes deben aceptar <code>dateFrom</code> y <code>dateTo</code></li>
+<li>cuando aplique, deben aceptar <code>groupBy</code></li>
+<li>cuando aplique, deben aceptar <code>agencyId</code>, <code>productId</code>, <code>userId</code>, <code>paymentType</code> y <code>status</code></li>
+<li>la respuesta debe indicar si la vista es <code>detailed</code> o <code>consolidated</code></li>
+<li>el timezone operativo por defecto es <code>America/Bogota</code></li>
+</ul>
+<h3>17.13. Regla general de autenticacion y permisos</h3>
+<ul>
+<li>todo endpoint del sistema requiere usuario autenticado</li>
+<li>toda operacion se resuelve segun rol, agencia y permisos definidos en <code>RLS</code> o capa backend</li>
+<li>no existe catalogo publico anonimo para LDS en el modelo objetivo</li>
+</ul>
+<h2>18. Desglose tecnico detallado de Sprint 4</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativa la base del modulo de reservas: creacion, consulta, filtro, detalle completo, impresion, envio por email y estructura inicial para division de reservas</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-011</code></li>
+<li><code>US-012</code></li>
+<li><code>US-013</code></li>
+<li><code>US-014</code></li>
+<li><code>US-015</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT4-001 - Modelo base de reservas</h4>
+<ul>
+<li>implementar entidad <code>reservations</code> con sus relaciones obligatorias</li>
+<li>generar localizador unico</li>
+<li>asociar reserva a producto, agencia vendedora, agencia dueÃ±a del producto y usuario creador</li>
+<li>dejar estado inicial <code>reserved</code></li>
+</ul>
+<h4>BT4-002 - Modelo de pasajeros de reserva</h4>
+<ul>
+<li>implementar entidad <code>reservation_passengers</code></li>
+<li>permitir multiples pasajeros por reserva</li>
+<li>guardar datos completos del pasajero</li>
+<li>soportar estado individual del pasajero</li>
+</ul>
+<h4>BT4-003 - Modelo de historial y notas</h4>
+<ul>
+<li>implementar <code>reservation_status_history</code></li>
+<li>implementar <code>reservation_notes</code></li>
+<li>registrar cambios relevantes desde la creacion</li>
+</ul>
+<h4>BT4-004 - Servicio de creacion de reservas</h4>
+<ul>
+<li>crear logica para crear reserva y pasajeros en una sola transaccion</li>
+<li>calcular montos base de la reserva</li>
+<li>guardar informacion de tipo de pago y temporada</li>
+<li>validar permisos segun rol</li>
+</ul>
+<h4>BT4-005 - Servicio de detalle de reserva</h4>
+<ul>
+<li>construir respuesta enriquecida con:</li>
+<li>datos generales</li>
+<li>pasajeros</li>
+<li>informacion economica</li>
+<li>notas</li>
+<li>historial</li>
+<li>novedades base</li>
+</ul>
+<h4>BT4-006 - Busqueda y filtros de reservas</h4>
+<ul>
+<li>implementar filtros por localizador</li>
+<li>implementar filtros por fecha de emision, creacion y embarque</li>
+<li>implementar filtros por periodos rapidos</li>
+<li>implementar refinamiento por nombre de turista, documento y estado</li>
+<li>implementar agrupacion por producto</li>
+</ul>
+<h4>BT4-007 - Division de reserva</h4>
+<ul>
+<li>implementar accion para mover uno o varios pasajeros a una nueva reserva</li>
+<li>conservar producto, destino, fechas, itinerario y precios</li>
+<li>registrar relacion padre-hija entre reservas</li>
+<li>impedir que la division cambie el significado economico de la tarifa original</li>
+</ul>
+<h4>BT4-008 - Impresion y envio por email</h4>
+<ul>
+<li>crear endpoint o servicio para generar documento imprimible</li>
+<li>crear endpoint o servicio para enviar reserva por email</li>
+<li>reutilizar plantilla de detalle de reserva</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT4-001 - Formulario de creacion de reserva</h4>
+<ul>
+<li>construir flujo de seleccion de producto</li>
+<li>permitir agregar multiples pasajeros</li>
+<li>permitir seleccionar forma de pago</li>
+<li>mostrar resumen economico antes de guardar</li>
+</ul>
+<h4>FT4-002 - Pantalla detalle de reserva</h4>
+<ul>
+<li>construir bloques de informacion general</li>
+<li>construir bloque de pasajeros con estados individuales</li>
+<li>construir bloque economico</li>
+<li>construir bloque de historial</li>
+<li>construir bloque de notas y novedades</li>
+</ul>
+<h4>FT4-003 - Panel de reservas</h4>
+<ul>
+<li>construir tabla principal de reservas</li>
+<li>agregar buscador por localizador</li>
+<li>agregar filtros por fecha y periodos rapidos</li>
+<li>agregar filtros posteriores por turista, documento y estado</li>
+<li>agregar agrupacion por producto</li>
+</ul>
+<h4>FT4-004 - Acciones de reserva</h4>
+<ul>
+<li>agregar botones <code>Imprimir</code> y <code>Enviar por email</code></li>
+<li>agregar accion <code>Dividir reserva</code> solo cuando corresponda</li>
+<li>controlar visibilidad de acciones por rol y estado</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT4-001 - Auditoria de reservas</h4>
+<ul>
+<li>registrar <code>created_by</code>, <code>updated_by</code></li>
+<li>registrar eventos clave en historial</li>
+<li>registrar envio por email si se requiere trazabilidad</li>
+</ul>
+<h4>TT4-002 - Tests del modulo de reservas</h4>
+<ul>
+<li>tests de creacion de reserva con multiples pasajeros</li>
+<li>tests de permisos de consulta segun rol</li>
+<li>tests de filtros de busqueda</li>
+<li>tests de detalle de reserva</li>
+<li>tests de division de reserva</li>
+<li>tests de impresion y envio por email</li>
+</ul>
+<h3>Definicion de terminado del Sprint 4</h3>
+<ul>
+<li>un usuario autorizado puede crear reservas con uno o varios pasajeros</li>
+<li>el panel de reservas permite buscar y filtrar segun las reglas definidas</li>
+<li>el detalle de reserva muestra informacion comercial, operativa y financiera base</li>
+<li>la reserva se puede imprimir y enviar por email</li>
+<li>una reserva activa se puede dividir respetando las condiciones del producto</li>
+</ul>
+<h2>19. Migraciones o schemas iniciales propuestos</h2>
+<h3>19.1. Convenciones sugeridas</h3>
+<ul>
+<li>base de datos relacional recomendada: PostgreSQL</li>
+<li><code>id</code> como <code>uuid</code></li>
+<li>timestamps en UTC</li>
+<li>estados sensibles modelados como <code>varchar</code> con validacion o <code>enum</code></li>
+<li>indices en campos de filtro frecuente: <code>locator</code>, <code>agency_id</code>, <code>product_id</code>, <code>travel_date</code>, <code>status</code></li>
+</ul>
+<h3>19.2. Migraciones SQL iniciales clave</h3>
+<h4>Migration 001 - <code>agencies</code></h4>
+<pre>create table agencies (
+  id uuid primary key,
+  agency_type varchar(20) not null,
+  nombre varchar(180) not null,
+  nit varchar(60) not null unique,
+  tipo_persona varchar(20) not null,
+  direccion varchar(255),
+  telefono_contacto varchar(40),
+  email_empresa varchar(180),
+  horario_atencion varchar(180),
+  ciudad varchar(120),
+  pais varchar(120),
+  status varchar(20) not null default &#x27;active&#x27;,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);</pre>
+<h4>Migration 002 - <code>agency_legal_representatives</code></h4>
+<pre>create table agency_legal_representatives (
+  id uuid primary key,
+  agency_id uuid not null unique references agencies(id),
+  nombre varchar(180) not null,
+  tipo_documento varchar(40),
+  numero_documento varchar(80),
+  telefono_contacto varchar(40),
+  email varchar(180),
+  cargo varchar(120),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);</pre>
+<h4>Migration 003 - <code>users</code></h4>
+<pre>create table users (
+  id uuid primary key,
+  agency_id uuid null references agencies(id),
+  role varchar(40) not null,
+  first_name varchar(120) not null,
+  last_name varchar(120) not null,
+  email varchar(180) not null unique,
+  email_verified_at timestamptz null,
+  phone varchar(40),
+  birth_date date null,
+  address varchar(255),
+  photo_url varchar(500),
+  status varchar(20) not null default &#x27;inactive&#x27;,
+  password_hash varchar(255) not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index idx_users_agency on users(agency_id);
+create index idx_users_role on users(role);</pre>
+<h4>Migration 004 - <code>products</code></h4>
+<pre>create table products (
+  id uuid primary key,
+  provider_agency_id uuid not null references agencies(id),
+  nombre varchar(180) not null,
+  ciudad varchar(120),
+  punto_encuentro varchar(255),
+  descripcion_breve text,
+  hora_salida time not null,
+  hora_llegada time not null,
+  status varchar(30) not null default &#x27;pending_activation&#x27;,
+  created_by uuid not null references users(id),
+  updated_by uuid null references users(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index idx_products_provider on products(provider_agency_id);
+create index idx_products_status on products(status);</pre>
+<h4>Migration 005 - <code>product_seasons</code></h4>
+<pre>create table product_seasons (
+  id uuid primary key,
+  product_id uuid not null references products(id) on delete cascade,
+  season_type varchar(20) not null,
+  fecha_inicio date not null,
+  fecha_fin date not null,
+  nombre_opcional varchar(120),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index idx_product_seasons_product on product_seasons(product_id);</pre>
+<h4>Migration 006 - <code>product_penalty_rules</code></h4>
+<pre>create table product_penalty_rules (
+  id uuid primary key,
+  product_id uuid not null unique references products(id) on delete cascade,
+  tarifa_administrativa numeric(12,2) not null default 0,
+  multa_cancelacion numeric(12,2) not null default 0,
+  multa_no_show numeric(12,2) not null default 0,
+  multa_reembolso numeric(12,2) not null default 0,
+  permite_reembolso boolean not null default true,
+  observaciones text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);</pre>
+<h4>Migration 007 - <code>product_active_ranges</code></h4>
+<pre>create table product_active_ranges (
+  id uuid primary key,
+  product_id uuid not null references products(id) on delete cascade,
+  fecha_inicio date not null,
+  fecha_fin date not null,
+  created_by uuid not null references users(id),
+  created_at timestamptz not null default now()
+);
+
+create index idx_product_active_ranges_product on product_active_ranges(product_id);</pre>
+<h4>Migration 008 - <code>product_calendar_dates</code></h4>
+<pre>create table product_calendar_dates (
+  id uuid primary key,
+  product_id uuid not null references products(id) on delete cascade,
+  fecha date not null,
+  is_operable boolean not null default true,
+  occupancy_percentage numeric(5,2) not null default 0,
+  blocked_reason varchar(255),
+  updated_by uuid null references users(id),
+  updated_at timestamptz not null default now(),
+  unique(product_id, fecha)
+);
+
+create index idx_product_calendar_dates_lookup on product_calendar_dates(product_id, fecha);</pre>
+<h4>Migration 009 - <code>reservations</code></h4>
+<pre>create table reservations (
+  id uuid primary key,
+  locator varchar(20) not null unique,
+  product_id uuid not null references products(id),
+  product_owner_agency_id uuid not null references agencies(id),
+  seller_agency_id uuid not null references agencies(id),
+  created_by_user_id uuid not null references users(id),
+  parent_reservation_id uuid null references reservations(id),
+  origin_type varchar(40) not null default &#x27;direct&#x27;,
+  status varchar(40) not null default &#x27;reserved&#x27;,
+  reservation_type varchar(20) not null default &#x27;full&#x27;,
+  booking_date date not null,
+  issue_date date null,
+  travel_date date not null,
+  embark_time time not null,
+  payment_type varchar(30) not null,
+  payment_status varchar(30),
+  total_amount numeric(12,2) not null,
+  currency varchar(10) not null default &#x27;COP&#x27;,
+  season_type varchar(20),
+  notes_summary text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index idx_reservations_product on reservations(product_id);
+create index idx_reservations_seller_agency on reservations(seller_agency_id);
+create index idx_reservations_travel_date on reservations(travel_date);
+create index idx_reservations_status on reservations(status);</pre>
+<h4>Migration 010 - <code>reservation_passengers</code></h4>
+<pre>create table reservation_passengers (
+  id uuid primary key,
+  reservation_id uuid not null references reservations(id) on delete cascade,
+  first_name varchar(120) not null,
+  last_name varchar(120) not null,
+  passenger_type varchar(10) not null,
+  document_type varchar(40),
+  document_number varchar(80),
+  country varchar(120),
+  sex varchar(20),
+  birth_date date null,
+  age integer,
+  phone varchar(40),
+  passenger_status varchar(30) not null default &#x27;active&#x27;,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index idx_reservation_passengers_reservation on reservation_passengers(reservation_id);
+create index idx_reservation_passengers_document on reservation_passengers(document_number);</pre>
+<h4>Migration 011 - <code>reservation_notes</code></h4>
+<pre>create table reservation_notes (
+  id uuid primary key,
+  reservation_id uuid not null references reservations(id) on delete cascade,
+  created_by_user_id uuid not null references users(id),
+  body text not null,
+  created_at timestamptz not null default now()
+);</pre>
+<h4>Migration 012 - <code>reservation_status_history</code></h4>
+<pre>create table reservation_status_history (
+  id uuid primary key,
+  reservation_id uuid not null references reservations(id) on delete cascade,
+  previous_status varchar(40),
+  new_status varchar(40) not null,
+  reason varchar(255),
+  changed_by_user_id uuid null references users(id),
+  changed_at timestamptz not null default now()
+);</pre>
+<h3>19.3. Schemas JSON iniciales sugeridos</h3>
+<h4>Product create schema</h4>
+<pre>{
+  &quot;providerAgencyId&quot;: &quot;uuid&quot;,
+  &quot;nombre&quot;: &quot;string&quot;,
+  &quot;ciudad&quot;: &quot;string&quot;,
+  &quot;puntoEncuentro&quot;: &quot;string&quot;,
+  &quot;descripcionBreve&quot;: &quot;string&quot;,
+  &quot;horaSalida&quot;: &quot;HH:mm&quot;,
+  &quot;horaLlegada&quot;: &quot;HH:mm&quot;,
+  &quot;seasons&quot;: [
+    {
+      &quot;seasonType&quot;: &quot;high&quot;,
+      &quot;fechaInicio&quot;: &quot;YYYY-MM-DD&quot;,
+      &quot;fechaFin&quot;: &quot;YYYY-MM-DD&quot;,
+      &quot;nombreOpcional&quot;: &quot;string&quot;
+    }
+  ],
+  &quot;penaltyRules&quot;: {
+    &quot;tarifaAdministrativa&quot;: 0,
+    &quot;multaCancelacion&quot;: 0,
+    &quot;multaNoShow&quot;: 0,
+    &quot;multaReembolso&quot;: 0,
+    &quot;permiteReembolso&quot;: true,
+    &quot;observaciones&quot;: &quot;string&quot;
+  }
+}</pre>
+<h4>Reservation create schema</h4>
+<pre>{
+  &quot;productId&quot;: &quot;uuid&quot;,
+  &quot;sellerAgencyId&quot;: &quot;uuid&quot;,
+  &quot;paymentType&quot;: &quot;online&quot;,
+  &quot;paymentStatus&quot;: &quot;paid&quot;,
+  &quot;travelDate&quot;: &quot;YYYY-MM-DD&quot;,
+  &quot;embarkTime&quot;: &quot;HH:mm&quot;,
+  &quot;totalAmount&quot;: 250000,
+  &quot;currency&quot;: &quot;COP&quot;,
+  &quot;passengers&quot;: [
+    {
+      &quot;firstName&quot;: &quot;string&quot;,
+      &quot;lastName&quot;: &quot;string&quot;,
+      &quot;passengerType&quot;: &quot;ADT&quot;,
+      &quot;documentType&quot;: &quot;CC&quot;,
+      &quot;documentNumber&quot;: &quot;123456&quot;,
+      &quot;country&quot;: &quot;Colombia&quot;,
+      &quot;sex&quot;: &quot;F&quot;,
+      &quot;birthDate&quot;: &quot;YYYY-MM-DD&quot;,
+      &quot;age&quot;: 32,
+      &quot;phone&quot;: &quot;3000000000&quot;
+    }
+  ]
+}</pre>
+<h2>20. Payloads JSON de ejemplo para endpoints criticos</h2>
+<h3>20.1. Crear agencia</h3>
+<p><code>POST /api/v1/agencies</code></p>
+<pre>{
+  &quot;agencyType&quot;: &quot;provider&quot;,
+  &quot;nombre&quot;: &quot;Amazon River Tours&quot;,
+  &quot;nit&quot;: &quot;900123456-7&quot;,
+  &quot;tipoPersona&quot;: &quot;juridica&quot;,
+  &quot;direccion&quot;: &quot;Cra 8 # 10-22&quot;,
+  &quot;telefonoContacto&quot;: &quot;+57 3001234567&quot;,
+  &quot;emailEmpresa&quot;: &quot;info@amazonriver.com&quot;,
+  &quot;horarioAtencion&quot;: &quot;Lunes a Sabado 8:00 a 18:00&quot;,
+  &quot;ciudad&quot;: &quot;Leticia&quot;,
+  &quot;pais&quot;: &quot;Colombia&quot;,
+  &quot;legalRepresentative&quot;: {
+    &quot;nombre&quot;: &quot;Carlos Mendoza&quot;,
+    &quot;tipoDocumento&quot;: &quot;CC&quot;,
+    &quot;numeroDocumento&quot;: &quot;10101010&quot;,
+    &quot;telefonoContacto&quot;: &quot;+57 3008889999&quot;,
+    &quot;email&quot;: &quot;carlos@amazonriver.com&quot;,
+    &quot;cargo&quot;: &quot;Representante Legal&quot;
+  }
+}</pre>
+<h3>20.2. Crear usuario en agencia</h3>
+<p><code>POST /api/v1/agencies/{agencyId}/users</code></p>
+<pre>{
+  &quot;role&quot;: &quot;travel_agent&quot;,
+  &quot;firstName&quot;: &quot;Laura&quot;,
+  &quot;lastName&quot;: &quot;PeÃ±a&quot;,
+  &quot;email&quot;: &quot;laura.pena@agencia.com&quot;,
+  &quot;phone&quot;: &quot;+57 3015550000&quot;,
+  &quot;birthDate&quot;: &quot;1995-08-14&quot;,
+  &quot;address&quot;: &quot;Calle 11 # 4-20&quot;,
+  &quot;photoUrl&quot;: &quot;https://cdn.lds.local/users/laura.jpg&quot;
+}</pre>
+<h3>20.3. Crear producto</h3>
+<p><code>POST /api/v1/products</code></p>
+<pre>{
+  &quot;providerAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+  &quot;nombre&quot;: &quot;Tour Etnotur&quot;,
+  &quot;ciudad&quot;: &quot;Leticia&quot;,
+  &quot;puntoEncuentro&quot;: &quot;Muelle principal&quot;,
+  &quot;descripcionBreve&quot;: &quot;Experiencia cultural de dia completo con comunidades locales.&quot;,
+  &quot;horaSalida&quot;: &quot;08:00&quot;,
+  &quot;horaLlegada&quot;: &quot;17:30&quot;,
+  &quot;seasons&quot;: [
+    {
+      &quot;seasonType&quot;: &quot;high&quot;,
+      &quot;fechaInicio&quot;: &quot;2026-06-15&quot;,
+      &quot;fechaFin&quot;: &quot;2026-07-15&quot;,
+      &quot;nombreOpcional&quot;: &quot;Vacaciones mitad de ano&quot;
+    }
+  ],
+  &quot;penaltyRules&quot;: {
+    &quot;tarifaAdministrativa&quot;: 10000,
+    &quot;multaCancelacion&quot;: 50000,
+    &quot;multaNoShow&quot;: 70000,
+    &quot;multaReembolso&quot;: 50000,
+    &quot;permiteReembolso&quot;: true,
+    &quot;observaciones&quot;: &quot;Tarifa promocional no aplica para reembolso total&quot;
+  }
+}</pre>
+<h3>20.4. Definir fechas activas del producto</h3>
+<p><code>POST /api/v1/products/{productId}/active-ranges</code></p>
+<pre>{
+  &quot;ranges&quot;: [
+    {
+      &quot;fechaInicio&quot;: &quot;2026-04-10&quot;,
+      &quot;fechaFin&quot;: &quot;2026-12-31&quot;
+    },
+    {
+      &quot;fechaInicio&quot;: &quot;2027-01-01&quot;,
+      &quot;fechaFin&quot;: &quot;2027-01-31&quot;
+    }
+  ]
+}</pre>
+<h3>20.5. Crear reserva</h3>
+<p><code>POST /api/v1/reservations</code></p>
+<pre>{
+  &quot;productId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72001&quot;,
+  &quot;sellerAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+  &quot;paymentType&quot;: &quot;online&quot;,
+  &quot;paymentStatus&quot;: &quot;paid&quot;,
+  &quot;travelDate&quot;: &quot;2026-07-20&quot;,
+  &quot;embarkTime&quot;: &quot;08:00&quot;,
+  &quot;totalAmount&quot;: 750000,
+  &quot;currency&quot;: &quot;COP&quot;,
+  &quot;passengers&quot;: [
+    {
+      &quot;firstName&quot;: &quot;Andrea&quot;,
+      &quot;lastName&quot;: &quot;Rios&quot;,
+      &quot;passengerType&quot;: &quot;ADT&quot;,
+      &quot;documentType&quot;: &quot;CC&quot;,
+      &quot;documentNumber&quot;: &quot;52345678&quot;,
+      &quot;country&quot;: &quot;Colombia&quot;,
+      &quot;sex&quot;: &quot;F&quot;,
+      &quot;birthDate&quot;: &quot;1990-03-01&quot;,
+      &quot;age&quot;: 36,
+      &quot;phone&quot;: &quot;+57 3001112222&quot;
+    },
+    {
+      &quot;firstName&quot;: &quot;Samuel&quot;,
+      &quot;lastName&quot;: &quot;Rios&quot;,
+      &quot;passengerType&quot;: &quot;CHD&quot;,
+      &quot;documentType&quot;: &quot;TI&quot;,
+      &quot;documentNumber&quot;: &quot;11445566&quot;,
+      &quot;country&quot;: &quot;Colombia&quot;,
+      &quot;sex&quot;: &quot;M&quot;,
+      &quot;birthDate&quot;: &quot;2015-09-10&quot;,
+      &quot;age&quot;: 11,
+      &quot;phone&quot;: &quot;+57 3001112222&quot;
+    }
+  ]
+}</pre>
+<h3>20.6. Cancelar reserva completa</h3>
+<p><code>POST /api/v1/reservations/{reservationId}/cancel</code></p>
+<pre>{
+  &quot;reasonType&quot;: &quot;customer_request&quot;,
+  &quot;requestedSolution&quot;: &quot;coupon&quot;,
+  &quot;effectiveAt&quot;: &quot;2026-07-18T10:30:00-05:00&quot;,
+  &quot;notes&quot;: &quot;Cliente solicita cancelar por cambio de plan.&quot;
+}</pre>
+<h3>20.7. Cancelar pasajero individual</h3>
+<p><code>POST /api/v1/reservations/{reservationId}/passengers/{passengerId}/cancel</code></p>
+<pre>{
+  &quot;reasonType&quot;: &quot;customer_request&quot;,
+  &quot;requestedSolution&quot;: &quot;refund&quot;,
+  &quot;effectiveAt&quot;: &quot;2026-07-18T10:45:00-05:00&quot;,
+  &quot;notes&quot;: &quot;El pasajero no podra viajar.&quot;
+}</pre>
+<h3>20.8. Solicitar reembolso desde cupon</h3>
+<p><code>POST /api/v1/coupons/{couponId}/refund-request</code></p>
+<pre>{
+  &quot;requestedByAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+  &quot;requestedByUserId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b74001&quot;,
+  &quot;reason&quot;: &quot;Cliente decide no usar el cupon y solicita devolucion.&quot;
+}</pre>
+<h3>20.9. Subir comprobante de reembolso</h3>
+<p><code>POST /api/v1/refunds/{refundId}/receipt</code></p>
+<pre>{
+  &quot;uploadedByAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+  &quot;uploadedByUserId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b74099&quot;,
+  &quot;receiptFileUrl&quot;: &quot;https://cdn.lds.local/refunds/receipt-1001.pdf&quot;,
+  &quot;paymentDate&quot;: &quot;2026-07-25&quot;,
+  &quot;notes&quot;: &quot;Pago realizado por transferencia bancaria.&quot;
+}</pre>
+<h3>20.10. Marcar no show</h3>
+<p><code>POST /api/v1/passenger-lists/{listId}/passengers/{passengerId}/no-show</code></p>
+<pre>{
+  &quot;markedByAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+  &quot;markedByUserId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b74088&quot;,
+  &quot;markedAt&quot;: &quot;2026-07-20T08:15:00-05:00&quot;,
+  &quot;notes&quot;: &quot;Pasajero no se presento al embarque.&quot;
+}</pre>
+<h3>20.11. Crear alianza</h3>
+<p><code>POST /api/v1/alliances</code></p>
+<pre>{
+  &quot;providerAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+  &quot;sellerAgencyId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+  &quot;city&quot;: &quot;Leticia&quot;,
+  &quot;facturadoLimit&quot;: 500000,
+  &quot;contractFileUrl&quot;: &quot;https://cdn.lds.local/contracts/alliance-2026-001.jpg&quot;
+}</pre>
+<h3>20.12. Cambiar estado de lista de pasajeros</h3>
+<p><code>PATCH /api/v1/passenger-lists/{listId}/status</code></p>
+<pre>{
+  &quot;newStatus&quot;: &quot;check_in&quot;,
+  &quot;reason&quot;: &quot;Se habilita el embarque del producto para la operacion del dia.&quot;
+}</pre>
+<h3>20.13. Buscar agencias para alianza</h3>
+<p><code>GET /api/v1/agencies/search?query=selva&amp;agencyType=seller</code></p>
+<h2>21. Desglose tecnico detallado de Sprint 5</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativos los estados de reserva, las notificaciones, las cancelaciones completas y parciales, la logica de multas y los escenarios de devolucion por cupon o reembolso</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-016</code></li>
+<li><code>US-017</code></li>
+<li><code>US-018</code></li>
+<li><code>US-019</code></li>
+<li><code>US-020</code></li>
+<li><code>US-021</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT5-001 - Maquina de estados de reserva</h4>
+<ul>
+<li>implementar transiciones validas entre <code>reserved</code>, <code>issued</code>, <code>cancelled_by_user</code>, <code>cancelled_by_expiration</code> y <code>refund_in_progress</code></li>
+<li>validar que una reserva emitida no venza por tiempo</li>
+<li>validar que una reserva solo pase a <code>refund_in_progress</code> si existe una solicitud de reembolso</li>
+</ul>
+<h4>BT5-002 - Servicio de cancelacion completa</h4>
+<ul>
+<li>cancelar todos los pasajeros de la reserva cuando corresponda</li>
+<li>crear registro en <code>cancellations</code></li>
+<li>actualizar estado de reserva</li>
+<li>registrar evento en <code>reservation_status_history</code></li>
+</ul>
+<h4>BT5-003 - Servicio de cancelacion parcial por pasajero</h4>
+<ul>
+<li>cancelar solo el pasajero seleccionado</li>
+<li>crear reserva hija cancelada</li>
+<li>mantener pasajeros restantes en la reserva original</li>
+<li>registrar relacion padre-hija y trazabilidad</li>
+</ul>
+<h4>BT5-004 - Motor de multas</h4>
+<ul>
+<li>calcular saldo neto usando multa de cancelacion o multa de no show</li>
+<li>aplicar multa de reembolso adicional solo si el cliente solicita reembolso</li>
+<li>soportar multas cero para cancelaciones o alteraciones provocadas por la agencia dueÃ±a del producto</li>
+<li>soportar productos sin reembolso o con multa alta</li>
+</ul>
+<h4>BT5-005 - Resolucion de salida economica</h4>
+<ul>
+<li>si la salida es <code>coupon</code>, crear cupon con saldo disponible</li>
+<li>si la salida es <code>refund</code>, crear reembolso con estado inicial correcto</li>
+<li>dejar trazabilidad del tipo de solucion elegida</li>
+</ul>
+<h4>BT5-006 - Cancelaciones por vencimiento</h4>
+<ul>
+<li>crear job o accion automatica para cancelar reservas reservadas vencidas</li>
+<li>liberar cupos</li>
+<li>registrar cancelacion por vencimiento</li>
+<li>generar notificacion</li>
+</ul>
+<h4>BT5-007 - Notificaciones por cambio de estado</h4>
+<ul>
+<li>generar notificaciones en cada cambio de estado de reserva</li>
+<li>soportar envio por email cuando la regla lo requiera</li>
+<li>registrar notificaciones leidas y no leidas</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT5-001 - UI de estados de reserva</h4>
+<ul>
+<li>mostrar estado actual de la reserva de forma visible</li>
+<li>mostrar historial de cambios con fecha y responsable cuando exista</li>
+<li>mostrar etiquetas diferenciadas para cancelada por usuario, por vencimiento y en reembolso</li>
+</ul>
+<h4>FT5-002 - Modal o flujo de cancelacion</h4>
+<ul>
+<li>permitir cancelar reserva completa o pasajero individual</li>
+<li>preguntar obligatoriamente si la salida sera por reembolso o cupon</li>
+<li>mostrar resumen economico del calculo antes de confirmar</li>
+</ul>
+<h4>FT5-003 - UI de multas y calculo</h4>
+<ul>
+<li>mostrar multa de cancelacion, multa de no show y multa de reembolso</li>
+<li>dejar claro que cancelacion y no show son excluyentes</li>
+<li>mostrar saldo resultante para cupon o reembolso</li>
+</ul>
+<h4>FT5-004 - Notificaciones</h4>
+<ul>
+<li>construir bandeja o resumen de notificaciones</li>
+<li>mostrar cambio de estado y eventos relevantes</li>
+<li>permitir marcar como leida</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT5-001 - Auditoria legal y financiera</h4>
+<ul>
+<li>registrar quien cancelo</li>
+<li>registrar desde que agencia se hizo el movimiento</li>
+<li>registrar por que motivo se aplico una multa o multa cero</li>
+</ul>
+<h4>TT5-002 - Tests del sprint</h4>
+<ul>
+<li>tests de transiciones validas e invalidas de estado</li>
+<li>tests de cancelacion completa</li>
+<li>tests de cancelacion parcial</li>
+<li>tests de calculo de multas</li>
+<li>tests de escenarios de responsabilidad de agencia</li>
+<li>tests de generacion de notificaciones</li>
+</ul>
+<h3>Definicion de terminado del Sprint 5</h3>
+<ul>
+<li>la reserva soporta sus estados oficiales</li>
+<li>la cancelacion completa y parcial funciona con trazabilidad</li>
+<li>el sistema calcula correctamente multas y saldos</li>
+<li>el sistema puede resolver cancelacion por cupon o reembolso</li>
+<li>todos los cambios de estado generan notificacion</li>
+</ul>
+<h2>22. Ejemplos de respuestas JSON para listados y detalles complejos</h2>
+<h3>22.1. Respuesta de listado de reservas</h3>
+<p><code>GET /api/v1/reservations</code></p>
+<pre>{
+  &quot;meta&quot;: {
+    &quot;page&quot;: 1,
+    &quot;pageSize&quot;: 20,
+    &quot;total&quot;: 2,
+    &quot;groupedByProduct&quot;: [
+      {
+        &quot;productId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72001&quot;,
+        &quot;productName&quot;: &quot;Tour Etnotur&quot;,
+        &quot;count&quot;: 1
+      },
+      {
+        &quot;productId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72002&quot;,
+        &quot;productName&quot;: &quot;Fullday Micos&quot;,
+        &quot;count&quot;: 1
+      }
+    ]
+  },
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b75001&quot;,
+      &quot;locator&quot;: &quot;HMK54R&quot;,
+      &quot;status&quot;: &quot;issued&quot;,
+      &quot;product&quot;: {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72001&quot;,
+        &quot;name&quot;: &quot;Tour Etnotur&quot;,
+        &quot;city&quot;: &quot;Leticia&quot;,
+        &quot;ownershipType&quot;: &quot;own_product&quot;
+      },
+      &quot;sellerAgency&quot;: {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+        &quot;name&quot;: &quot;Viajes Selva Viva&quot;
+      },
+      &quot;travelDate&quot;: &quot;2026-07-20&quot;,
+      &quot;issueDate&quot;: &quot;2026-07-18&quot;,
+      &quot;bookingDate&quot;: &quot;2026-07-15&quot;,
+      &quot;embarkTime&quot;: &quot;08:00&quot;,
+      &quot;totalAmount&quot;: 750000,
+      &quot;currency&quot;: &quot;COP&quot;,
+      &quot;passengerCount&quot;: 2
+    },
+    {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b75002&quot;,
+      &quot;locator&quot;: &quot;LDS88P&quot;,
+      &quot;status&quot;: &quot;reserved&quot;,
+      &quot;product&quot;: {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72002&quot;,
+        &quot;name&quot;: &quot;Fullday Micos&quot;,
+        &quot;city&quot;: &quot;Leticia&quot;,
+        &quot;ownershipType&quot;: &quot;third_party_product&quot;
+      },
+      &quot;sellerAgency&quot;: {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+        &quot;name&quot;: &quot;Viajes Selva Viva&quot;
+      },
+      &quot;travelDate&quot;: &quot;2026-07-22&quot;,
+      &quot;issueDate&quot;: null,
+      &quot;bookingDate&quot;: &quot;2026-07-19&quot;,
+      &quot;embarkTime&quot;: &quot;07:30&quot;,
+      &quot;totalAmount&quot;: 420000,
+      &quot;currency&quot;: &quot;COP&quot;,
+      &quot;passengerCount&quot;: 1
+    }
+  ]
+}</pre>
+<h3>22.2. Respuesta de detalle de reserva</h3>
+<p><code>GET /api/v1/reservations/{reservationId}</code></p>
+<pre>{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b75001&quot;,
+    &quot;locator&quot;: &quot;HMK54R&quot;,
+    &quot;status&quot;: &quot;issued&quot;,
+    &quot;reservationType&quot;: &quot;full&quot;,
+    &quot;originType&quot;: &quot;direct&quot;,
+    &quot;product&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72001&quot;,
+      &quot;name&quot;: &quot;Tour Etnotur&quot;,
+      &quot;city&quot;: &quot;Leticia&quot;,
+      &quot;meetingPoint&quot;: &quot;Muelle principal&quot;,
+      &quot;travelDate&quot;: &quot;2026-07-20&quot;,
+      &quot;embarkTime&quot;: &quot;08:00&quot;,
+      &quot;seasonType&quot;: &quot;high&quot;
+    },
+    &quot;sellerAgency&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+      &quot;name&quot;: &quot;Viajes Selva Viva&quot;
+    },
+    &quot;ownerAgency&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+      &quot;name&quot;: &quot;Amazon River Tours&quot;
+    },
+    &quot;financial&quot;: {
+      &quot;paymentType&quot;: &quot;online&quot;,
+      &quot;paymentStatus&quot;: &quot;paid&quot;,
+      &quot;totalAmount&quot;: 750000,
+      &quot;currency&quot;: &quot;COP&quot;,
+      &quot;couponApplied&quot;: null,
+      &quot;highSeasonFare&quot;: true
+    },
+    &quot;passengers&quot;: [
+      {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b76001&quot;,
+        &quot;fullName&quot;: &quot;Andrea Rios&quot;,
+        &quot;passengerType&quot;: &quot;ADT&quot;,
+        &quot;documentNumber&quot;: &quot;52345678&quot;,
+        &quot;country&quot;: &quot;Colombia&quot;,
+        &quot;sex&quot;: &quot;F&quot;,
+        &quot;age&quot;: 36,
+        &quot;phone&quot;: &quot;+57 3001112222&quot;,
+        &quot;status&quot;: &quot;active&quot;
+      },
+      {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b76002&quot;,
+        &quot;fullName&quot;: &quot;Samuel Rios&quot;,
+        &quot;passengerType&quot;: &quot;CHD&quot;,
+        &quot;documentNumber&quot;: &quot;11445566&quot;,
+        &quot;country&quot;: &quot;Colombia&quot;,
+        &quot;sex&quot;: &quot;M&quot;,
+        &quot;age&quot;: 11,
+        &quot;phone&quot;: &quot;+57 3001112222&quot;,
+        &quot;status&quot;: &quot;active&quot;
+      }
+    ],
+    &quot;notes&quot;: [
+      {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b77001&quot;,
+        &quot;createdBy&quot;: &quot;Laura Pena&quot;,
+        &quot;body&quot;: &quot;Cliente solicita ubicacion cerca de la guia.&quot;,
+        &quot;createdAt&quot;: &quot;2026-07-18T09:00:00-05:00&quot;
+      }
+    ],
+    &quot;history&quot;: [
+      {
+        &quot;previousStatus&quot;: null,
+        &quot;newStatus&quot;: &quot;reserved&quot;,
+        &quot;reason&quot;: &quot;Reserva creada&quot;,
+        &quot;changedAt&quot;: &quot;2026-07-15T10:00:00-05:00&quot;
+      },
+      {
+        &quot;previousStatus&quot;: &quot;reserved&quot;,
+        &quot;newStatus&quot;: &quot;issued&quot;,
+        &quot;reason&quot;: &quot;Pago confirmado&quot;,
+        &quot;changedAt&quot;: &quot;2026-07-18T11:10:00-05:00&quot;
+      }
+    ],
+    &quot;novelties&quot;: []
+  }
+}</pre>
+<h3>22.3. Respuesta de detalle de cupon</h3>
+<p><code>GET /api/v1/coupons/{couponId}</code></p>
+<pre>{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b78001&quot;,
+    &quot;code&quot;: &quot;CPN-2026-0001&quot;,
+    &quot;status&quot;: &quot;active&quot;,
+    &quot;requestedAt&quot;: &quot;2026-07-19T10:45:00-05:00&quot;,
+    &quot;reason&quot;: &quot;Cancelacion por solicitud del cliente&quot;,
+    &quot;buyerAgency&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+      &quot;name&quot;: &quot;Viajes Selva Viva&quot;
+    },
+    &quot;sellerAgency&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+      &quot;name&quot;: &quot;Amazon River Tours&quot;
+    },
+    &quot;createdBy&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b74001&quot;,
+      &quot;name&quot;: &quot;Laura Pena&quot;
+    },
+    &quot;reservation&quot;: {
+      &quot;locator&quot;: &quot;HMK54R&quot;,
+      &quot;productName&quot;: &quot;Tour Etnotur&quot;,
+      &quot;city&quot;: &quot;Leticia&quot;,
+      &quot;travelDate&quot;: &quot;2026-07-20&quot;,
+      &quot;embarkTime&quot;: &quot;08:00&quot;,
+      &quot;passengerName&quot;: &quot;Andrea Rios&quot;,
+      &quot;cancelReason&quot;: &quot;cancelled_by_user&quot;
+    },
+    &quot;economic&quot;: {
+      &quot;originalProductAmount&quot;: 200000,
+      &quot;appliedPenaltyAmount&quot;: 50000,
+      &quot;availableBalance&quot;: 150000,
+      &quot;currency&quot;: &quot;COP&quot;
+    },
+    &quot;actions&quot;: {
+      &quot;canRequestRefund&quot;: true,
+      &quot;canDownloadPdf&quot;: true,
+      &quot;canEmail&quot;: true
+    }
+  }
+}</pre>
+<h3>22.4. Respuesta de detalle de reembolso</h3>
+<p><code>GET /api/v1/refunds/{refundId}</code></p>
+<pre>{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b79001&quot;,
+    &quot;code&quot;: &quot;REF-2026-0001&quot;,
+    &quot;status&quot;: &quot;por_pagar&quot;,
+    &quot;requestDate&quot;: &quot;2026-07-19T11:00:00-05:00&quot;,
+    &quot;refundDate&quot;: null,
+    &quot;buyerAgency&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b73001&quot;,
+      &quot;name&quot;: &quot;Viajes Selva Viva&quot;
+    },
+    &quot;sellerAgency&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b71001&quot;,
+      &quot;name&quot;: &quot;Amazon River Tours&quot;
+    },
+    &quot;createdBy&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b74001&quot;,
+      &quot;name&quot;: &quot;Laura Pena&quot;
+    },
+    &quot;reservation&quot;: {
+      &quot;locator&quot;: &quot;HMK54R&quot;,
+      &quot;productName&quot;: &quot;Tour Etnotur&quot;,
+      &quot;city&quot;: &quot;Leticia&quot;,
+      &quot;travelDate&quot;: &quot;2026-07-20&quot;,
+      &quot;embarkTime&quot;: &quot;08:00&quot;,
+      &quot;passengerName&quot;: &quot;Andrea Rios&quot;,
+      &quot;documentNumber&quot;: &quot;52345678&quot;,
+      &quot;country&quot;: &quot;Colombia&quot;,
+      &quot;sex&quot;: &quot;F&quot;,
+      &quot;age&quot;: 36,
+      &quot;cancelReason&quot;: &quot;cancelled_by_user&quot;
+    },
+    &quot;economic&quot;: {
+      &quot;originalProductAmount&quot;: 200000,
+      &quot;cancellationPenaltyAmount&quot;: 50000,
+      &quot;noShowPenaltyAmount&quot;: 0,
+      &quot;refundFeeAmount&quot;: 50000,
+      &quot;refundTotalAmount&quot;: 100000,
+      &quot;currency&quot;: &quot;COP&quot;
+    },
+    &quot;paymentReceipt&quot;: null,
+    &quot;actions&quot;: {
+      &quot;canUploadReceipt&quot;: true,
+      &quot;canRequestPaymentReminder&quot;: true,
+      &quot;canDownloadReceipt&quot;: false
+    }
+  }
+}</pre>
+<h3>22.5. Respuesta de listado de listas de pasajeros</h3>
+<p><code>GET /api/v1/passenger-lists</code></p>
+<pre>{
+  &quot;meta&quot;: {
+    &quot;page&quot;: 1,
+    &quot;pageSize&quot;: 10,
+    &quot;total&quot;: 2
+  },
+  &quot;data&quot;: [
+    {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b80001&quot;,
+      &quot;productId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72001&quot;,
+      &quot;productName&quot;: &quot;Tour Etnotur&quot;,
+      &quot;date&quot;: &quot;2026-07-20&quot;,
+      &quot;status&quot;: &quot;check_in&quot;,
+      &quot;passengerCount&quot;: 28
+    },
+    {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b80002&quot;,
+      &quot;productId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72002&quot;,
+      &quot;productName&quot;: &quot;Fullday Micos&quot;,
+      &quot;date&quot;: &quot;2026-07-19&quot;,
+      &quot;status&quot;: &quot;inactive&quot;,
+      &quot;passengerCount&quot;: 12
+    }
+  ]
+}</pre>
+<h3>22.6. Respuesta de detalle de lista de pasajeros</h3>
+<p><code>GET /api/v1/passenger-lists/{listId}</code></p>
+<pre>{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b80001&quot;,
+    &quot;product&quot;: {
+      &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b72001&quot;,
+      &quot;name&quot;: &quot;Tour Etnotur&quot;
+    },
+    &quot;date&quot;: &quot;2026-07-20&quot;,
+    &quot;status&quot;: &quot;check_in&quot;,
+    &quot;passengers&quot;: [
+      {
+        &quot;reservationId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b75001&quot;,
+        &quot;reservationLocator&quot;: &quot;HMK54R&quot;,
+        &quot;agency&quot;: &quot;Viajes Selva Viva&quot;,
+        &quot;passengerId&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b76001&quot;,
+        &quot;fullName&quot;: &quot;Andrea Rios&quot;,
+        &quot;passengerType&quot;: &quot;ADT&quot;,
+        &quot;documentNumber&quot;: &quot;52345678&quot;,
+        &quot;country&quot;: &quot;Colombia&quot;,
+        &quot;sex&quot;: &quot;F&quot;,
+        &quot;age&quot;: 36,
+        &quot;phone&quot;: &quot;+57 3001112222&quot;,
+        &quot;itemStatus&quot;: &quot;pending&quot;,
+        &quot;actions&quot;: {
+          &quot;canOpenReservation&quot;: true,
+          &quot;canCheckIn&quot;: true
+        },
+        &quot;novelty&quot;: null
+      }
+    ]
+  }
+}</pre>
+<h3>22.7. Respuesta de detalle de alianza</h3>
+<p><code>GET /api/v1/alliances/{allianceId}</code></p>
+<pre>{
+  &quot;data&quot;: {
+    &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b81001&quot;,
+    &quot;city&quot;: &quot;Leticia&quot;,
+    &quot;providerAgency&quot;: &quot;Amazon River Tours&quot;,
+    &quot;sellerAgency&quot;: &quot;Viajes Selva Viva&quot;,
+    &quot;facturadoLimit&quot;: 500000,
+    &quot;currentBalance&quot;: 400000,
+    &quot;currency&quot;: &quot;COP&quot;,
+    &quot;status&quot;: &quot;active&quot;,
+    &quot;movements&quot;: [
+      {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b82002&quot;,
+        &quot;movementType&quot;: &quot;payment&quot;,
+        &quot;movementDate&quot;: &quot;2026-07-21&quot;,
+        &quot;description&quot;: &quot;Recibo 1011&quot;,
+        &quot;amount&quot;: 150000,
+        &quot;amountDisplayType&quot;: &quot;positive&quot;,
+        &quot;balanceAfter&quot;: 400000,
+        &quot;viewTarget&quot;: {
+          &quot;type&quot;: &quot;receipt&quot;,
+          &quot;id&quot;: &quot;receipt-1011&quot;
+        }
+      },
+      {
+        &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b82001&quot;,
+        &quot;movementType&quot;: &quot;sale&quot;,
+        &quot;movementDate&quot;: &quot;2026-07-20&quot;,
+        &quot;description&quot;: &quot;Loc HMK54R&quot;,
+        &quot;amount&quot;: 250000,
+        &quot;amountDisplayType&quot;: &quot;negative&quot;,
+        &quot;balanceAfter&quot;: 250000,
+        &quot;viewTarget&quot;: {
+          &quot;type&quot;: &quot;reservation&quot;,
+          &quot;id&quot;: &quot;70c85f1b-cf3c-4ef7-8260-8765d8b75001&quot;
+        }
+      }
+    ]
+  }
+}</pre>
+<h2>23. Desglose tecnico detallado de Sprint 6</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativos los cupones, reembolsos, comprobantes de pago y la trazabilidad de no show con reservas hijas</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-022</code></li>
+<li><code>US-023</code></li>
+<li><code>US-026</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT6-001 - Generacion de cupones</h4>
+<ul>
+<li>crear servicio para generar cupon desde cancelacion o no show</li>
+<li>calcular saldo disponible segun reglas de multas</li>
+<li>asociar cupon a reserva, pasajero y cancelacion cuando aplique</li>
+<li>controlar vigencia y estado <code>active</code> o <code>inactive</code></li>
+</ul>
+<h4>BT6-002 - Solicitud de reembolso desde reserva o cupon</h4>
+<ul>
+<li>crear servicio para iniciar reembolso desde reserva emitida o cupon existente</li>
+<li>validar que el producto permita reembolso cuando aplique</li>
+<li>calcular valor final descontando multa correspondiente y tasa de reembolso</li>
+<li>dejar el reembolso en estado inicial <code>por_pagar</code> o <code>en_reembolso</code> segun la regla operativa definida</li>
+</ul>
+<h4>BT6-003 - Modelo economico de reembolso</h4>
+<ul>
+<li>almacenar valor original del producto</li>
+<li>almacenar multa de cancelacion o multa de no show aplicada</li>
+<li>almacenar tasa de reembolso</li>
+<li>almacenar saldo final del reembolso</li>
+</ul>
+<h4>BT6-004 - Comprobante de pago</h4>
+<ul>
+<li>permitir que la agencia vendedora o dueña del producto suba comprobante cuando el reembolso este <code>por_pagar</code></li>
+<li>almacenar archivo y metadatos del pago</li>
+<li>cambiar estado del reembolso cuando corresponda</li>
+</ul>
+<h4>BT6-005 - Solicitud automatica de pago</h4>
+<ul>
+<li>permitir que la agencia que espera el dinero solicite pago por email</li>
+<li>registrar fecha de solicitud y usuario que la hizo</li>
+<li>dejar trazabilidad de recordatorios enviados</li>
+</ul>
+<h4>BT6-006 - No show con reserva hija</h4>
+<ul>
+<li>al marcar <code>no_show</code>, crear reserva hija individual cancelada</li>
+<li>mover el pasajero afectado a la reserva hija</li>
+<li>generar cupon individual para ese pasajero</li>
+<li>mantener reserva original con pasajeros embarcados</li>
+<li>registrar historico en la reserva original</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT6-001 - Pantalla detalle de cupon</h4>
+<ul>
+<li>mostrar codigo, agencias, agente creador, motivo y fecha</li>
+<li>mostrar bloque de reserva asociada</li>
+<li>mostrar bloque economico</li>
+<li>mostrar boton para solicitar reembolso si el cliente no desea usar el cupon</li>
+<li>agregar acciones de PDF y email</li>
+</ul>
+<h4>FT6-002 - Pantalla detalle de reembolso</h4>
+<ul>
+<li>mostrar codigo, estado, agencias, creador y fechas</li>
+<li>mostrar informacion completa de la reserva y del pasajero</li>
+<li>mostrar bloque economico con todas las multas y total final</li>
+<li>mostrar boton para descargar comprobante cuando exista</li>
+</ul>
+<h4>FT6-003 - Flujo de subida de comprobante</h4>
+<ul>
+<li>mostrar control de carga solo a quien pueda subirlo</li>
+<li>mostrar estado visual del reembolso</li>
+<li>mostrar boton de solicitud de pago a quien espera el dinero</li>
+</ul>
+<h4>FT6-004 - Novedades por no show</h4>
+<ul>
+<li>reflejar en UI el pasajero no show dentro de la reserva original</li>
+<li>mostrar reserva hija relacionada</li>
+<li>mostrar acceso rapido al cupon generado</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT6-001 - Auditoria de postventa</h4>
+<ul>
+<li>registrar quien creo el cupon</li>
+<li>registrar quien solicito el reembolso</li>
+<li>registrar quien subio el comprobante</li>
+<li>registrar quien marco el no show</li>
+</ul>
+<h4>TT6-002 - Tests del sprint</h4>
+<ul>
+<li>tests de generacion de cupon por cancelacion y por no show</li>
+<li>tests de solicitud de reembolso desde cupon</li>
+<li>tests de calculo economico del reembolso</li>
+<li>tests de subida y consulta de comprobante</li>
+<li>tests de creacion de reserva hija por no show</li>
+</ul>
+<h3>Definicion de terminado del Sprint 6</h3>
+<ul>
+<li>una cancelacion puede resolverse con cupon o reembolso de forma trazable</li>
+<li>el cupon muestra su relacion con la reserva y su saldo correcto</li>
+<li>el reembolso muestra su detalle economico y documental</li>
+<li>un no show genera reserva hija y cupon individual</li>
+<li>la reserva original conserva el historico del no show</li>
+</ul>
+<h2>24. Desglose tecnico detallado de Sprint 7</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativas las listas de pasajeros, el check in por pasajero y las novedades visibles del embarque</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-024</code></li>
+<li><code>US-025</code></li>
+<li><code>US-027</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT7-001 - Generacion y consulta de listas de pasajeros</h4>
+<ul>
+<li>crear servicio para listar salidas por producto y fecha con estado <code>inactive</code>, <code>active</code> o <code>check_in</code></li>
+<li>agrupar pasajeros por producto, fecha y reserva origen</li>
+<li>calcular conteos de pasajeros y disponibilidad de acciones por lista</li>
+<li>permitir consulta paginada y filtrable por fecha y producto</li>
+</ul>
+<h4>BT7-002 - Detalle operativo de lista</h4>
+<ul>
+<li>construir respuesta detallada con localizador, agencia, tipo de pasajero, documento, pais, sexo, edad y celular</li>
+<li>incluir estado operativo por pasajero</li>
+<li>exponer acciones permitidas segun el estado de la lista</li>
+<li>soportar novedades visibles por pasajero cuando existan cancelaciones, no show o reembolsos</li>
+</ul>
+<h4>BT7-003 - Servicio de check in por pasajero</h4>
+<ul>
+<li>registrar check in individual con fecha, hora exacta y usuario responsable</li>
+<li>impedir check in duplicado del mismo pasajero</li>
+<li>validar que la lista se encuentre en estado <code>check_in</code></li>
+<li>actualizar estado operativo del pasajero y trazabilidad de la reserva</li>
+</ul>
+<h4>BT7-004 - Transiciones de estado de lista</h4>
+<ul>
+<li>permitir cambio controlado entre <code>inactive</code>, <code>active</code> y <code>check_in</code></li>
+<li>bloquear transiciones invalidas cuando no corresponda por fecha o estado de la operacion</li>
+<li>registrar quien cambia el estado y en que momento</li>
+<li>exponer reglas para determinar acciones visibles en frontend</li>
+</ul>
+<h4>BT7-005 - Reportes operativos de lista inactiva</h4>
+<ul>
+<li>construir consulta de cierre de lista con pasajeros chequeados, no show, cancelados y reembolsados</li>
+<li>incluir referencias a cupones o reembolsos relacionados</li>
+<li>permitir obtener version consolidada por lista para exportacion o consulta</li>
+<li>conservar historico final de embarque</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT7-001 - Pantalla principal de listas de pasajeros</h4>
+<ul>
+<li>construir modulo de entrada desde <code>Lista de pasajeros</code></li>
+<li>mostrar nombre de producto, fecha, estado y accion <code>Ver lista</code></li>
+<li>permitir filtros por fecha, producto y estado</li>
+<li>reflejar conteos basicos por lista</li>
+</ul>
+<h4>FT7-002 - Pantalla detalle de lista</h4>
+<ul>
+<li>mostrar tabla operativa por pasajero con todos los datos requeridos por backlog</li>
+<li>mostrar boton <code>Reserva</code> cuando la lista este <code>active</code></li>
+<li>mostrar botones <code>Reserva</code> y <code>Check in</code> cuando la lista este <code>check_in</code></li>
+<li>permitir navegacion al detalle de reserva correspondiente</li>
+</ul>
+<h4>FT7-003 - Interaccion de check in</h4>
+<ul>
+<li>habilitar confirmacion visual del check in por pasajero</li>
+<li>bloquear accion cuando el backend indique que ya fue ejecutada o no es valida</li>
+<li>mostrar fecha, hora y agente responsable despues del check in</li>
+<li>refrescar la lista sin perder filtros ni contexto operativo</li>
+</ul>
+<h4>FT7-004 - Novedades en listas inactivas</h4>
+<ul>
+<li>mostrar bloque de novedad debajo de cada pasajero cuando aplique</li>
+<li>distinguir visualmente check in, no show, cancelacion y reembolso</li>
+<li>agregar botones <code>Ver cupon</code> y <code>Ver reembolso</code> cuando existan relaciones</li>
+<li>permitir consulta historica aun cuando la lista ya no este operativa</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT7-001 - Auditoria de embarque</h4>
+<ul>
+<li>registrar quien marco check in</li>
+<li>registrar quien cambio el estado de la lista</li>
+<li>registrar evidencia temporal completa de cada novedad visible</li>
+<li>relacionar eventos con reserva, pasajero y lista</li>
+</ul>
+<h4>TT7-002 - Tests del sprint</h4>
+<ul>
+<li>tests de generacion de listas por producto y fecha</li>
+<li>tests de detalle operativo de lista</li>
+<li>tests de check in valido e invalido</li>
+<li>tests de transiciones de estado de lista</li>
+<li>tests de visualizacion de novedades finales</li>
+</ul>
+<h3>Definicion de terminado del Sprint 7</h3>
+<ul>
+<li>existe modulo de listas de pasajeros navegable</li>
+<li>el check in se realiza por pasajero con trazabilidad completa</li>
+<li>las listas muestran sus estados operativos correctos</li>
+<li>las listas inactivas reflejan novedades finales de embarque</li>
+<li>el usuario puede navegar desde la lista a reserva, cupon o reembolso cuando corresponda</li>
+</ul>
+<h2>25. Desglose tecnico detallado de Sprint 8</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativas las alianzas entre agencias y el control de movimientos sobre cupo facturado</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-032</code></li>
+<li><code>US-033</code></li>
+<li><code>US-034</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT8-001 - Creacion de alianzas</h4>
+<ul>
+<li>crear servicio para registrar alianza entre agencia proveedora y agencia vendedora</li>
+<li>almacenar ciudad, cupo facturado, contrato y estado inicial</li>
+<li>validar reglas de negocio de tipos de agencia y duplicidad de alianza</li>
+<li>dejar trazabilidad de usuario creador y fecha de creacion</li>
+</ul>
+<h4>BT8-002 - Listado y consulta de alianzas</h4>
+<ul>
+<li>construir endpoint de listado con filtros por estado, ciudad y agencia</li>
+<li>devolver agencia proveedora, agencia vendedora, estado y accion de detalle</li>
+<li>soportar paginacion y orden por fecha o estado</li>
+<li>incluir capacidad para mostrar cupo y saldo actual resumido</li>
+</ul>
+<h4>BT8-003 - Movimientos de alianza</h4>
+<ul>
+<li>modelar movimientos de tipo <code>sale</code> y <code>payment</code></li>
+<li>actualizar saldo actual despues de cada movimiento</li>
+<li>permitir consulta cronologica del mas reciente al mas antiguo</li>
+<li>relacionar movimientos con reserva o recibo cuando aplique</li>
+</ul>
+<h4>BT8-004 - Registro de pagos a alianza</h4>
+<ul>
+<li>crear servicio para registrar pago realizado por la agencia aliada</li>
+<li>almacenar comprobante, fecha y valor del pago</li>
+<li>recalcular saldo disponible despues del pago</li>
+<li>dejar el recibo disponible para consulta y descarga</li>
+</ul>
+<h4>BT8-005 - Reglas de estado y suspension</h4>
+<ul>
+<li>permitir cambiar alianza a <code>active</code>, <code>inactive</code> o <code>suspended</code></li>
+<li>validar permisos segun rol y agencia</li>
+<li>impedir operaciones comerciales en alianzas suspendidas cuando la regla lo exija</li>
+<li>registrar historico de cambios de estado</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT8-001 - Pantalla de creacion de alianza</h4>
+<ul>
+<li>construir formulario con busqueda de agencia aliada</li>
+<li>mostrar datos de la agencia encontrada</li>
+<li>permitir ingreso de <code>Valor Facturado</code></li>
+<li>permitir carga de contrato o evidencia documental</li>
+</ul>
+<h4>FT8-002 - Listado principal de alianzas</h4>
+<ul>
+<li>mostrar tabla con agencia proveedora, agencia vendedora, estado y accion <code>Ver</code></li>
+<li>permitir filtros por estado, ciudad y agencia</li>
+<li>mostrar accion <code>Crear alianza</code></li>
+<li>reflejar saldo o resumen comercial cuando aporte valor operativo</li>
+</ul>
+<h4>FT8-003 - Pantalla detalle de alianza</h4>
+<ul>
+<li>mostrar ciudad, agencia aliada, valor facturado y saldo actual</li>
+<li>mostrar filtro por tiempo para movimientos</li>
+<li>listar movimientos con fecha, descripcion, valor, saldo y accion <code>Ver</code></li>
+<li>diferenciar visualmente ventas en rojo y pagos en negro</li>
+</ul>
+<h4>FT8-004 - Navegacion a recibos y reservas</h4>
+<ul>
+<li>abrir recibo cuando el movimiento sea de pago</li>
+<li>abrir reserva cuando el movimiento sea de venta</li>
+<li>conservar contexto de filtros y periodo al volver al detalle</li>
+<li>manejar estados vacios y errores de consulta</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT8-001 - Auditoria comercial de alianzas</h4>
+<ul>
+<li>registrar quien crea la alianza</li>
+<li>registrar quien cambia estados</li>
+<li>registrar quien sube contrato o comprobantes</li>
+<li>registrar origen de cada movimiento financiero</li>
+</ul>
+<h4>TT8-002 - Tests del sprint</h4>
+<ul>
+<li>tests de creacion valida e invalida de alianza</li>
+<li>tests de listado filtrado</li>
+<li>tests de registro de movimiento de venta</li>
+<li>tests de registro de pago y recalculo de saldo</li>
+<li>tests de cambios de estado y restricciones</li>
+</ul>
+<h3>Definicion de terminado del Sprint 8</h3>
+<ul>
+<li>se puede crear una alianza con su contrato y cupo facturado</li>
+<li>existe listado navegable de alianzas</li>
+<li>el detalle muestra movimientos y saldo actual</li>
+<li>los movimientos enlazan a recibos o reservas segun corresponda</li>
+<li>los estados de la alianza controlan la operacion comercial de forma trazable</li>
+</ul>
+<h2>26. Desglose tecnico detallado de Sprint 9</h2>
+<h3>Objetivo del sprint</h3>
+<ul>
+<li>dejar operativos los reportes comerciales, operativos y financieros definidos en el backlog</li>
+</ul>
+<h3>Historias incluidas</h3>
+<ul>
+<li><code>US-028</code></li>
+<li><code>US-029</code></li>
+<li><code>US-030</code></li>
+<li><code>US-031</code></li>
+</ul>
+<h3>Tareas tecnicas de backend</h3>
+<h4>BT9-001 - Reporte de ventas</h4>
+<ul>
+<li>construir consulta detallada con localizador, fecha de emision, valor, usuario vendedor y tipo de venta</li>
+<li>construir consulta consolidada agrupable por valor, forma de pago y usuario</li>
+<li>soportar filtros por usuario, fecha y forma de pago</li>
+<li>preparar salida para PDF y email</li>
+</ul>
+<h4>BT9-002 - Reporte de ganancias</h4>
+<ul>
+<li>calcular utilidad por reserva, producto y vendedor segun reglas del negocio</li>
+<li>construir vista detallada y consolidada</li>
+<li>soportar filtros por fecha y agrupaciones necesarias</li>
+<li>mantener consistencia con ventas emitidas y estados validos</li>
+</ul>
+<h4>BT9-003 - Reporte de ventas facturadas</h4>
+<ul>
+<li>construir consulta detallada con agencia vendedora, valor y estado pagado/no pagado</li>
+<li>soportar consolidado por agencia</li>
+<li>soportar consolidado por estado general</li>
+<li>relacionar resultados con alianzas y movimientos facturados</li>
+</ul>
+<h4>BT9-004 - Reporte de novedades y reembolsos</h4>
+<ul>
+<li>construir reporte general por fechas con cancelados, no show y reembolsos</li>
+<li>construir reportes especificos por producto para novedades y reembolsos</li>
+<li>soportar estados <code>en_reembolso</code>, <code>pagado</code> y <code>por_pagar</code></li>
+<li>permitir filtros por fecha, producto y tipo de novedad</li>
+</ul>
+<h4>BT9-005 - Exportacion y envio</h4>
+<ul>
+<li>implementar generacion de PDF para reportes soportados</li>
+<li>implementar envio por email de reportes generados</li>
+<li>registrar quien exporta o envia y en que momento</li>
+<li>asegurar formato consistente entre vista, PDF y email</li>
+</ul>
+<h3>Tareas tecnicas de frontend</h3>
+<h4>FT9-001 - Modulo de reportes</h4>
+<ul>
+<li>construir pantalla principal de reportes con acceso a ventas, ganancias, facturado, novedades y reembolsos</li>
+<li>permitir seleccion del tipo de reporte</li>
+<li>mostrar filtros iniciales por fecha y criterios de negocio</li>
+<li>soportar cambio entre vista detallada y consolidada cuando aplique</li>
+</ul>
+<h4>FT9-002 - Visualizacion de resultados</h4>
+<ul>
+<li>mostrar tablas y agregados de forma consistente</li>
+<li>permitir agrupaciones, estados vacios y manejo de errores</li>
+<li>mostrar indicadores resumen de alto valor para lectura ejecutiva</li>
+<li>permitir abrir entidades relacionadas cuando el reporte lo requiera</li>
+</ul>
+<h4>FT9-003 - Exportacion en PDF y envio por email</h4>
+<ul>
+<li>agregar acciones visibles de <code>PDF</code> y <code>Enviar por email</code></li>
+<li>mostrar feedback de generacion, carga y envio</li>
+<li>impedir exportaciones invalidas cuando falten filtros obligatorios</li>
+<li>conservar configuracion del reporte al exportar</li>
+</ul>
+<h4>FT9-004 - Reportes de novedades operativas</h4>
+<ul>
+<li>mostrar consolidado de cancelados, no show y reembolsos</li>
+<li>permitir filtro por producto y rango de fechas</li>
+<li>reflejar estados de reembolso y relaciones con reserva cuando aplique</li>
+<li>dar salida clara para seguimiento operativo y financiero</li>
+</ul>
+<h3>Tareas tecnicas transversales</h3>
+<h4>TT9-001 - Gobierno de datos de reporteria</h4>
+<ul>
+<li>validar definiciones unicas de metricas comerciales y financieras</li>
+<li>documentar fuentes de cada reporte</li>
+<li>asegurar que ventas, ganancias y facturado no usen criterios contradictorios</li>
+<li>definir reglas de corte temporal y timezone para consultas</li>
+</ul>
+<h4>TT9-002 - Tests del sprint</h4>
+<ul>
+<li>tests de consultas de ventas detalladas y consolidadas</li>
+<li>tests de calculo de ganancias</li>
+<li>tests de ventas facturadas por agencia y estado</li>
+<li>tests de reportes de novedades y reembolsos</li>
+<li>tests de exportacion PDF y envio por email</li>
+</ul>
+<h3>Definicion de terminado del Sprint 9</h3>
+<ul>
+<li>existe modulo de reportes con las cuatro lineas definidas en backlog</li>
+<li>los reportes soportan filtros, vista detallada y consolidada cuando aplica</li>
+<li>los reportes se pueden exportar en PDF y enviar por email</li>
+<li>los reportes de novedades y reembolsos permiten control operativo y financiero</li>
+<li>las metricas quedan documentadas y consistentes con el resto del sistema</li>
+</ul>
+<h2>27. Adaptacion oficial a Supabase</h2>
+<ul>
+<li>el backend objetivo de LDS es <code>Supabase</code></li>
+<li>las migraciones reales del proyecto viven en <code>supabase/migrations/</code></li>
+<li>la autenticacion se modela sobre <code>auth.users</code></li>
+<li>el perfil de negocio se modela sobre <code>public.users</code></li>
+<li>las politicas de acceso se implementan con <code>RLS</code> por agencia y rol</li>
+</ul>
+<h2>28. Siguiente paso recomendado</h2>
+<ul>
+<li>validar los desgloses de <code>Sprint 7</code>, <code>Sprint 8</code> y <code>Sprint 9</code> contra el modelo final de Supabase</li>
+<li>convertir estos contratos en <code>OpenAPI</code> o colecciones <code>Postman</code></li>
+<li>complementar las politicas RLS con buckets y politicas de <code>Supabase Storage</code></li>
+</ul>
+<div class="footer">Documento derivado del backlog funcional consolidado de LDS. Generado para seguimiento de implementacion.</div>
+</main>
+</body>
+</html>
